@@ -37,10 +37,23 @@
 2. Don't stare at the interviewer(s) - look at theirforehead instead if needed
 3. Avoid questions on salary and benefits
 4. Follow up with a thank you email!
+5. Mirroring - the interviewer's gestures
+6. Nothing is worse than a limb handshake!
+7. Consider some more special colors than white - light/dark blue, grey, yellow/peach are possible
 
 ### My selection of harder questions to prepare
 1. How did you overcome a difficult situation?
     - Maybe think of it as "What is the most challenging part of your internship/ commitment/ event?"
 2. Have you shown leadership in a team project?
 3. What interests you in this/previous job? (make sure to hit the important part of the job rather than secondary requirements)
+
+#### Common Pitfalls & DOs
+1. Don't answer too quickly - take some time to think
+2. Practice likely questions, but not too unoriginal
+3. Don't over/under answer, don't ask about a secondary part of the job
+4. Prior Preparation and Planning Prevents Poor Performance
+5. Treat everyone (eg. receptionist) well! Politely and professionally.
+6. Prepare your own questions (at least 5!) "absolutely imperative, otherwise frustrating"
+7. Research the company, department, interviewer
+8. Check the news for any growth plans, mergers, new products etc
 
