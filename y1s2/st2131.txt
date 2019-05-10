@@ -1,0 +1,6 @@
+These are the problems I tried but couldn't solve:
+
+Sheldon Ross - First Course in Probability
+Chapter 7
+Theoretical Exercises
+ - 2, 
