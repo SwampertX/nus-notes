@@ -1,0 +1,134 @@
+% Created 2020-02-19 Wed 11:24
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{default}
+\author{Tan Yee Jian}
+\date{\today}
+\title{CS2106 Operating Systems}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={CS2106 Operating Systems},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\begin{frame}[label={sec:orgb061a4c},fragile]{Lecture 6 IPC, Threads}
+ \begin{block}{Archipelago Q\&A}
+\begin{enumerate}
+\item Why not set the Time Quantum to the Interval of Timer Interrupt, since that
+is the only important time to run the scheduler?
+A: ITI is hardware specific, and QT is set by kernel.
+\item If there is only one job in RR, then will there be context switch every TQ
+before the job ends?
+A: No, but some stack will still be saved upon the running of the Interrupt Routine.
+\end{enumerate}
+\end{block}
+\begin{block}{Inter-process Communication}
+Mechanisms:
+\begin{block}{Shared memory}
+\end{block}
+\begin{block}{Message passing}
+Can be either \alert{Blocking} or \alert{Non-blocking}.
+\begin{block}{Receiver}
+Blocking receive is the most common
+\end{block}
+\begin{block}{Sender}
+\begin{block}{Asynchronous}
+Even asynchronous can be blocking, since the mailbox(buffer) can be full.
+If sent before receiver calls \texttt{receive}, is blocked until the receiver receives
+the message using the \texttt{receive} function call.
+\end{block}
+\begin{block}{Synchronous}
+Also known as \alert{Rendezvous}, since both process have to meet at a known point in time.
+There is no immediate buffering, the sender have to be blocked until the
+receiver is ready.
+\end{block}
+\end{block}
+\begin{block}{Pros and Cons}
+\begin{block}{Pros}
+\begin{itemize}
+\item Can send across different machines
+\item Cross-platform, as long as message is standard
+\item Easier synchronization
+\end{itemize}
+\end{block}
+\begin{block}{Cons}
+\begin{itemize}
+\item Inefficient
+\item Messages are limited in size and format
+\end{itemize}
+\end{block}
+\end{block}
+\end{block}
+\begin{block}{Pipes (Unix)}
+One of the earliest UPC mechanism
+\begin{itemize}
+\item FIFO
+\item Blocking
+\begin{itemize}
+\item Writers wait when buffer is full
+\item Readers wait when buffer is empty
+\end{itemize}
+\end{itemize}
+\end{block}
+\begin{block}{Signal (Unix)}
+\alert{SIGH$\backslash$*}, programs which receive that either handle it with it's own handlers, or
+ use the default handlers given by the system.
+\end{block}
+\end{block}
+\begin{block}{Threads}
+\alert{Motivation}: Processes are
+\begin{itemize}
+\item heavy/expensive
+\item hard to context switch
+\item IPC is hard, since each process have independent memory space
+\end{itemize}
+and threads can help us with
+\begin{itemize}
+\item achieving multi-core programming
+\item even on 1 core, we can move I/O intensive tasks to a thread to prevent
+blocking, and enable doing some other CPU tasks at the main process
+\end{itemize}
+
+\alert{Brain teaser: would we want to run two threads with exact same code?}
+Answer: Yes, probably on different data. Egg. searching for a number in an
+array - data-centric parallelization
+
+What can Threads share?
+\begin{itemize}
+\item GPR - No. They will interfere with one another
+\item Special registers - No
+\item Text segment - Yes
+\item Data segment - Yes
+\item Heap - Yes
+\item Stack - No. Different fn calls
+\item PID - Yes
+\item Files - Yes
+\item Instruction cache - not relevant
+\item Data cache - not relevant
+\end{itemize}
+
+In short, anything other than \alert{Stack and Registers} are shared.
+\end{block}
+\end{frame}
+\end{document}

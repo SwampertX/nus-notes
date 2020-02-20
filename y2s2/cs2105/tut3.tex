@@ -1,0 +1,58 @@
+% Created 2020-02-19 Wed 14:20
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Tan Yee Jian}
+\date{\today}
+\title{CS2105 Tutorial 3}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={CS2105 Tutorial 3},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\begin{enumerate}
+\item Network diagnostic tool
+\begin{enumerate}
+\item \texttt{POST}
+\item \texttt{POST} sends data to server, while \texttt{GET} fetches data from server
+\end{enumerate}
+\item Not sure
+\item TCP needs to establish connection with server before sending. \textbf{TCPEchoClient}
+will end because it cannot create a socket without a receiving server.
+
+On the other hand, \textbf{UDPEchoClient} just fires datagrams mindlessly and when
+the server comes online, response will be received from the server.
+\item The Datagram headers contain the source IP and ports, so the server can distinguish
+the datagrams from different hosts that way.
+\item \texttt{01011100} +
+\texttt{01100101} =
+\texttt{11000001} has 1s complement \texttt{00111110}
+
+\texttt{11011010} +
+\texttt{01100101} =
+\texttt{100111111} overflows to \texttt{01000000} has 1s complement \texttt{10111111}
+\item No. It can correspond to overflown values too, where \texttt{01000000} can be a sum
+of the 2 numbers as in question 5 part 2, it can also be the sum of
+\texttt{00000000} and \texttt{01000000} which are corrupted inputs.
+\item We can accidentally ack the wrong package due to delay in receiving the message.
+\end{enumerate}
+\end{document}

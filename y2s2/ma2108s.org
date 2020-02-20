@@ -1,0 +1,7 @@
+#+TITLE: MA2108S Mathematical Analysis
+* E-lecture 7: Open sets in metric spaces
+1. *Definition* Let $<M,\rho>$ be a metric space. A subset G of M is an open
+   subset of M if for every $x \in G$, there exists r > 0 so that $B[x,r] \subset G$.
+* Week 6 Tutorial
+** [G] Exercise 4.1, Question 8
+We show that

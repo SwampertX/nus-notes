@@ -1,0 +1,109 @@
+#+TITLE: UPI2211 Utopia
+* Week 6 Monday
+** More's Utopia: Foreign Politics, War and Morals in Utopia
+*** Foreign Politics
+- Idealism
+  - Human nature is a treaty by itself, humans are united via feelings and
+    emotions
+  - And it is more effective than treaties
+- Cynicism
+  - Giving rewards to people who kill the enemy king, as loyalty is impossible and
+    people only care about themselves
+*** Policies
+- Do not involves citizens in foreign wars
+  - Only on a voluntary basis
+  - Unless Utopia is invaded, then people are tasked to defend
+  - Send whole families to war instead, boost morale
+  - Compare to "international army" who fight for others causes
+- Tolerant of religious plurality
+  - However disallows/looksdown on atheists
+  - All religions held in a same church - everything is common to all religions
+** Discussions
+*** Warfare: hypocrisies and contradictions
+- Utopians hire Venalians to fight for themselves
+  Problems:
+  - "Utopians do not care how many Venalians they send to their deaths" (p.94)
+  - They don't care if Venalians are enticed by money to fight one another
+  - Saying that Venalians are "naturally designed for war" prevent Utopians to
+    question the moralities of their policies
+  - Double standards on the value of human life, regarding Utopians and Venalians
+  - Can they always be the richest country?
+
+*** Group discussion questions
+- Are these policies what More thought was the ideal manner of interstate behavior?
+  - Is this Thomas More or Morus? Probably Thomas More
+  - Are they ideal? Probably in a efficiency sense, but does it go against their morals?
+  - Their reasons for going to war are quite petty
+  - Utopia is built on a practical rather than a moral objective
+    - For example, religion + afterlife is to regulate moral behaviors
+    - Did he want to eliminate the class system? Probably not(?)
+- Is a non-contradictory utopia possible? Efficient == moral?
+  - Not killing civilians is a efficient/moral way of waging war.(less lives lost) But reasons for waging war might not be moral
+  - Impossible. Why?
+    - There is just so much you can control. Things can never be absolutely equal
+    - There will always be tradeoffs? Also, what is moral then may not be moral now (ie no freedom of choice to live life)
+- Is Utopia satiric? If so, why did he still alternate between possible and satiric policies?
+  - He wants people to think about his policies
+  - Blurs the line between utopia and dystopia - good place and noplace
+  - Cover up what he really thought with ridiculous ideas?
+* Midterm Assignment
+We shall first list down possible topics/areas, based on the forum posts.
+** Previous Topics
+*** Week 2 Monday
+- Are humans innately selfish?
+- Why did Plato abandon the healthy city and go for the luxurious city?
+- Do you agree with the principle of specialization?
+*** Week 2 Thursday - The noble lie's preempt: censorship and the arts
+- Does the effect of harmful representations depend on the medium or on the spectator?
+- Should we censor content or educate spectators? Are there limits to how much spectators can be educated?
+- What ensures that the censors are always right? How should we make trade-offs between individual  freedom and social harmony?
+- Does music have objective ethical effects?
+*** Week 3 Thursday - The Noble Lie
+- Is the noble lie a necessary evil? Or is it optional?
+- Will the guardians believe in the noble lie?
+- Is the city a utilitarian calculus? Are we enjoying at the cost of sacrificing
+  a minority (the guardians)?
+- Inequality and leadership? Compared to Singapore, where ministers are paid handsomely?
+*** Week 4 Monday - Kallipolis Social arrangements
+This week is about more's treatment of women, love/marriage, children, and eugenics.
+- Is Plato a feminist?
+- How does Plato decide what is a "best" person and hence suitable for reproduction?
+- The abolition of the nuclear family
+*** Week 4 Thursday
+Book 1 of Utopia: How thieves are dealt with, and society in Europe at that time.
+- Book 1 as a political commentary, written to contexualise the second book
+- Tallstoria: thieves forced into labour
+- The ethics of penal labor - is it ethical?
+  - It does not deal with the root cause of feudal landowners
+*** Week 5 Monday
+* Week 6 Thursday - Cinnamonia
+** Political
+*** Decentrailzed government by a few constitutional laws
+*** The rest have their own laws, and may the best system emerge victorious
+Like the religious system in Utopia
+*** Cons: hard to reconcile, for example gun laws in US
+** Economic
+*** Dual-tier
+**** Necessities are paid for
+Instead of money, give them electricity, food, water, shelter etc (Universal
+Basic Services)
+**** More work more pay
+However it is hard to regulate how long they work for different professions
+**** Cons
+However the best states will attract the most citizens, like US states
+which might cause overpopulation due to the freedom of movement
+** Community, Health, Family
+*** Do what you are good at
+and leave the rest for AI. If AI is good enough, it can do most of the jobs, and
+people can choose what they wanna do
+*** Nuclear family
+*** Conflict between state intervention and personal freedom/liberty
+Which is a problem in Utopia, since we would imagine both in an ideal city
+**** Possible solution:
+With sufficient education for people to think rationally, and choose the best
+option for them.
+** Tech and sustainability
+Both of these need education/noble lie from young, since we are very idealistic
+in forming our policies
+*** Sustainable energy
+*** Sharing of technology - Open Source

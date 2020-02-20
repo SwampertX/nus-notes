@@ -1,0 +1,45 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb}
+
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\title{MA2108S Cheatsheet}
+\author{Tan Yee Jian}
+\date{11 February 2020}
+
+\begin{document}
+  \maketitle
+  \section{Real Number System}
+  \section{Sequences}
+  \subsection{Theorems}
+  \begin{enumerate}
+    \item{Cauchy $\iff$ Convergent $\implies$ Bounded}.\\
+      $(a_n)_{n=1}^{\infty}$
+  \end{enumerate}
+  \section{Series}
+    \subsection{Definitions}
+    \subsection{Theorems}
+    \begin{enumerate}
+      \item{If $\sum\limits_{n=1}^{\infty}{a_n} $ converges, them $\lim_{n \to \infty} a_n  = 0$}
+      \item{If $a_n$ is non-negative, then
+          $\sum\limits_{n=1}^{\infty}{a_n}$ converges \textbf{if and only if }
+          $s_n = \sum\limits_{k=1}^{n}{a_n}$ is bounded.}
+      \item{}
+    \end{enumerate}
+\end{document}

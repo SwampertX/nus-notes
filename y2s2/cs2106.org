@@ -1,0 +1,88 @@
+#+TITLE: CS2106 Operating Systems
+* Lecture 6 IPC, Threads
+** Archipelago Q&A
+1. Why not set the Time Quantum to the Interval of Timer Interrupt, since that
+   is the only important time to run the scheduler?
+   A: ITI is hardware specific, and QT is set by kernel.
+2. If there is only one job in RR, then will there be context switch every TQ
+   before the job ends?
+   A: No, but some stack will still be saved upon the running of the Interrupt Routine.
+** Inter-process Communication
+Mechanisms:
+*** Shared memory
+*** Message passing
+Can be either *Blocking* or *Non-blocking*.
+**** Receiver
+Blocking receive is the most common
+**** Sender
+***** Asynchronous
+Even asynchronous can be blocking, since the mailbox(buffer) can be full.
+If sent before receiver calls =receive=, is blocked until the receiver receives
+the message using the =receive= function call.
+***** Synchronous
+Also known as *Rendezvous*, since both process have to meet at a known point in time.
+There is no immediate buffering, the sender have to be blocked until the
+receiver is ready.
+**** Pros and Cons
+***** Pros
+- Can send across different machines
+- Cross-platform, as long as message is standard
+- Easier synchronization
+***** Cons
+- Inefficient
+- Messages are limited in size and format
+*** Pipes (Unix)
+One of the earliest UPC mechanism
+- FIFO
+- Blocking
+  - Writers wait when buffer is full
+  - Readers wait when buffer is empty
+*** Signal (Unix)
+*SIGH\**, programs which receive that either handle it with it's own handlers, or
+ use the default handlers given by the system.
+** Threads
+*Motivation*: Processes are
+- heavy/expensive
+- hard to context switch
+- IPC is hard, since each process have independent memory space
+and threads can help us with
+- achieving multi-core programming
+- even on 1 core, we can move I/O intensive tasks to a thread to prevent
+  blocking, and enable doing some other CPU tasks at the main process
+
+*Brain teaser: would we want to run two threads with exact same code?*
+Answer: Yes, probably on different data. Egg. searching for a number in an
+array - data-centric parallelization
+
+What can Threads share?
+- GPR - No. They will interfere with one another
+- Special registers - No
+- Text segment - Yes
+- Data segment - Yes
+- Heap - Yes
+- Stack - No. Different fn calls
+- PID - Yes
+- Files - Yes
+- Instruction cache - not relevant
+- Data cache - not relevant
+
+In short, anything other than *Stack and Registers* are shared.
+    Threads can be implemented as User or Kernel threads, the former cannot
+    utilize multiple cores, and the latter can.
+*** User Thread
+A user process A spawns multiple threads A1, A2,... and the OS deems A as just
+one thread.
+- Advantages:
+  - Any OS
+  - Thread operations are library calls
+  - Can design your own thread scheduling policy
+- Disadvantages:
+  - Cannot exploit multiple cores
+
+*** Kernel Thread
+- Advantages:
+  - Can run on multiple CPUs!
+- Disadvantages:
+  - Now thread operations are system calls, and is more expensive
+  - If thread operations are too feature intensive, it becomes very heavy to
+    run, and too feature-poor for the converse

@@ -1,0 +1,32 @@
+#+TITLE: CS2105 Tutorial 3
+1. Network diagnostic tool
+   1. =POST=
+   2. =POST= sends data to server, while =GET= fetches data from server
+    HTTP is always Action on Resource: =GET <URL>= etc
+    =POST= usually sends a form, with data for server to, hopefully save somewhere
+2. Not sure
+3. TCP needs to establish connection with server before sending. *TCPEchoClient*
+   will end because it cannot create a socket without a receiving server.
+
+   On the other hand, *UDPEchoClient* just fires datagrams mindlessly and when
+   the server comes online, response will be received from the server.
+
+   *TCP* is a *connection-oriented* protocol, while *UDP* is a *connectionless* protocol
+  
+4. The Datagram headers contain the source IP and ports, so the server can distinguish
+   the datagrams from different hosts that way.
+
+5. =01011100= +
+   =01100101= =
+   =11000001= has 1s complement =00111110=
+
+   =11011010= +
+   =01100101= =
+   =100111111= overflows to =01000000= has 1s complement =10111111=
+6. No. It can correspond to overflown values too, where =01000000= can be a sum
+   of the 2 numbers as in question 5 part 2, it can also be the sum of
+   =00000000= and =01000000= which are corrupted inputs.
+7. We can accidentally ack the wrong package due to delay in receiving the message.
+
+   In a simpler case, if we don't have a sequence number, the sender cannot tell
+   if a packet is a duplicated one or not.

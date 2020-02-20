@@ -1,0 +1,32 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb}
+
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\title{Lecture 8}
+\author{Tan Yee Jian}
+\date{07 February 2020}
+
+\begin{document}
+    \maketitle
+    \fbox{Theorem} Suppose that $\sum\limits_{n=1}^{\infty}{a_n} $ is conditionally convergent. Then $\forall L \in \mathbb{R}, \exists$
+    rearrangement of $\sum\limits_{n=1}^{\infty}{a_n}$  that converges to L.
+
+    \underline{Proof} Let $x_1$ be the smallest natural number such that $p_1 + \dots + pn_1 > L$.
+\end{document}
