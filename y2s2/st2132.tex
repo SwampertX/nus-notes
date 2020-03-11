@@ -1,0 +1,84 @@
+% Created 2020-03-11 Wed 09:46
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[theorem]
+\newtheorem{note}{Note}[theorem]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{observation}{Observation}[section]
+\author{Tan Yee Jian}
+\date{\today}
+\title{ST2131 Mathematical Statistics}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={ST2131 Mathematical Statistics},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.90 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Chapter 4 Parameter Estimation}
+\label{sec:org961607a}
+\subsection{Standard Error}
+\label{sec:org56fe284}
+SE = SD(sample mean)
+\section{Chapter 6 Hypothesis Testing}
+\label{sec:orgced21f8}
+
+
+\subsection{The Neymann-Pearson Paradigm}
+\label{sec:org65f1871}
+\begin{definition}[Statistical Hypothesis]
+
+\uline{Statistical hypothesis} is an assertion/conjecture about the distribution of
+one or more random RVs.
+
+\uline{Simple hypothesis}: a SH that completely specifies the distribution
+
+\uline{Complex hypothesis}: otherwise
+\end{definition}
+
+\begin{definition}[Null & Alternative Hypotheses]
+When deciding which of two hypothesis is true, the \textbf{first} is called the \uline{null
+hypothesis \(H_0\)}, and the \textbf{other}, \uline{alternative hypothesis \(H_A\) or \(H_1\)}
+
+The decision rule is based on a \uline{test statistic}.
+\end{definition}
+
+\begin{definition}[Type I & Type II errors]
+The decision rule has typically 2 possible conclusions: \textbf{reject, or do not
+reject} \(H_0\).
+
+\uline{Type I error:} rejecting \(H_0\) when it is true. The probability of this is
+called \uline{significance level} of the test, \(\alpha\).
+
+\uline{Type II error:} \textbf{accepting} (do not reject) \(H_0\) when it is false. Probability
+of this is \(\beta\). \uline{Power of the test} is probability of \textbf{rejecting} \(H_0\)
+when it is false, \(1-\beta\).
+\end{definition}
+
+\begin{ex}[Egg Tarts - Normal]
+Egg tarts weigh, in grams \(N(40, 2^2)\) when made by chefs, but \(N(43, 2^2)\)
+when made by a trainee. Given the weight of tarts, is the trainee working today?
+\end{ex}
+\end{document}

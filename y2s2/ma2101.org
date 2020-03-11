@@ -1,0 +1,12 @@
+#+TITLE: MA2101 Linear Algebra II
+* Week 7 Monday Lecture
+** Definition
+Let A and B be two n \(\times\) n matrices over the field \(\mathbb{F}\). We say
+B
+*is similar to A over \(\mathbb{F}\)*
+if there is an invertible n \(\times\) n matrix P such that
+\(B = P^{-1}AP\)
+Moreover, by Theorem 2.8.2, if A and B represent the same linear operator T,
+then they must be similar.
+** Proposition: The determinant of a linear transformation
+Let \(T:V\rightarrowV\) be a linear operator. Let \(\mathcal{}\)

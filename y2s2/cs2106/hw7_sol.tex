@@ -1,0 +1,136 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[outputdir=tmp]{minted}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+
+\title{CS2106 Homework 7}
+\author{Tan Yee Jian}
+\date{10 March 2020}
+
+\begin{document}
+\maketitle
+
+I shall first present the solution, and then prove its correctness.
+
+\section{Solution}
+For the implementation without count:
+\begin{minted}{py}
+  mutex1 = Semaphore(1)
+  mutex2 = Semaphore(1)
+  notFull = Semaphore(K)
+  notEmpty = Semaphore(0)
+  in=0
+  out=0
+\end{minted}
+
+For the one with count, the declarations are already given in the slides.
+It is just the above code snippet with the below:
+
+\begin{minted}{py}
+  count = 0
+\end{minted}
+
+\section{Proof of correctness}
+\begin{prop}
+  We claim that this initialization, with the implementation rids the program
+  of:
+  \begin{enumerate}
+    \item Race Condition
+    \item Deadlock
+    \item Starvation
+    \item Indexing error
+  \end{enumerate}
+\end{prop}
+\begin{proof} (correctness)
+  \begin{enumerate}
+    \item {
+        Race condition is eliminated by the semaphores \verb|notFull| and
+        \verb|notEmpty|.
+
+        Mutex2 guards against multiple consumers consuming at once, while
+        Mutex1 prevents multiple producers producing at once.
+
+        Two threads can fetch and write to the buffer concurrently, but we
+        have the following constraint:
+        \[ in \geq out \]
+
+        To show this, we note the following properties:
+        \begin{enumerate}
+          \item The circular buffer can be thought of as an infinite buffer
+            (due to the wraparound property), and with an active window of
+            maximum width \verb|K|.
+          \item $in \geq notEmpty \geq consumersRan \geq out$
+        \end{enumerate}
+
+        The buffer has an active window of at most K since at most K items
+        can be produced before producers are blocked. For each item consumed,
+        exactly one producer is allowed to produce, giving us the invariance:
+        \[ \#items = 0 + produced - consumed \]
+
+        In a producer thread, \verb|in| is incremented before notEmpty is
+        signalled. Since both are initialized to 0, we must have
+        $in \geq notEmpty$.
+
+        But also consumers can only run if not blocked by the \verb|notEmpty|
+        semaphore, thus the second inequality.
+
+        The \verb|out| variable is incremented only if a consumer thread is ran,
+        and that gives us the last equality.
+      }
+
+    \item {
+        Deadlock occurs if two semaphores are 0 at the same time, namely
+        \verb|notEmpty| and \verb|notFull|.
+
+        This is impossible in our case since we have invariance:
+        \[ notEmpty + notFull = K \neq 0 \]
+
+        If a producer (consumer) is called, it first decrements \verb|notEmpty|
+        (\verb|notFull|), and eventually increments \verb|notFull|
+        (\verb|notEmpty|). Thus we have the invariance.
+      }
+    \item {
+        Starvation occurs if one process perpetually does not get to run. This
+        does not happen because of the invariance in the previous bullet point,
+        and as long as one thread runs, it allows an opposing thread to run.
+      }
+    \item {
+        Indexing errors are guaranteed not to happen even if mutexes 1 and 2
+        are different, given by an inequality we showed before:
+        \[
+          in \geq notEmpty \geq consumersRan \geq out
+        \]
+
+        Alongside with the property that the "infinte buffer" has an active
+        window of at most K, no overwrites can happen. Since $in \geq out$,
+        the window cannot be of negative length, ie the consumer will not
+        be consuming empty item.
+      }
+  \end{enumerate}
+\end{proof}
+\end{document}

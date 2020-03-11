@@ -1,2 +1,95 @@
 #+TITLE: CS2105 Computer Networking
+* Tutorial 4
+1. Yes, if we use the reliable transfer protocol as discussed.
+   The latest version of RDT:
+   Sender:
+   1. Sends packets with numbering
+   2. =PKT0= would expect =ACK0=
+   3. Has a timer to account for packet lost: if time elapsed but no ack, resend
+      the package
+   4. Against packet corruption: if ack is corrupted, resend the package, since
+      the corrupted ack could be "i received" or "i havent"
 
+   Receiver:
+   1. Passively receives. If receive a complete packet of =PKTn=, sends back
+      =ACKn=.
+   2. If =PKTn= is corrupted, =ACKn-1= to prompt sender to resend =PKTn=
+2. (Wrong solution, one by one)
+   Recall RDT3.0 only numbers packets (and acks) with 0 and 1.
+   1.
+      1. Sender sends =PKT0= then =PKT1=.
+      2. Receiver gets both in order, and sends out =ACK0= then =ACK1=.
+      3. (Jumble) Sender gets =ACK1=, realizes =PKT0= is not yet acked.
+      4. Sender resends =PKT0=.
+      5. Receiver gets =PKT0=, but thought it is the third package in order. Things
+         are already messed up.
+   2. Correction: (Use timeout)
+      1. =PKT0= takes very long
+      2. Timeout on client. =PKT0=
+      3. =ACK0=
+      4. =PKT1=
+      5. =ACK1=
+      6. Now the old =PKT0= arrives. mistaken
+3. Add a timestamp, or greater numbering
+   (Below is wrong answer)
+   *Go-back N*:
+   - Client: I have a window
+     - if gets =ACK= *less than* my window, then ignore (cumulative ack)
+     - else if it is *greater than* my window, move the window to one after the ack
+   - Server: my latest ack is *N*.
+     - if gets =PKT= *less than* N, then ignore and send =ACKN=
+     - else if it is *greater than* N, still send =ACKN=
+
+   *Selective repeat*:
+   In selective repeat, Server always have a more updated window
+   - Client: I have a window, a to b
+     - if gets =ACK= *less than* a, then ignore (cumulative ack)
+     - impossible to get ack more than b: I do not send packet outside of my
+       window. or don't care
+   - Server: I have a window a to b
+     - if gets =PKT= *less than* a, ignore
+     - else if it is *greater than* b, ignore
+4. (8,9), (6,5)
+   *Go-back N*:
+   Discards packets
+   Only relies on timer to resend. (Why cumulative ACK doesn't have any effect?)
+   - =PKT0,1,2,3=
+   - =ACK0=
+   - =PKT4=
+   - Since =PKT1= timeouts, =PKT1,2,3,4=
+   - =ACK0= when =PKT4= received since =PKT1= is missing
+   - =ACK1,2,3,4=
+   *Selective repeat*:
+   In selective repeat, Server always have a more updated window
+   - Client: I have a window, a to b
+     - if gets =ACK= *less than* a, then ignore (cumulative ack)
+     - impossible to get ack more than b: I do not send packet outside of my
+       window. or don't care
+   - Server: I have a window a to b
+     - if gets =PKT= *less than* a, ignore
+     - else if it is *greater than* b, ignore
+5. 92-65 = 27. 92
+6. Max L = 2^32
+   Size of of packet = (64 + 512)*8 bits
+   no of packet = L/512 = 2^27
+   Speed = 155 * 10^6 bps
+** Recap
+*** RDT1.0 - No loss/corrupt
+Just send, no need feedback
+*** RDT2.0 - No loss, but can corrupt
+ACK/NAK to signal good/bad
+*** RDT2.1 - No loss, but can corrupt
+NAK-free by acking the last valid packet
+*** RDT3.0 - Loss/corrupt
+Using timer to gauge loss
+Timer duration = slightly bigger than RTT
+\[RTT_{n} = \alpha RTT_{actual} + (1 - \alpha) RTT_{n-1}\]
+*** Go-Back N
+Relies on 1 timer every pipeline. if the timer expire, pick up the latest ack
+and send N
+*** Selective repeat
+*** TCP
+**** Sequence number
+is the byte number of the first byte in the file
+**** Ack number
+is the byte number receiver is expecting

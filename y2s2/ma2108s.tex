@@ -1,0 +1,192 @@
+% Created 2020-03-06 Fri 23:57
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Tan Yee Jian}
+\date{\today}
+\title{MA2108S Week 7 Assignment}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={MA2108S Week 7 Assignment},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.90 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\begin{enumerate}
+\item Since \textbf{(b)} would imply the forward direction in \textbf{(a)}, I will first prove \textbf{(b)}.
+
+\textbf{(b)} We want to show that \(U\) is open and \(U \subseteq E\).
+
+Since, by definition, \(\overline{(E')}\) is closed, \(U = \overline{(E')}'\)
+is open.
+
+Now we are left to show that \(U \subseteq E\). By contradiction, for any
+\(x \in U\), we assume that \(x \notin E\). Then
+\[
+   x \in E' \implies x \in \overline{(E')} = U'
+   \]
+A contradiction, as \(x\) cannot be in both \(U\) and \(U'\). Therefore \(U =
+   \overline{(E')}'\). \(\square\)
+
+(a) Let us first prove the forward direction.
+
+(\(\implies\)) Since \(U\) is an open set, there must exist an \(r > 0\) such
+that \(B[x,r] \subseteq U \subseteq \E\). \(\square\)
+
+(\(\impliedby\)) Now we are done with the forward direction, we shall prove that for any
+\(x\),
+\[
+   \exists r, B[x,r] \subseteq E \implies x \in U
+   \].
+
+We show the contrapositive, \(x \notin U \implies \forall r, B[x,r]
+   \nsubseteq E\).
+
+Then \(x \in U'\). Since \(U \subseteq E\) by the previous part, either
+\(x \in (E - U)\) or \(x \in E'\). The latter case is obvious since if that
+is true,
+\[ x \in B[x,r] \notin E \] and clearly the ball is not fully contained by E.
+
+Otherwise, we must have \(x \in E - U\). Since \(x \in U' = \overline{(E')}\) which is a
+closed set, then either \(x \in E'\) (which is impossible), or \(x\) is a
+cluster point of \(E'\).
+
+By the definition of cluster point,
+\[
+   \forall r > 0, \exists y \in B[x,r] \quad \text{such that} \quad y \in E'
+   \].
+
+Thus some part of the ball must always be in \(E'\), which gives the result.
+\(\square\)
+
+(c) Given \(O\) is open, then by definition,
+\[
+   \forall x \in O, \exists r, B[x,r] \subseteq O \subseteq E
+   \].
+
+by 1(a), we have \(x\) must be in \(U\) as well, since every element of O
+must be contained by \(U\), \(O \subseteq U\). \(\square\)
+
+\item We first show a lemma:
+
+\textbf{Lemma}: \(S, T\) are subsets of metric space \(<M, \rho>\). If
+\(S \subseteq \overline{T}\), then \(\overline{S} \subseteq \overline{T}\).
+
+\uline{Proof of Lemma:}
+
+Clearly, if \(S\) is closed, then \(\overline{S} = \overline{T}\).
+Otherwise, then we just consider whether the cluster points of \(S\) are in
+\(\overline{T}\).
+Suppose \(x\) is a cluster point of S, then by definition,
+\[
+   B[x, r] \cap S \neq \emptyset
+   \]
+and thus,
+\[
+   B[x, r] \cap T \supseteq S \neq \emptyset
+   \]
+\(x\) is a cluster point of T too, and thus is in \(\overline{T}\). \(\square\)
+
+Now we shall proceed with the proof.
+
+(\(\implies\)) We first have \(f(A) \subseteq \overline{f(A)}\). Then looking
+at preimages of both sets,
+\[
+   A \subseteq f^{-1}(f(A)) \subseteq f^{-1}(\overline{f(A)})
+   \]
+And since \(f\) is continuous, \(\overline{f(A)}\) is closed \(\implies
+   f^{-1}(\overline{f(A)})\) is closed.
+
+Since we have \(A \subseteq f^{-1}(\overline{f(A)})\), where RHS is a closed set,
+by the lemma, this implies
+\[
+   \overline{A} \subseteq f^{-1}(\overline{f(A)})
+   \]
+And taking the images of both sets, we have
+ \[f(\overline{A}) \subseteq \overline{f(A)}\] \(\square\)
+
+(\(\impliedby\)) Given that \[f(\overline{A}) \subseteq \overline{f(A)}\], we
+wish to show that if we have a closed set \(V \subseteq M_2\), then
+\(f^{-1}(V)\) is also closed.
+
+By the assumption, we have
+\[
+   f(\overline{f^{-1}(V)}) \subseteq \overline{f(f^{-1}(V))}
+   \]
+and since \(f\) need not be injective,
+\[
+   f(\overline{f^{-1}(V)}) \subseteq \overline{f(f^{-1}(V))} \subseteq
+   \overline{V} = V
+   \]
+since V is defined as closed.
+
+We then have
+\[
+   f(\overline{f^{-1}(V)}) \subseteq V
+   \]
+which, considering their preimages,
+\[
+   \overline{f^{-1}(V)} \subseteq f^{-1}(V)
+   \]
+
+By definition, \(\overline{f^{-1}(V)} = (\{\text{cluster points of V}\} \cup f^{-1}(V))
+   \subseteq f^{-1}(V)\),
+which implies \(f^{-1}(V)\) contains all its cluster points. Thus
+\(f^{-1}(V)\) is closed. \(\square\)
+
+\item Set \(a\) such that \(a > f(x) + \epsilon\) for some \(\epsilon > 0\) and \(x
+   \in f^{-1}(-\infty, a)\) naturally.
+
+Then since \(f^{-1}(-\infty, a)\) is open,
+\[
+   \exists r > 0 \quad \text{such that} \quad B[x, r] \subseteq f^{-1}(-\infty, a)
+   \]
+Since it is known that \((x_n)^\infty_{n=1}\) converges, then given \(r\) as
+defined above, there is an \(N \in \mathbb{N}\) such that for all \(n \geq
+   N\),
+\[
+   \rho(x_n, x) < r \quad \forall n \geq \mathbb{N}
+   \].
+
+Since we now have
+\[
+   x_N, x_{N+1}, \dots \in B[x,r] \subseteq f^{-1}(-\infty, a)
+   \]
+
+and since \(f\) is upper-semicontinuous,
+\[
+   f(x_N), f(x_{N+1}), \dots < a
+   \]
+
+Consider \(M_k = sup\{f(x_N), f(x_{N+1}), \dots \} < a\). Thus,
+\[
+   \lim_{k \rightarrow \infty} M_k < a \implies
+   \limsup_{k \rightarrow \infty} f(x_n) < a = f(x) + \epsilon
+   \]
+
+Now, for every epsilon given, we can find an \(a\), and thus \(N\) such that
+the previous statement is true. Given by Exercise 2.2 Question 2 in
+\emph{Goldberg},
+\[
+   \limsup_{k \rightarrow \infty} f(x_n) < f(x) + \epsilon
+   \implies
+   \limsup_{k \rightarrow \infty} f(x_n) < f(x)
+   \]
+\(\square\)
+\end{enumerate}
+\end{document}

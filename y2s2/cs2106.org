@@ -86,3 +86,238 @@ one thread.
   - Now thread operations are system calls, and is more expensive
   - If thread operations are too feature intensive, it becomes very heavy to
     run, and too feature-poor for the converse
+* --- Uncle Soo >> Djordje ---
+* Lecture 6 Synchronization
+** Race Condition
+Reason: each operation is a few machine instructions which can interleave
+Solution: designate section that will race, as *Critical Section*
+- Only one process can run in the CS
+*** The Toilet Analogy
+You want toilet to be a Critical Section: only one person (process/thread) can
+be in it
+Therefore, it should have 4 properties:
+1. Mutual Exclusion
+   Only one guy in the toilet
+2. Progress
+   If no one is in toilet, one of the queuing guy can use
+3. Bounded Wait
+   If you are queuing, your waiting time is bounded
+4. Independence
+   If you are not anywhere near the toilet, you can not block (book) it
+*** Bad Synchronization
+The "meet each other in corridor" analogy
+**** Deadlock
+Both insist walking on the same side of corridor
+**** Livelock
+Both switch sides together to "make way", end up blocking each other
+**** Starvation
+Some people never get to pass through the corridor
+*** Critical Section Implementations
+#+BEGIN_SRC python3
+EnterCS()
+# do something dangerous
+ExitCS()
+#+END_SRC
+*And we wish to implement =EnterCS()= and =ExitCS()=.*
+**** Assembly level Implementation
+A =TestAndSet= instruction which
+1. Fetches memory from a Lock to a register
+2. Set the content of the memory to =1=
+all in one instruction.
+#+BEGIN_SRC C
+void EnterCS(int* Lock) {
+    // loop until lock is free, ie == 1
+    while (TestAndSet(Lock) == 1);
+}
+
+/*Do CS Stuff Here*/
+
+void ExitCS(int* Lock) { *Lock = 0; }
+// exit by setting lock free
+
+#+END_SRC
+***** Criteria check - Passed!
+1. Mutual Exclusion - *Yes*
+   The lock is 0 or 1
+2. Progress - *Yes*
+   The lock is 0 then others can use
+3. Bounded Wait - *Depends*
+   Only possible if scheduling is fair - other processes get to use the lock
+4. Independence - *Yes*
+***** Catches
+Busy Waiting - due to the while loop when waiting to use the lock
+**** High-level language Implementation
+***** Attempt 1 - Violates Mutual Exclusion
+We first notice that setting a Lock to 0 for free, and 1 for locked does not
+work - because *checking and setting locks are multiple instructions*.
+This will allow the /Mutual Exclusion/ requirement to fail, since multiple
+process perceive the lock as free.
+*lousy solution*: disable interrupts, hence only one process at a time. /But
+this disables the scheduler/!
+***** Attempt 2 - Violates Independence
+Now the Lock value determines which process can use:
+if A and B wants to use the CS, 1 represents A use, and 0 represents B use.
+*Problem*: this violates the /Independence/ property.
+***** Attempt 3 - Deadlock
+#+BEGIN_SRC C
+want[myId] = 1;
+while (want[otherId] == 1);
+// CS code
+want[myId] = 0;
+#+END_SRC
+Problem: What if both =myId= and =otherId= are both 1 (ie, they both want to
+use)?
+Answer: They will both wait for each other to give up (via the while loop),
+which will not happen
+***** Peterson's Algorithm
+Combining Attempt 2 and 3:
+Recall Attempt 3's problem: Both let each other run
+We add a "Judge" variable: =Turn=
+We will only wait when the other process wants to run and does not let me run
+
+=Turn= variable gives "priority" to a process, so the deadlock in Attempt 3 will
+not happen
+***** Criteria check - Passed (Peterson)
+1. Mutual Exclusion - *Yes*
+   Determined by =Turn= variable - it can only be one value at a time
+2. Progress - *Yes*
+   Resets =Want[myId]= when coming out of the CS
+3. Bounded Wait - *Depends*
+   If scheduling is fair
+4. Independence - *Yes*
+   complements =want[myId]= with a =Turn= variable to facilitate switching
+***** Peterson's Algorithm: Disadvantages
+- Busy Waiting
+- Low-Level
+- 2 processes only
+**** High-level abstraction, implemented as Assembly
+By Dijkstra
+***** Semaphore
+A generalized synchronization mechanism. Is a specification, rather than
+implementation.
+A Semaphore is a Data Structure that contains:
+- An integer value =S=
+- A queue of processes
+and it supports two functions to be called by processes/threads:
+1. =Wait(sem)= (=Down(sem)=)
+   - If =S= <= 0, then wait in the queue until =S= > 0 and then decrement and
+     continue executing
+   - Else, decrement =S= and continue executing
+2. =Signal(sem)= (=Up(sem)=)
+  =S++=. Wake up =S= processes
+****** Properties
+Given \(S_{initial} \geq 0\), then \(S_{current} = S_{initial} + \#signal(S) -
+\#wait(s)\) is an invariant.
+Where
+- \(#signal(S)\) = no. of =signal()= executed, and
+- \(#wait(S)\) = no. of =wait()= *completed*
+****** Proof that Semaphore eliminates Deadlock and Starvation
+***** Criteria check
+1. Mutual Exclusion
+2. Progress
+3. Bounded Wait
+4. Independence
+** Classical Synchronization Problems
+*** Producer Consumer
+**** Specification
+- Processes share a bounded buffer (fixed size array, or stack) of size *K*
+- *Producers* insert to the end of buffer if items < K
+- *Consumer* remove item from the end if items > 0
+*** Readers Writers
+**** Specification
+Processes share a data structure D
+*Writer* must have *exclusive* access to D
+*Reader* can read with other readers *concurrently*
+* Tutorial 5
+** Question 1
+1. Process, since we sometimes want to detach the running program when shell exits.
+   - protects, acts as a sandbox for programs running
+   - does not need to share memory space
+2. Process? There is no need to share the heap
+   - same as previous, need to protect separate memory space
+3. Thread. Share the heap, and many entities, process is too heavy
+   - IPC has higher overhead
+4. Thread would be fine, as they can share cache of some sort in-memory
+** Question 2
+- We list down the instructions:
+  1. Load, inc, store
+  2. Load, inc, store. label these (1-6),
+  3. Load, mult, store. label these 7-9.
+- 1-6 and 7-9 are sequential. then equivalent to 9 choose 3. 84 scenarios
+- Ignoring operations, we have 6C2 = 15 scenarios
+- Listing them:
+  | sequence | outcome | notes |
+  |----------+---------+-------|
+  |   123456 | 2*2 = 4 |       |
+  |   123546 |       2 |       |
+  |   125346 |       2 |       |
+  |   152346 |       0 |       |
+  |   512346 |       0 |       |
+  |   123564 |       1 |       |
+  |   125364 |       2 |       |
+  |   152364 |       2 |       |
+  |   512364 |         |       |
+  |   125634 |         |       |
+  |   152634 |         |       |
+  |   512634 |         |       |
+  |   156234 |         |       |
+  |   516234 |         |       |
+  |   561234 |         |       |
+  0, 1, 2, 3, 4 are possible
+** Question 3
+Yes it would avoid, since only the current thread/process can run without
+interrupt, but it can never be killed
+- does not work in multicore
+- might not have privilege to disable
+- if disable timer -
+** Question 4
+S1 = 1, S2 = 0
+Therefore A must be blocked and can only happen after C.
+B and C can happen freely. then
+BCA, CAB, CBA are possible ones
+** Question 5
+#+BEGIN_SRC C
+int arrived = 0;
+Semaphore mutex = 1;
+Semaphore waitQ = 0;
+
+void Barrier(N) {
+    wait(mutex);
+    arrived++;
+    signal(mutex);
+
+    // everyone steps pass this except for the nth
+    if(arrived == N)
+        signal(waitQ); // CRUCIAL
+
+    // N - 1 has called this and waits in the queue
+    wait(waitQ);
+
+    // crucial happens. then first process goes below and releases the second
+    // continues until all N go through
+    signal(waitQ);
+}
+#+END_SRC
+This barrier is un-reusable.
+** Question 6
+in =GeneralWait()= :
+if two processes have not reached =wait(queue)=
+then count = -2, mutex =
+but two
+* Lecture 7 Memory Management
+** Recap - memory usage of process
+- *Text* for instructions
+- *Data* for global variables
+- *Heap* for dynamic allocation
+- *Stack* for function invocations
+** Summary
+- *Source code to Executable* - memory locations are relative
+- *Executable to Actual Process* - OS loads and run into memory
+Topics to explore:
+1. Memory Abstraction
+2. Contiguous Memory Allocation
+   allocating chunks of memory
+3. Disjoint Memory Allocation
+   like a linked list
+4. Virtual Memory Management
+   secondary storage (ie hard drive)

@@ -1,4 +1,0 @@
-#+TITLE: ST2131 Mathematical Statistics
-* Chapter 4 Parameter Estimation
-** Standard Error
-SE = SD(sample mean)
