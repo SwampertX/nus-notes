@@ -1,0 +1,173 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[a4paper, total={170mm,257mm}, left=20mm, top=20mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Tan Yee Jian (A0190190L)}
+\chead{MA2108S Homework 6}
+
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% \newcommand{\txt}[1]{\quad\text{#1}\quad}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+
+\title{MA2108S Homework 6}
+\author{Tan Yee Jian}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{enumerate}
+  \item \begin{proof} % q1
+      For the sake of contradiction, assume that
+      \[\forall d>0, \rho(x,y)<d\text{ for all }x\in E\text{ and all }y\in
+        F\].
+
+      Then let
+      \begin{gather*}
+        \rho(x_1,y_1) < 1\\
+        \rho(x_2,y_2) < \frac{1}{2}\\
+        \dots\\
+        \rho(x_n,y_n) < \frac{1}{n}\\
+      \end{gather*}
+
+      Since $E$ is compact, then the sequence $\seqn{x_n}$  has a convergent
+      subsequence, $\seqk{x_{n_k}}$, converging to a certain $x\in E$. We
+      claim that $\seqk{y_{n_k}}$ is also convergent to $x$. If this is true,
+      then since $F$ is closed, we have also $x\in F$. This then implies that
+      \[ x\in (E\cap F) \iff (E\cap F)\neq\emptyset \], a contradiction.
+
+      To prove that $\seqk{y_{n_k}}$ is convergent: let $\epsilon$ be given.
+      Then since $\seqk{x_{n_k}}$ is convergent,
+
+      \[ \exists N_1\in\mathbb{N} \text{ such that }\rho(x_{n_k}, x)
+        <\frac{\epsilon}{2}\text{ for any } n_k>N_1\].
+
+      Also, we can choose $N_2$ such that $ \frac{1}{N_2} <\frac{\epsilon}{2}
+      \iff N_2 > \frac{2}{\epsilon}$, which implies
+      \[ \rho(x_{n_k},y_{n_k}) < \frac{1}{n_k} \leq \frac{1}{N_2} <
+        \frac{\epsilon}{2} \].
+
+      Taking $N=\max\{N_1,N_2\}$, we have for any $n\geq N$,
+      \[ \rho(y_{n_k},x)\leq\rho(y_{n_k},x_{n_k}) + \rho(x_{n_k},x) <
+        \frac{\epsilon}{2}+\frac{\epsilon}{2}=\epsilon \]
+      which shows that $\lim_{k\rightarrow\infty}{y_{n_k}} = x$.
+    \end{proof}
+  \item \begin{enumerate}
+      \item \begin{proof} %q_2a
+          For any $\epsilon>0$, we can choose $\delta<\frac{\epsilon}{C}$, and
+          thus for any $x,y\in M_1$,
+          \begin{align*}
+            \rho_1(x,y)&<\delta<\frac{\epsilon}{C}\implies\\
+            \rho_2(f(x),f(y))&\leq C\rho_1(x,y)\\
+            &<C(\frac{\epsilon}{C})\\
+            &=\epsilon
+          \end{align*}
+          F is uniformly continuous.
+        \end{proof}
+      \item \begin{proof}
+          We use the fact that $g$ is uniformly continuous: take any
+          $\epsilon>0$, (for example $\epsilon=1$), then there is a $\delta>0$
+          such that
+          \[ |x-y|<\delta \implies |g(x)-g(y)|<\epsilon \].
+
+          I choose $r=\delta$, then we try to find $C$. If $|x-y|\geq r$, then
+          we can select $(n-1)$ "jumping points" from $x$ to $y$ in intervals of
+          $\delta/2$, such that between two consecutive points, it can satisfy
+          the uniform continuity. That is, without loss of generality, assume
+          $x<y$, then we select $x, (x+\frac{\delta}{2}), \dots,
+          (x+(n-1)\frac{\delta}{2}),y$, where $(n-1)\frac{\delta}{2}<|x-y|$ and
+          $\frac{n\delta}{2}\geq|x-y|$. By triangle inequality, we have
+
+          \begin{align*}
+            |g(x)-g(y)|&\leq|g(x)-g(x+\frac{\delta}{2})|
+            +|g(x+\frac{\delta}{2})-g(x+\frac{2\delta}{2})|+\dots\\
+            &\quad +|g(x+\frac{(n-1)\delta}{2})-g(y)|\\
+          \end{align*}
+
+          Since each of the terms are at most $\frac{\delta}{2}$ apart, and we
+          have
+          \[(n-1)\frac{\delta}{2}<|x-y| \implies
+            n<\frac{2|x-y|+\delta}{\delta}\]
+          Thus
+          \begin{align*}
+            |g(x)-g(y)|&<n\epsilon\\
+            &<(\frac{2|x-y|+\delta}{\delta})\epsilon
+          .\end{align*}
+
+        Since $\delta=r\leq|x-y|$,
+
+        \begin{align*}
+          |g(x)-g(y)|
+          &<(\frac{2|x-y|+\delta}{\delta})\epsilon\\
+          &\leq(\frac{2|x-y|+|x-y|}{\delta})\epsilon\\
+          &=(\frac{3\epsilon}{\delta})|x-y|
+        \end{align*}
+
+        and there we have it, $C=\frac{3\epsilon}{\delta}$.
+      \end{proof}
+    \end{enumerate}
+  \item \begin{proof}
+      Yes, a uniformly convergent sequence of uniformly continuous function
+      would converge to a uniformly continuous function, and I will show that
+      using the "famous" $\epsilon/3$ argument.
+
+      Let $\epsilon>0$ be given. Then we want to show that
+      \begin{align*}
+        \rho_2(f(x),f(y))&\leq\rho_2(f(x), f_n(x))+\rho_2(f_n(x),f_n(y))+
+        \rho(f_n(y),f(y))\\&<\epsilon
+      \end{align*}
+
+      Using the given $\epsilon$, the uniform convergence of $\seqn{f_n}$ gives
+      us $N\in\mathbb{N}$ where
+      \[ \forall x\in M_1,\rho_2(f(x),f_n(x)) < \epsilon/3.\]
+
+      And similarly, using the given $\epsilon$ again, the uniform continuity of
+      $f:M_1\rightarrow M_2$ gives us $\delta>0$ such that
+      \[ \rho_1(x,y)<\delta \implies \rho_2(f_n(x),f_n(y)) < \epsilon/3.\]
+
+      Therefore,
+      \begin{align*}
+        \rho_2(f(x),f(y))&\leq\rho_2(f(x), f_n(x))+\rho_2(f_n(x),f_n(y))+
+        \rho(f_n(y),f(y))\\
+        &< \epsilon/3 + \epsilon/3 + \epsilon/3\\
+        &=\epsilon
+      \end{align*}
+      $\therefore f$ is uniformly continuous on $M_1$.
+  \end{proof}
+\end{enumerate}
+\end{document}

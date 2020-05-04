@@ -1,0 +1,424 @@
+\message{ !name(cheatsheet.tex)}\documentclass{article}
+
+\usepackage[a4paper,landscape,total={290mm,200mm}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{multicol}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+	\def\svgwidth{\columnwidth}
+	\import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\rightarrow\infty}}
+\newcommand{\ktoinf}{\limits_{k\rightarrow\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+
+\title{MA2108S Cheatsheet}
+\author{Tan Yee Jian}
+\date{\today}
+
+\begin{document}
+
+\message{ !name(cheatsheet.tex) !offset(-3) }
+
+
+\begin{center}
+	{\textbf{MA2108S Cheat sheet}}
+\end{center}
+
+\begin{multicols*}{3}
+	\section{The Real Number System}
+	\begin{enumerate}
+		\item \emph{Definition}: a \textbf{field} is the 5-tuple
+		      \(\langle\mathbb{F},+,\cdot,e,u\rangle\), where \(\mathbb{F}\) is a
+		      set containing at least the elements $e$ and $u$, where $e\neq u$,
+		      and satisfies: For any $a,b,c\in\mathbb{F}$,
+		      \begin{enumerate}
+			      \item (commutative add) $a+b=b+a$
+			      \item (associative add) $(a+b)+c=a+(b+c)$
+			      \item (additive identity) $a+e=a$
+			      \item (additive inverse) $\forall a,\exists b\in\mathbb{F}\text{
+					            such that } a+b=e.$
+			      \item (commutative multiply) $a\cdot b=b\cdot a$
+			      \item (associative multiply) $(a\cdot b)\cdot c=a\cdot (b\cdot c)$
+			      \item (multiplicative identity) $a\cdot u=a$
+			      \item (multiplicative inverse) $\forall a,\exists b\in\mathbb{F}
+				            \text{ such that } a\cdot b=u.$
+			      \item (distributive) $\forall a,b,c\in\mathbb{F},
+				            a\cdot(b+c)=a\cdot b+a\cdot c$
+		      \end{enumerate}
+
+		\item \emph{Example}: $\mathbb{Q}, \mathbb{N}, \mathbb{Z}, \mathbb{R},
+			      \mathbb{C}, \mathbb{R} -\mathbb{Q} $ are fields.
+		\item \emph{Definiton}: A field $\mathbb{F}$ is \textbf{ordered} if $\exists
+			      P\subseteq \mathbb{F}$ such that $\forall a,b\in P$,
+		      \begin{enumerate}
+			      \item $a+b\in P$
+			      \item $a\cdot b\in P$
+			      \item (trichotomy) either
+			            \begin{enumerate}
+				            \item $a\in P$
+				            \item $a=e$, or
+				            \item $-a\in P$
+			            \end{enumerate}
+			      \item $e\notin P$.
+		      \end{enumerate}
+
+		\item \emph{Theorem}: $a\in P\implies-a\notin P$.
+		\item \emph{Definiton}: if a subset of an ordered field, $A\subseteq\mathbb{F}$
+		      contains an element
+		      $a$ such that $\forall x\in \mathbb{F}, a\leq(\geq) x$, then
+		      $\mathbb{F}$ is \textbf{bounded below (above)}. Such $a$ is called
+		      an \textbf{lower (upper) bound} of $A$.
+
+		\item \emph{Definition}: if $\emptyset\neq A\subseteq \mathbb{F}$ is
+		      bounded above (below), an element $b$ is the \textbf{least upper
+			      (greatest lower) bound} if
+		      \begin{enumerate}
+			      \item $b$ is an upper(lower) bound of $A$ and
+			      \item $\forall c\in \mathbb{F}$ where c is an upper(lower) bound of
+			            $A$, $b\geq c(b\leq c)$.
+		      \end{enumerate}
+		      , denoted by $\sup A(\inf A)$ respectively.
+		\item \emph{Definition}: An ordered field $\mathbb{F}$ is \textbf{(order)
+			      complete} if it has the \textbf{least upper bound property}:
+		      $\forall \emptyset\neq A\subseteq\mathbb{F}$, if $A$ is bounded
+		      above, $A$ has a least upper bound.
+		\item \emph{Example}: $\mathbb{R}$ is order complete, but $\mathbb{Q}$
+		      is not.
+	\end{enumerate}
+
+	\section{Sequences of Real Numbers}
+	\begin{enumerate}
+		\item \emph{Definition}: A \textbf{sequence} in a set $S$ is a function,
+		      $f:\mathbb{N}\rightarrow S$, where we denote $f(n)=s_n$ for all $n\in
+			      \mathbb{N}$, and the sequence as $\seqn{s_n}$.
+
+		\item \emph{Definiton}: given a sequence $f:\mathbb{N}\rightarrow S$, a
+		      \textbf{subsequence} of $f$ is a sequence of the form $f\circ
+			      g:\mathbb{N}\rightarrow S$, where $g:\mathbb{N}\rightarrow\mathbb{N}$
+		      is strictly increasing. We write $\seqn{(f\circ g)(n)}=\seqn{s_{g(n)}}$.
+		\item \emph{Analogy}: We have a real sequence $\seqn{s_n}$. We claim
+		      that \underline{$L$ is the limit}. An opponent then issues a
+		      \underline{challenge $\epsilon$}. We need to be able to to any
+		      $\epsilon$ given with a $N$ such that all our terms after $N$,$(s_N,
+			      s_{N+1},s_{N+2},\dots)$ are all at most $\epsilon$ from $L$.
+
+		\item \emph{Definiton}: if $\lim\limits_{n\rightarrow\infty}s_n=L$
+		      holds then we say $\seqn{s_n}$ is \textbf{convergent}. Conversely,
+		      $\seqn{s_n}$ is \textbf{convergent} if
+		      there exists an $L\in\real$ such that $\seqn{s_n}$ converges to L.
+		\item \emph{Definition}: a sequence $\seqn{s_n}$ \textbf{diverges to
+			      $\infty$($-\infty$)} if $\forall M\in\real,\exists N\in\nat$ such
+		      than $s_n\geq M (s_n\leq M)$ for any $n\geq N$.
+		\item \emph{Proposition}: sequence is convergent $\implies$ \textbf{any
+			      subsequence} of that sequence is convergent.
+		\item \emph{Definition}: (properties of sequences) A sequence
+		      $\seqn{s_n}$ is
+		      \begin{enumerate}
+			      \item \textbf{bounded} if $\exists M\in\real,M>0$ such that
+			            $|s_n|\leq M$ for any $n>N$.
+			      \item \textbf{nondecreasing} if $s_n\leq s_{n+1}\quad\forall
+				            n\in\nat$.
+			      \item \textbf{nonincreasing} if $s_n\geq s_{n+1}\quad\forall
+				            n\in\nat$.
+			      \item \textbf{monotone} if it is either nondecreasing or
+			            nonincreasing.
+		      \end{enumerate}
+
+		\item \emph{Proposition}: bounded and nondecreasing(nonincreasing)
+		      $\implies$ convergent to its supremum (infimum).
+		\item \emph{Definition}: $\limn s_n=e(x)$. $e(x+y)=e(x)+e(y),e(0)=1$.
+		\item \emph{Theorem}: Every real sequence has a monotone subsequence.
+		      Therefore, every bounded sequence has a convergent subsequence.
+		\item \emph{Proposition}: If $c>1$, then $\limn{c_{1/n}}=1$.
+		\item \emph{Proposition}: A convergent sequence of non-negative numbers
+		      converge to a nonnegative number. Similarly, if all values of a
+		      sequence are greater than $k$, its limit is greater than $k$ too.
+		\item \emph{Theorem}: suppose $\limn s_n=L\in\real, \limn
+			      t_n=M\in\real$, and $C\in\real$. Then
+		      \begin{enumerate}
+			      \item $\limn(s_n+Ct_n)=L+CM$.
+			      \item $\limn(s_nt_n)=LM$.
+			      \item if $M\neq0$,then $\limn1/t_n=1/M$.
+		      \end{enumerate}
+		\item \emph{Definition}: Let $\seqn{s_n}$ be a real sequence. Then
+		      define \textbf{limit superior} \[\limsup\limits_{n\rightarrow\infty}=
+			      \begin{cases}
+				      \infty    & \text{if }\seqn{s_n}\text{ is not bounded above} \\
+				      \limn M_n & \text{if }\seqn{M_n}\text{ is bounded below}     \\
+				      -\infty   & \text{if }\seqn{M_n}\text{ is not bounded below} \\
+			      \end{cases}\]
+		      where $\seqn{M_k}=\sup\{s_k, s_{k+1},\dots\}$,
+		      and define \textbf{limit inferior}
+		      \[\liminf\limits_{n\rightarrow\infty}=
+			      \begin{cases}
+				      \infty    & \text{if }\seqn{s_n}\text{ is not bounded below} \\
+				      \limn M_n & \text{if }\seqn{M_n}\text{ is bounded above}     \\
+				      -\infty   & \text{if }\seqn{M_n}\text{ is not bounded above} \\
+			      \end{cases}\]
+		      where $\seqn{M_k}=\inf\{s_k, s_{k+1},\dots\}$.
+		\item \emph{Proposition}:
+		      $\limsup_{n\rightarrow\infty}s_n=L,\limsup_{n\rightarrow\infty}t_n=M$,
+		      where $L,M\in\real$, and the sequences are bounded,
+		      $\implies\limsup_{n\rightarrow\infty}(s_n+t_n)\leq L+M$.
+		\item \emph{Proposition}: for any sequence, $\liminf\leq\limsup$.
+		\item \emph{Proposition}: for any bounded sequence, $\limn s_n=L\iff
+			      \liminf\ntoinf s_n=\limsup\ntoinf s_n=L$.
+		\item \emph{Theorem}: given a bounded real sequence, there exist
+		      subsequences that converge to the \emph{limsup} and \emph{liminf}
+		      respectively. \emph{Any} convergent subsequence converges to at most
+		      the \emph{limsup}, and at least the \emph{liminf}. That is, for any
+		      subsequence $\seqk{s_{n_k}}$,
+		      $\liminf\ntoinf s_n\leq\limk{s_{n_k}}\leq\limsup\ntoinf s_n$.
+		\item \emph{Definition}: A sequence $\seqn{s_n}$ is \textbf{Cauchy} if
+		      $\forall\epsilon>0,\exists N\in\nat$ such that
+		      $\forall n,m\geq N,|s_n-s_m|<\epsilon$.
+		\item \emph{Theorem}: for real sequences, convergence $\iff$ Cauchy
+		      $\implies$ bounded.
+		\item \emph{Theorem}: for real sequences, convergence $\iff$ Cauchy
+		      $\implies$ bounded.
+		\item \emph{Nested Inverval Theorem}: Given $I_1\supseteq I_2\supseteq
+			      I_3\subseteq\dots$ are closed bounded intervals such that
+		      $\limn\diam I_n=0$. Then $\bigcup\limits_{n=1}^\infty I_n$ contains
+		      exactly one point.
+		\item \emph{Theorem}: There is no onto map $f:\nat\rightarrow[0,1]$. In
+		      other words, $[0,1]$ is uncountable.
+		\item \emph{Definition}: Given a real sequence $\seqn{s_n}$, define
+		      $\sigma_n=(s_1+s_2+\dots+s_n)/n,\forall n\in\nat$. We say
+		      $\seqn{s_n}$ is $(C,1)$ summable to $L\in\real$ if $\limn\sigma_n=L$.
+		\item \emph{Theorem (regularity)}: If a real sequence converges to $L$,
+		      then it is $(C,1)$ summable to $L$.
+	\end{enumerate}
+
+	\section{Series of Real Numbers}
+	\begin{enumerate}
+		\item \emph{Definition}: Given an \textbf{infinite series} $\infsrsn{a_n}$,
+		      define $s_k=a_1+a_2+\dots+a_k=\sum_{n=1}^k a_n, k=1,2,3,\dots$.
+		      Then $\seqk{s_k}$ is the sequence of \textbf{partial sums} of
+		      $\infsrsk{a_k}$.
+		\item \emph{Definition}: The infinite series $\infsrsn{a_n}$
+		      \textbf{converges} to L if the partial sums $\seqk{s_k}$ converges to
+		      L. If $\seqk{s_k}$ diverges, then we say $\infsrsn{a_n}$ also
+		      \textbf{diverges}.
+		\item \emph{Proposition}: If $\infsrsn{a_n}$ converges
+		      $\implies\limn{a_n}=0$. (The converse need not be true, see
+		      $\infsrsn{\frac{1}{n}}$).
+		\item \emph{Proposition}: If $a_n\geq0$, then $\infsrsn{a_n}$ converges
+		      $\iff$ the sequence of partial sums, $\seqn{s_n}$ is bounded above.
+		\item \emph{Definition}: An \textbf{alternating series}  is a series of the
+		      form $\infsrsn{(-1)^na_n}$ or $\infsrsn{(-1)^{n+1}a_n}$ where $a_n\geq0$.
+		\item \emph{Theorem (Alternating Series Test)}: Given an alternating series
+		      $\infsrsn{(-1)^{n+1}a_n}$, if $a_n$ is nonincreasing and convergent to
+		      0, then $\infsrsn{(-1)^{n+1}a_n}$ converges to some $L\in\real$.
+
+		      Furthermore, for any $k\in\real$,
+		      $|\sum_{n-1}^{k}(-1)^{n+1}a_n-L|<a_{k+1}$.
+		\item \emph{Proposition}: If $\infsrsn{a_n}=L, \infsrsn{b_n}=M,
+			      c\in\real$, then $\infsrsn{a_n+cb_n}=L+cM$.
+		\item \emph{Definition}: A series $\infsrsn{a_n}$ is \textbf{absolutely
+			      convergent} if $\infsrsn{|a_n|}$ is convergent. It is
+		      \textbf{conditionally convergent} if $\infsrsn{a_n}$ converges but
+		      $\infsrsn{|a_n|}$ diverges.
+		\item \emph{Theorem}: absolute convergence $\implies$ convergence.
+		\item \emph{Definition}: Given series $\infsrsn{a_n}$. Define
+		      \[p_n=(a_n+|a_n|)/2,\quad q_n=(a_n-|a_n|)/2,\] then we have properties
+		      as follows:
+		      \begin{enumerate}
+			      \item If $a_n\geq 0$ for all n, then $p_n=a_n,q_n=0$.
+			      \item If $a_n<0$ for all n, then $p_n=0,q_n=a_n$.
+			      \item If $a_n<0$ for all n, then $p_n=0,q_n=a_n$.
+			      \item If $\infsrsn{a_n}$ converges absolutely $\iff$ both
+			            $\infsrsn{p_n}$ and $\infsrsn{q_n}$ converge.
+			      \item If $\infsrsn{a_n}$ converges conditionally $\implies$
+			            both $\infsrsn{p_n}$ and $\infsrsn{q_n}$ diverge.
+		      \end{enumerate}
+		\item \emph{Definition}: An \textbf{arrangement} of a series
+		      $\infsrsn{a_n}$ is a series of the form $\infsrsn{a_{g(n)}}$, where
+		      $g:\nat\rightarrow\nat$ is a bijection.
+		\item \emph{Lemma}: If $a_{n}\geq0$, and $\infsrsn{a_{n}}$ converges to L,
+			then any rearrangement $a_{g(n)}$ also converges to $L$.
+		\item \emph{Theorem}: If $\infsrsn{a_{n}}$ is absolutely convergent and
+			$\infsrsn{a_{n}}=L$, then any arrangement $\infsrsn{a_{g(n)}}$ is
+			absolutely convergent and $\infsrsn{a_{g(n)}}=L$.
+		\item \emph{Theorem}: Suppose both $\infsrsn{a_{n}}$ and $\infsrsn{a_{n}}$
+			both converge absolutely. Let $c_{n}$
+	\end{enumerate}
+
+	\section{ eLecture 10 - Connectedness}
+	\begin{enumerate}
+		\item \emph{Definition (Disconnected)}:
+		      \begin{enumerate}
+			      \item A set \(E\) in M is \textbf{disconnected} if there are nonempty
+			            sets \(A,B\) so that \(E=A\cup B\) and
+			            \(\overline{A}\cap B=\emptyset=A\cap\overline{B}\).
+			      \item
+		      \end{enumerate}
+		\item \emph{Proposition (interval property)}: In \(\mathbb{R}\), a set is connected
+		      \(\iff\) it is an interval.
+		\item
+	\end{enumerate}
+
+	\section{eLecture 13 - Total Boundedness}
+	\begin{enumerate}
+		\item \emph{Definition}: A subset \(A\) of \(M\) is bounded if there exist \(x \in M\) and \(0<R<\infty\)
+		      so that \(A \subseteq B[x,R]\).
+		\item \emph{Definition}: A subset \(A\) of \(M\) is \textbf{totally bounded} if for any
+		      \(\epsilon > 0\), there are finitely many points \(x_1,\dots,x_n\) so that
+		      \(A \subseteq \bigcup^n_{i=1}B[x_i,\epsilon]\).
+		\item \emph{Remark}: If a subset \(A\) of \(M\) is \textbf{totally bounded}, we can request the
+		      center of the bounding (open) balls to be all from A.
+		\item \emph{Proposition}: Totally bounded \(\implies\) bounded.
+		\item \emph{Proposition}: In \(\langle\mathbb{N}^n,\rho_2\rangle\), a subset is totally
+		      bounded \(\iff\) bounded.
+		\item \emph{Theorem}: A subset \(A\) of \(M\) is totally bounded \(\iff\) every sequence
+		      in A has a Cauchy subsequence. (Lion Hunting)
+	\end{enumerate}
+
+	\section{eLecture 14 - Completeness}
+	\begin{enumerate}
+		\item \emph{Definition (complete)}: A subset \(A\) of \(M\) is \textbf{complete} if every Cauchy
+		      sequence in \(A\) converges to a point in \(A\).
+		\item \emph{Proposition}: Let \((x_k)^\infty_{k=1}\) be a sequence in \(\mathbb{R}^n\).
+		      Then
+		      \begin{enumerate}
+			      \item It is Cauchy wrt \(\rho_2\) \(\iff\) each coordinate is a Cauchy
+			            sequence in \(\langle\mathbb{R},\rho_e\rangle\).
+			      \item It is convergent wrt \(\rho_2\) \(\iff\) each coordinate is a convergent
+			            sequence in \(\langle\mathbb{R},\rho_e\rangle\).
+		      \end{enumerate}
+		\item \emph{Proposition}: given a complete metric space \(M\), a subset \(A\) of \(M\)
+		      is complete \(\iff\) \(A\) is closed in \(M\).
+		\item \emph{Definition (diameter)}: \(\diam A = \sup\{d(x,y):x,y\in A\}\), the maximum
+		      distance between any 2 points in \(A\).
+		\item \emph{Nested Set Theorem}: Let \(M\) be a complete metric space. Suppose that
+		      \((A_n)^\infty_{n=1}\) is a sequence of bounded nonempty closed subsets of M
+		      so that
+		      \begin{enumerate}
+			      \item \(A_1 \supseteq A_2 \supseteq \dots\),
+			      \item \(\lim_{n\rightarrow\infty} \diam A_n = 0\)
+		      \end{enumerate}
+		      Then there is exactly one point in \(\bigcap^\infty_{n=1}A_n\).
+		\item \emph{Definition (contraction)}: A function \(T:M\rightarrow M\) is a
+		      \textbf{contraction} if there exists \textbf{contraction constant} \(0<C<1\) so that
+		      \(\rho(T(x),T(y))\leq C\rho(x,y)\) for all \(x,y\in M\).
+		\item \emph{Banach Fixed Point Theorem (aka Contraction Mapping Principle)}: \(M\) is a
+		      complete metric space. If \(T:M\rightarrow M\) is a contraction with
+		      constant \(C\). Then \(T\) has a unique fixed point, i.e., there is a unique
+		      \(x\in M\) so that \(T(x)=x\). Furthermore, take any \(x_0 \in M\) and define
+		      \(x_n = T(x_{n-1})\) for any \(n\in\mathbb{N}\), then the sequence converges
+		      to the fixed point \(x\) and \(\rho(x_n,x)\leq\frac{C^n}{1-C}\rho(x_0,x_1)\)
+		      for all \(n\in\mathbb{N}\).
+		\item \emph{Baire's Theorem}: Let \(M\) be a complete metric space. Assume that
+		      \(M=\bigcup^\infty_{n=1} F_n\), where each \(F_n\) is a closed set in \(M\).
+		      Then there exists \(n_0 \in \mathbb{N}\) so that \(F_{n_0}\) contains a nonempty
+		      open ball \(B[x,r]\).
+	\end{enumerate}
+
+	\section{eLecture 15 - Completion}
+	Let \(\langle M,\rho\rangle\), \(\langle N,\tau\rangle\) and
+	\(\langle P,\sigma\rangle\) be metric spaces.
+	\begin{enumerate}
+		\item \emph{Definition (isometry)}: Let \(\langle M,\rho\rangle\) and \(\langle N,\tau\rangle\)
+		      be metric spaces. A function \(f:M\rightarrow N\) is an \textbf{isometry} if
+		      \(\tau(f(x),f(y)) = \rho(x,y)\) for all \(x,y\in M\).
+		\item \emph{Theorem}: Let \(\langle M,\rho\rangle\) be a metric space. There is a pair
+		      \((N,i)\), where \(\langle N,\tau\rangle\) is a \textbf{complete} metric space,
+		      where \(i:M\rightarrow N\) is an isometry, and \(i(M)\) is dense in N. That
+		      is, \(\overline{i(M)} = N\). \((N,i)\) is a \textbf{completion} of \(M\).
+		\item \emph{Theorem (completion is unique up to isometry)}: Let \((N,i)\) and \((P,j)\)
+		      be two completions of a metric space \(\langle M,\rho\rangle\). Then there is
+		      an bijective isometry \(\pi:N\rightarrow P\) so that \(\pi\circ i = j\), and
+		      \(\pi^{-1}\) is an isometry too so that \(\pi^{-1}\circ j = i\).
+		\item \emph{Proposition}: Let \(\langle M_i,\rho_i\rangle, i=1,2\) be metric spaces and
+		      let \(f:M_1 \rangle M_2\) be an isometry (not necessarily onto). Let
+		      \(\langle N_i,\tau_i\rangle\) be the completion of \(\langle
+		      M_i,\rho_i\rangle, i=1,2\). There is a unique continuous function
+		      \(\widetilde{f}:N_1 \rightarrow N_2\) that extends f, i.e.,
+		      \(\widetilde{f}(x)=f(x)\) for all \(x\in M_1\subseteq N_1\). Moreover, the
+		      extension \(\widetilde{f}\) is an isometry.
+	\end{enumerate}
+
+	\section{eLecture 16 - Compactness}
+	\begin{enumerate}
+		\item \emph{Definition (compact)}: \(E \subseteq M\) is \textbf{compact} if \(E\) is both
+		      \textbf{complete} and \textbf{totally bounded}.
+		\item \emph{Proposition}: In \(\langle\mathbb{R}^n, \rho_2\rangle\), a subset E is
+		      \textbf{compact \(\iff\) closed and bounded}
+		\item \emph{Definition (open covering)}: Let \(E\) be a subset of a metric space
+		      \(\langle M,\rho\rangle\). A family \(\mathcal{G}\) of sets is an
+		      \textbf{open
+			      covering} of E if
+		      \begin{enumerate}
+			      \item Each \(G\in\mathcal{G}\) is an open set in M.
+			      \item \(E\) is covered by \(\bigcup \{G:G\in\mathcal{G}\}\).
+		      \end{enumerate}
+		\item \emph{Definition (Heine-Borel property)}: (Every open cover of E has a finite
+		      subcover.) A subset \(E\) of a metric space has the
+		      \textbf{Heine-Borel property} if for every open covering \(\mathcal{G}\) of \(E\),
+		      there are finitely many \(G_1,\dots,G_n\in\mathcal{G}\) so that \(E\subseteq
+		      G_1\cup\dots\cup G_n\).
+		\item \emph{Theorem (multiple characterization of compactness)}: Let \(E \subseteq
+		      \langle M,\rho\rangle\). The following are equivalent:
+		      \begin{enumerate}
+			      \item E is compact (i.e., totally bounded and complete).
+			      \item \textbf{(Sequential compactness)} Every sequence in \(E\) has a convergent
+			            subsequence (to a point in \(E\)).
+			      \item \textbf{(Bolzano-Weierstrass property, the weakest)}: Every infinite subset of
+			            \(E\) has a cluster point in \(E\).
+			      \item \textbf{(Heine-Borel property)}: Every open cover of \(E\) has a finite subcover.
+		      \end{enumerate}
+		\item \emph{Lebesque covering Lemma}: Given a compact subset \(E\) in a metric space
+		      \(\langle M,\rho\rangle\) and let \(\mathcal{G}\) be an open cover of \(E\).
+		      Then there exist a \textbf{Lebesgue's Number} \(r>0\), so that \(\forall x\in E,
+		      \exists G\in\mathcal{G}\) (depending on \(x\)) so that \(B[x,r]\subseteq G\).
+		\item \emph{Proposition:} compact \(\implies\) closed. A closed subset in a compact set
+		      is compact.
+	\end{enumerate}
+	\section{Miscellaneous}
+	\begin{enumerate}
+		\item \emph{Proposition}: If $c>1$, then $\limn{c_{1/n}}=1$.
+	\end{enumerate}
+\end{multicols*}{3}
+
+\end{document}
+
+\message{ !name(cheatsheet.tex) !offset(-424) }

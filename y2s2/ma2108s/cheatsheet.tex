@@ -1,10 +1,25 @@
-\documentclass[12pt, a4paper]{article}
-
+\documentclass[10pt]{article}
+									 
+\usepackage[
+a4paper,landscape,
+total={284mm,170mm},
+bottom=7mm,
+top=14mm,headsep=3mm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
-\usepackage{amsmath, amssymb}
-
+\usepackage{amsmath, amssymb, amsthm}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{multicol}
+\setlength{\columnsep}{4mm}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Page \thepage/\pageref{LastPage}}
+\lhead{Made by Tan Yee Jian (\texttt{@swampertx})}
+\chead{MA2108S Cheat Sheet}
 
 % figure support
 \usepackage{import}
@@ -13,33 +28,737 @@
 \usepackage{pdfpages}
 \usepackage{transparent}
 \newcommand{\incfig}[1]{%
-  \def\svgwidth{\columnwidth}
-  \import{./figures/}{#1.pdf_tex}
+	\def\svgwidth{\columnwidth}
+	\import{./figures/}{#1.pdf_tex}
 }
 
 \pdfsuppresswarningpagegroup=1
 
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\rat}{\mathbb{Q}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+
 \title{MA2108S Cheatsheet}
 \author{Tan Yee Jian}
-\date{11 February 2020}
+\date{\today}
 
 \begin{document}
-  \maketitle
-  \section{Real Number System}
-  \section{Sequences}
-  \subsection{Theorems}
-  \begin{enumerate}
-    \item{Cauchy $\iff$ Convergent $\implies$ Bounded}.\\
-      $(a_n)_{n=1}^{\infty}$
-  \end{enumerate}
-  \section{Series}
-    \subsection{Definitions}
-    \subsection{Theorems}
-    \begin{enumerate}
-      \item{If $\sum\limits_{n=1}^{\infty}{a_n} $ converges, them $\lim_{n \to \infty} a_n  = 0$}
-      \item{If $a_n$ is non-negative, then
-          $\sum\limits_{n=1}^{\infty}{a_n}$ converges \textbf{if and only if }
-          $s_n = \sum\limits_{k=1}^{n}{a_n}$ is bounded.}
-      \item{}
-    \end{enumerate}
+
+% \begin{center}
+% 	\Large{\textbf{MA2108S Cheat Sheet}}
+% \end{center}
+
+\begin{multicols*}{3}
+	\section{The Real Number System}
+	\begin{enumerate}
+		\item \emph{Definition}: a \textbf{field} is the 5-tuple
+		      \(\langle\mathbb{F},+,\cdot,e,u\rangle\), where \(\mathbb{F}\) is a
+		      set containing at least the elements $e$ and $u$, where $e\neq u$,
+		      and satisfies: For any $a,b,c\in\mathbb{F}$,
+		      \begin{enumerate}
+			      \item (commutative add) $a+b=b+a$
+			      \item (associative add) $(a+b)+c=a+(b+c)$
+			      \item (additive identity) $a+e=a$
+			      \item (additive inverse) $\forall a,\exists b\in\mathbb{F}\text{
+					            such that } a+b=e.$
+			      \item (commutative multiply) $a\cdot b=b\cdot a$
+			      \item (associative multiply) $(a\cdot b)\cdot c=a\cdot (b\cdot c)$
+			      \item (multiplicative identity) $a\cdot u=a$
+			      \item (multiplicative inverse) $\forall a,\exists b\in\mathbb{F}
+				            \text{ such that } a\cdot b=u.$
+			      \item (distributive) $\forall a,b,c\in\mathbb{F},
+				            a\cdot(b+c)=a\cdot b+a\cdot c$
+		      \end{enumerate}
+
+		\item \emph{Example}: $\mathbb{Q}, \mathbb{N}, \mathbb{Z}, \mathbb{R},
+			      \mathbb{C}, \mathbb{R} -\mathbb{Q} $ are fields.
+		\item \emph{Definiton}: A field $\mathbb{F}$ is \textbf{ordered} if $\exists
+			      P\subseteq \mathbb{F}$ such that $\forall a,b\in P$,
+		      \begin{enumerate}
+			      \item $a+b\in P$
+			      \item $a\cdot b\in P$
+			      \item (trichotomy) either
+			            \begin{enumerate}
+				            \item $a\in P$
+				            \item $a=e$, or
+				            \item $-a\in P$
+			            \end{enumerate}
+			      \item $e\notin P$.
+		      \end{enumerate}
+
+		\item \emph{Theorem}: $a\in P\implies-a\notin P$.
+		\item \emph{Definiton}: if a subset of an ordered field, $A\subseteq\mathbb{F}$
+		      contains an element
+		      $a$ such that $\forall x\in \mathbb{F}, a\leq(\geq) x$, then
+		      $\mathbb{F}$ is \textbf{bounded below (above)}. Such $a$ is called
+		      an \textbf{lower (upper) bound} of $A$.
+
+		\item \emph{Definition}: if $\emptyset\neq A\subseteq \mathbb{F}$ is
+		      bounded above (below), an element $b$ is the \textbf{least upper
+			      (greatest lower) bound} if
+		      \begin{enumerate}
+			      \item $b$ is an upper(lower) bound of $A$ and
+			      \item $\forall c\in \mathbb{F}$ where c is an upper(lower) bound of
+			            $A$, $b\geq c(b\leq c)$.
+		      \end{enumerate}
+		      , denoted by $\sup A(\inf A)$ respectively.
+		\item \emph{Definition}: An ordered field $\mathbb{F}$ is \textbf{(order)
+			      complete} if it has the \textbf{least upper bound property}:
+		      $\forall \emptyset\neq A\subseteq\mathbb{F}$, if $A$ is bounded
+		      above, $A$ has a least upper bound.
+		\item \emph{Example}: $\mathbb{R}$ is order complete, but $\mathbb{Q}$
+		      is not.
+	\end{enumerate}
+
+	\section{Sequences of Real Numbers}
+	\begin{enumerate}
+		\item \emph{Definition}: A \textbf{sequence} in a set $S$ is a function,
+		      $f:\mathbb{N}\to S$, where we denote $f(n)=s_n$ for all $n\in
+			      \mathbb{N}$, and the sequence as $\seqn{s_n}$.
+
+		\item \emph{Definiton}: given a sequence $f:\mathbb{N}\to S$, a
+		      \textbf{subsequence} of $f$ is a sequence of the form $f\circ
+			      g:\mathbb{N}\to S$, where $g:\mathbb{N}\to\mathbb{N}$
+		      is strictly increasing. We write $\seqn{(f\circ g)(n)}=\seqn{s_{g(n)}}$.
+		\item \emph{Analogy}: We have a real sequence $\seqn{s_n}$. We claim
+		      that \underline{$L$ is the limit}. An opponent then issues a
+		      \underline{challenge $\epsilon$}. We need to be able to to any
+		      $\epsilon$ given with a $N$ such that all our terms after $N$,$(s_N,
+			      s_{N+1},s_{N+2},\dots)$ are all at most $\epsilon$ from $L$.
+
+		\item \emph{Definiton}: if $\lim\limits_{n\to\infty}s_n=L$
+		      holds then we say $\seqn{s_n}$ is \textbf{convergent}. Conversely,
+		      $\seqn{s_n}$ is \textbf{convergent} if
+		      there exists an $L\in\real$ such that $\seqn{s_n}$ converges to L.
+		\item \emph{Definition}: a sequence $\seqn{s_n}$ \textbf{diverges to
+			      $\infty$($-\infty$)} if $\forall M\in\real,\exists N\in\nat$ such
+		      than $s_n\geq M (s_n\leq M)$ for any $n\geq N$.
+		\item \emph{Proposition}: sequence is convergent $\implies$ \textbf{any
+			      subsequence} of that sequence is convergent.
+		\item \emph{Definition}: (properties of sequences) A sequence
+		      $\seqn{s_n}$ is
+		      \begin{enumerate}
+			      \item \textbf{bounded} if $\exists M\in\real,M>0$ such that
+			            $|s_n|\leq M$ for any $n>N$.
+			      \item \textbf{nondecreasing} if $s_n\leq s_{n+1}\quad\forall
+				            n\in\nat$.
+			      \item \textbf{nonincreasing} if $s_n\geq s_{n+1}\quad\forall
+				            n\in\nat$.
+			      \item \textbf{monotone} if it is either nondecreasing or
+			            nonincreasing.
+		      \end{enumerate}
+
+		\item \emph{Proposition}: bounded and nondecreasing(nonincreasing)
+		      $\implies$ convergent to its supremum (infimum).
+		\item \emph{Definition}: $\limn s_n=e(x)$. $e(x+y)=e(x)+e(y),e(0)=1$.
+		\item \emph{Theorem}: Every real sequence has a monotone subsequence.
+		      Therefore, every bounded sequence has a convergent subsequence.
+		\item \emph{Proposition}: If $c>1$, then $\limn{c_{1/n}}=1$.
+		\item \emph{Proposition}: A convergent sequence of non-negative numbers
+		      converge to a nonnegative number. Similarly, if all values of a
+		      sequence are greater than $k$, its limit is greater than $k$ too.
+		\item \emph{Theorem}: suppose $\limn s_n=L\in\real, \limn
+			      t_n=M\in\real$, and $C\in\real$. Then
+		      \begin{enumerate}
+			      \item $\limn(s_n+Ct_n)=L+CM$.
+			      \item $\limn(s_nt_n)=LM$.
+			      \item if $M\neq0$,then $\limn1/t_n=1/M$.
+		      \end{enumerate}
+		\item \emph{Definition}: Let $\seqn{s_n}$ be a real sequence. Then
+		      define \textbf{limit superior} \[\limsup\limits_{n\to\infty}=
+			      \begin{cases}
+				      \infty    & \text{if }\seqn{s_n}\text{ is not bounded above} \\
+				      \limn M_n & \text{if }\seqn{M_n}\text{ is bounded below}     \\
+				      -\infty   & \text{if }\seqn{M_n}\text{ is not bounded below} \\
+			      \end{cases}\]
+		      where $\seqn{M_k}=\sup\{s_k, s_{k+1},\dots\}$,
+		      and define \textbf{limit inferior}
+		      \[\liminf\limits_{n\to\infty}=
+			      \begin{cases}
+				      \infty    & \text{if }\seqn{s_n}\text{ is not bounded below} \\
+				      \limn M_n & \text{if }\seqn{M_n}\text{ is bounded above}     \\
+				      -\infty   & \text{if }\seqn{M_n}\text{ is not bounded above} \\
+			      \end{cases}\]
+		      where $\seqn{M_k}=\inf\{s_k, s_{k+1},\dots\}$.
+		\item \emph{Proposition}:
+		      $\limsup_{n\to\infty}s_n=L,\limsup_{n\to\infty}t_n=M$,
+		      where $L,M\in\real$, and the sequences are bounded,
+		      $\implies\limsup_{n\to\infty}(s_n+t_n)\leq L+M$.
+		\item \emph{Proposition}: for any sequence, $\liminf\leq\limsup$.
+		\item \emph{Proposition}: for any bounded sequence, $\limn s_n=L\iff
+			      \liminf\ntoinf s_n=\limsup\ntoinf s_n=L$.
+		\item \emph{Theorem}: given a bounded real sequence, there exist
+		      subsequences that converge to the \emph{limsup} and \emph{liminf}
+		      respectively. \emph{Any} convergent subsequence converges to at most
+		      the \emph{limsup}, and at least the \emph{liminf}. That is, for any
+		      subsequence $\seqk{s_{n_k}}$,
+		      $\liminf\ntoinf s_n\leq\limk{s_{n_k}}\leq\limsup\ntoinf s_n$.
+		\item \emph{Definition}: A sequence $\seqn{s_n}$ is \textbf{Cauchy} if
+		      $\forall\epsilon>0,\exists N\in\nat$ such that
+		      $\forall n,m\geq N,|s_n-s_m|<\epsilon$.
+		\item \emph{Theorem}: for real sequences, convergence $\iff$ Cauchy
+		      $\implies$ bounded.
+		\item \emph{Nested Inverval Theorem}: Given $I_1\supseteq I_2\supseteq
+			      I_3\supseteq\dots$ are closed bounded intervals such that
+		      $\limn\diam I_n=0$. Then $\bigcap\limits_{n=1}^\infty I_n$ contains
+		      exactly one point.
+		\item \emph{Theorem}: There is no onto map $f:\nat\to[0,1]$. In
+		      other words, $[0,1]$ is uncountable.
+		\item \emph{Definition}: Given a real sequence $\seqn{s_n}$, define
+		      $\sigma_n=(s_1+s_2+\dots+s_n)/n,\forall n\in\nat$. We say
+		      $\seqn{s_n}$ is $(C,1)$ summable to $L\in\real$ if $\limn\sigma_n=L$.
+		\item \emph{Theorem (regularity)}: If a real sequence converges to $L$,
+		      then it is $(C,1)$ summable to $L$.
+	\end{enumerate}
+
+	\section{Series of Real Numbers}
+	\begin{enumerate}
+		\item \emph{Definition}: Given an \textbf{infinite series} $\infsrsn{a_n}$,
+		      define $s_k=a_1+a_2+\dots+a_k=\sum_{n=1}^k a_n, k=1,2,3,\dots$.
+		      Then $\seqk{s_k}$ is the sequence of \textbf{partial sums} of
+		      $\infsrsk{a_k}$.
+		\item \emph{Definition}: The infinite series $\infsrsn{a_n}$
+		      \textbf{converges} to L if the partial sums $\seqk{s_k}$ converges to
+		      L. If $\seqk{s_k}$ diverges, then we say $\infsrsn{a_n}$ also
+		      \textbf{diverges}.
+		\item \emph{Proposition}: If $\infsrsn{a_n}$ converges
+		      $\implies\limn{a_n}=0$. (The converse need not be true, see
+		      $\infsrsn{\frac{1}{n}}$).
+		\item \emph{Proposition}: If $a_n\geq0$, then $\infsrsn{a_n}$ converges
+		      $\iff$ the sequence of partial sums, $\seqn{s_n}$ is bounded above.
+		\item \emph{Definition}: An \textbf{alternating series}  is a series of the
+		      form $\infsrsn{(-1)^na_n}$ or $\infsrsn{(-1)^{n+1}a_n}$ where $a_n\geq0$.
+		\item \emph{Proposition}: If $\infsrsn{a_n}=L, \infsrsn{b_n}=M,
+			      c\in\real$, then $\infsrsn{a_n+cb_n}=L+cM$.
+		\item \emph{Definition}: A series $\infsrsn{a_n}$ is \textbf{absolutely
+			      convergent} if $\infsrsn{|a_n|}$ is convergent. It is
+		      \textbf{conditionally convergent} if $\infsrsn{a_n}$ converges but
+		      $\infsrsn{|a_n|}$ diverges.
+		\item \emph{Theorem}: absolute convergence $\implies$ convergence.
+		\item \emph{Definition}: Given series $\infsrsn{a_n}$. Define
+		      \[p_n=(a_n+|a_n|)/2,\quad q_n=(a_n-|a_n|)/2,\] then we have properties
+		      as follows:
+		      \begin{enumerate}
+			      \item If $a_n\geq 0$ for all n, then $p_n=a_n,q_n=0$.
+			      \item If $a_n<0$ for all n, then $p_n=0,q_n=a_n$.
+			      \item If $a_n<0$ for all n, then $p_n=0,q_n=a_n$.
+			      \item If $\infsrsn{a_n}$ converges absolutely $\iff$ both
+			            $\infsrsn{p_n}$ and $\infsrsn{q_n}$ converge.
+			      \item If $\infsrsn{a_n}$ converges conditionally $\implies$
+			            both $\infsrsn{p_n}$ and $\infsrsn{q_n}$ diverge.
+		      \end{enumerate}
+		\item \emph{Definition}: An \textbf{arrangement} of a series
+		      $\infsrsn{a_n}$ is a series of the form $\infsrsn{a_{g(n)}}$, where
+		      $g:\nat\to\nat$ is a bijection.
+		\item \emph{Lemma}: If $a_{n}\geq0$, and $\infsrsn{a_{n}}$ converges to L,
+			then any rearrangement $a_{g(n)}$ also converges to $L$.
+		\item \emph{Theorem}: If $\infsrsn{a_{n}}$ is absolutely convergent and
+			$\infsrsn{a_{n}}=L$, then any arrangement $\infsrsn{a_{g(n)}}$ is
+			absolutely convergent and $\infsrsn{a_{g(n)}}=L$.
+		\item \emph{Theorem}: Suppose that $\infsrsn{a_{n}}$ is conditionally
+			convergent, then for any $L\in\real$, $\exists$ a rearrangement of
+			$\infsrsn{a_{n}}$ that converges to L.
+		\item \emph{Theorem}: Suppose both $\infsrsn{a_{n}}$ and $\infsrsn{a_{n}}$
+			both converge absolutely. Let
+			$c_{n}=\sum\limits^{\infty}_{k=0}a_{k}b_{n-k}$ for all $n=0,1,\dots$. Then
+			$\infsrsn{c_{n}}$ converges absolutely and\\
+			$\infsrsn{c_{n}}=(\infsrsn{a_{n}})(\infsrsn{b_{n}})$.
+		\item \emph{Theorem (Series Tests)}: Given a real series $\infsrsn{a_{n}}$.
+			\begin{enumerate}
+		\item \textbf{Alternating Series Test}: Given an alternating series
+		      $\infsrsn{(-1)^{n+1}a_n}$, if $a_n$ is nonincreasing and convergent to
+		      0, then $\infsrsn{(-1)^{n+1}a_n}$ converges to some $L\in\real$.
+
+					Furthermore, for any $k\in\real$,
+					$|\sum_{n-1}^{k}(-1)^{n+1}a_n-L|<a_{k+1}$.
+				\item \textbf{Comparison Test}: Suppose that $\exists k<\infty$ such
+					that $\forall n\in\nat,a_{n}\leq k|b_{n}|$. If $\infsrsn{b_{n}}$
+					converges absolutely, then $\infsrsn{a_{n}}$ converges absolutely.
+				\item \textbf{Ratio Test}:\\
+					$\liminf\ntoinf|a_{n+1}/a_{n}|<1\implies\infsrsn{a_{n}}$ converges
+					absolutely.
+				$\limsup\ntoinf|a_{n+1}/a_{n}|>1\implies\infsrsn{a_{n}}$ diverges.
+				\item \textbf{Root Test}:\\
+					$\limsup\ntoinf\sqrt[n]{|a_n|}<1\implies\infsrsn{a_{n}}$ converges
+					absolutely.
+					$\limsup\ntoinf\sqrt[n]{|a_n|}>1\implies\infsrsn{a_{n}}$ diverges.
+			\end{enumerate}
+		\item \emph{Definition}: Given series $\infsrsn{a_{n}}$ and sequence
+			$\seqn{b_{n}}$, and let $s_{k}=\sum\limits_{n=1}^{k}a_{n}$. Then we have
+			\textbf{summation by parts}: $\sum\limits_{k=1}^{n}a_{k}b_{k}=s_{n}b_{n}+\sum\limits_{k=1}^{n-1}s_{k}(b_{k}-b_{k+1})$.
+			\begin{enumerate}
+				\item \textbf{Dirichlet's Test}: $\seqk{s_{k}}$ bounded, $\seqk{b_{k}}$
+					is monotone and converges to 0 $\implies\infsrsn{a_{n}b_{n}}$ converges.
+				\item \textbf{Abel's Test}: $\seqk{s_{k}}$ converges, $\seqk{b_{k}}$
+					is monotone and bounded $\implies\infsrsn{a_{n}b_{n}}$ converges.
+			\end{enumerate}
+		\item \emph{Definition}: Given $\infsrsn{a_{n}}$. If its partial sum is
+			(C,1) summable to $k$, that is, $\lim\ktoinf(s_{1}+\dots+s_{k})/k=A$, then
+			we say $\infsrsn{a_{n}}$ is \textbf{(C,1) summable}, written as
+			$\infsrsn{a_{n}}=A\quad(C,1)$.
+		\item \emph{Tauberian Theorem}: A series (C,1) summable to $L\implies$
+			convergent to L.
+	\end{enumerate}
+
+	\section{Limits in Metric Spaces}
+	Convention: $\met{}, \met{1}, \met{2}$ are metric spaces. $\rho, \sigma, \tau$
+	are metrics.
+	\begin{enumerate}
+		\item \emph{Definition}: A \textbf{metric} on a nonempty set $M$ is a
+			function $\rho:M\times M\to\real$, that satisfies for any $x,y,z\in M$:
+			\begin{enumerate}
+				\item $\rho(x,x)=0$,
+				\item $x\neq y\implies\rho(x,y)>0$.
+				\item (symmetry) $\rho(x,y)=\rho(y,x)$, and
+				\item (triangle inequality) $\rho(x,y)\leq\rho(x,z)+\rho(y,z)$.
+			\end{enumerate}
+			Commonly used metrics for $\real^{n}$ include:
+			\begin{enumerate}
+				\item (1-metric)
+					$\rho_{1}((a_{i})^{n}_{i=1},(b_{i})^{n}_{i=1})=\sum\limits^{n}_{i=1}|a_{i}-b_{i}|$.
+				\item (2-metric, or Euclidian metric)\\
+					$\rho_{2}((a_{i})^{n}_{i=1},(b_{i})^{n}_{i=1})=\sqrt{\sum\limits^{n}_{i=1}|a_{i}-b_{i}|^{2}}$.
+				\item (n-metric)
+					$\rho_{n}((a_{i})^{n}_{i=1},(b_{i})^{n}_{i=1})=\sqrt[n]{\sum\limits^{n}_{i=1}|a_{i}-b_{i}|^{n}}$.
+				\item ($\infty$-metric)\\
+					$\rho_{\infty}((a_{i})^{n}_{i=1},(b_{i})^{n}_{i=1})=\max\{|a_{i}-b_{i}|:1\leq i\leq n\}$.
+				\item (discrete-metric) given $x,y\in\met{},$\\
+					$\rho_{d}(x,y)= \begin{cases} 0 & x\neq y,\\ 1 & x=y. \end{cases}$
+
+			\end{enumerate}
+			The pair $\met{}$ is called a \textbf{metric space}.
+
+		\item \emph{Cauchy-Schwartz Inequality}: $\forall a_{i},b_{i}\in\real$,
+			$\sum\limits_{i=i}^{n}|a_{i}b_{i}|\leq AB$ where
+			$A=\sqrt{\sum\limits_{i=1}^{n}|a_{i}|^{2}}$ and $B=\sqrt{\sum\limits_{i=1}^{n}|b_{i}|^{2}}$.
+
+		\item \emph{Minkowski's Inequality}:\\
+			$\sqrt{\sum\limits_{i=1}^{n}|a_{i}+b_{i}|^{2}}\leq
+			\sqrt{\sum\limits_{i=1}^{n}|a_{i}|^{2}}+\sqrt{\sum\limits_{i=1}^{n}|b_{i}|^{2}}$
+		\item \emph{Definition}: $A\subseteq \met{}$. A point $a\in M$ is a
+			\textbf{cluster point} of $A$ if, $\forall h>0,\exists x\in A$ such that
+			$0<\rho(x,a)<h$. Also known as \textbf{limit points} or
+			\textbf{accumulation points}. A point is an \textbf{isolated point} if it
+			is \textbf{not a cluster point}.
+		\item \emph{Proposition}: (Sequential formulation of cluster points) $x$ is
+			a cluster point of $E \iff\exists\seqn{x_{n}}\in E$ that converges to $x$.
+		\item \emph{Definition (limits)}: Given $f:M_{1}\to M_{2}$.
+			Suppose $a$ is a cluster point of $M_{1}$, and
+			$L\in M_{2}$. Then we say $\lim\limits_{x\to a}f(x)=L$ if
+			for any $\epsilon>0, \exists\delta>0$ such that:\\
+			$0<\rho_{1}(x,a)<\delta\implies\rho_{2}(f(x),L)<\epsilon\quad\forall x\in M$.
+			\begin{enumerate}
+				\item \textbf{Sequential characterization of limits}:
+					$\lim\limits_{x\to a}f(x)=L\iff$ For all sequences $\seqn{x_{n}}$ in
+					$M_{1}$ that converges to a, $x_{n}\neq a\ \forall n\in\nat$,
+					$\seqn{f(x_{n})}$ converges to $L$ in $M_{2}$.
+				\item \textbf{Arithmetic of limits}: Suppose $f,g:M\to\real$, and $a$ is
+					a cluster point of $M$. Given
+					$\lim\limits_{x\to a}f(x)=A,\ \lim\limits_{x\to a}g(x)=B$, then as
+					usual,
+					\begin{enumerate}
+						\item $\lim\limits_{x\to a}(f(x)+g(x))=A+B$
+						\item $\lim\limits_{x\to a}(f(x)g(x))=AB$
+						\item $\lim\limits_{x\to a}(f(x)/g(x))=A/B$ if
+							$g(x)\neq 0\ \forall x\in M\text{ and }B\neq0$.
+					\end{enumerate}
+			\end{enumerate}
+
+	\end{enumerate}
+
+	\section{Open and Closed Sets, Continuity}
+	\begin{enumerate}
+		\item \emph{Definition}: The \textbf{open ball} centered at $a\in M$ with
+			radius $r>0$ is the set $B[a,r]=\{x\in M:\rho(x,a)<r\}$.
+		\item \emph{Definition}: A function $f:M_{1}\to M_{2}$ is
+			\textbf{continuous} at a point $a\in M_{1}$ if
+			$\forall\epsilon>0,\exists\delta>0$ such that
+			\begin{enumerate}
+				\item
+					$\rho_{2}(f(x), f(a))<\epsilon$ for all $x\in M_{1}$ such that
+					$\rho_{1}(x,a)<\delta$.
+				\item (Balls) $x\in B[a,\delta]\implies f(x)\in B[f(a),\epsilon]$
+				\item $B[a,\delta]\subseteq f^{-1}(B[f(a),\epsilon])$ or
+				$f(B[a,\delta])\subseteq B[f(a),\epsilon]$.
+			\end{enumerate}
+		\item \emph{Proposition}: Functions are always continuous at isolated
+			points. $f:M_{1}\to M_{2}$ is continuous at a cluster
+			point $a\in M_{1}\iff\lim\limits_{x\to a}f(x) = f(a)$.
+		\item \textbf{Sequential formulation of continuity}: A
+			function $f:M_{1}\to M_{2}$ is continuous at
+			$a\in M_{1}\iff\forall\seqn{x_{n}}$ in $M_{1}$ that converges to $a$,
+			$\seqn{f(x_{n})}$ converges to $f(a)\in M_{2}$
+			\item \textbf{Arithmetic of continuous functions}: Let $f,g:M\to\real$ be continuous at $a\in M$. Then
+			$f+g, f\cdot g,f/g$ are continuous, the last case if
+			$g(x)\neq0\ \forall x\in M$.
+		\item \emph{Corollary}: Since $f(x)=x, f:\real\to\real$ is continuous at any
+			$a\in\real$, thus any rational function with nonzero denominator is
+			continuous.
+		\item \emph{Theorem}: The composition of two continuous functions are continuous.
+		\item \emph{Definition (Open Set)}: A subset $G\subseteq M$ is an \textbf{open subset
+			in $M$} if $\forall x\in G,\ \exists r>0$ such that $B[x,r]\subseteq G$. In
+			words, every point in an open set can ball up to a certain radius and the
+			ball will be contained in the set.
+		\item \emph{Definition}: \textbf{closure} of
+			$E=\overline{E}=E\cup\{\text{cluster points of E}\}$.
+			A set $E\in M$ is \textbf{closed in $M$} if
+			$E=\overline{E}$.
+			\begin{enumerate}
+			\item \textbf{Characterization of Closure}:
+			$x\in\overline{E}\iff\forall r>0,B[x,r]\cap E\neq\emptyset$.
+		\item \textbf{Consistency of closure and closed set}: for any
+			$E\in M$, $\overline{E}$ is a closed set.
+			\end{enumerate}
+			\item \emph{Punishable by Death}: Closed $\neq$ not open, not closed
+			$\neq$ open. $[0,1)\subseteq\real$ is neither open nor closed.
+			\item \emph{Proposition}: Let $E\subseteq M$. $E$ is closed
+			$\iff E'$ is open in $M$.
+			\item \emph{Propositions}:
+			\begin{itemize}
+				\item Any open ball in any metric space is an open set (in $M$).
+				\item In any metric space with the discrete metric, any subset of it is
+				an open set (in $M$).
+				\item In any metric space, $\emptyset$ and $M$ are both open and close in
+					$M$.
+			\item The union of any number of open sets is open. The
+			intersection of \emph{finitely many} open sets is open.
+			\item The intersection of any family of closed sets is
+			closed. The union of \emph{finitely }many closed sets is closed.
+			\end{itemize}
+			\item \emph{Theorem}: The following statements are equivalent:
+			\begin{enumerate}
+				\item A function $f:M_{1}\to M_{2}$ is continuous in $M_{2}$
+				\item Whenever $G$ is open in $M_{2}$, $f^{-1}(G)$ is open in
+				$M_{1}$
+				\item whenever $F$ is closed in $M_{1}$, $f(F)$ is closed in
+			$M_{2}$.
+			\end{enumerate}
+			\item \emph{Definition}: Given $f:M_{1}\to M_{2}$, if $f$ is a bijection
+			and both $f, f^{-1}$ are continuous, then $f$ is a \textbf{homeomorphism}.
+			Two sets are \textbf{homeomorphic} if there is a homeomorphism from one to
+			the other. \textbf{Homeomorphism is transitive}, since the composition of
+			homeomorphic (continuous) functions is homeomorphic (continuous).
+		\item \emph{Definition}: $E\subseteq M, E$ is \textbf{dense in M} if
+			$\overline{E}=M$. For example, $\mathbb{Q}$ is \textbf{dense} in
+			$\langle\real,\rho_{e}\rangle$.
+			\item  Baire's Theorem:
+			\begin{enumerate}
+				\item \emph{Prop}: Given $f:\real\to\real$ nondecreasing, set
+				\[J_{f}(a)=\inf\{f(x):x>a\}-\sup\{f(x):x<a\},\] the ``jump'' function
+				at point $a$ of the nondecreasing function.
+				$J_{f}(a)\geq0,J_{f}(a)=0\iff f$ is continuous at $a$.
+				\item \emph{Lemma}: If $a_{1},\dots,a_{n}$ are points in an interval
+				$(u,v)$, then $J_{f}(a_{1})+\dots+J_{f}(a_{n})\leq f(v)-f(u)$.
+				\item \emph{Defn}: A set is \textbf{countable} if it is either finite or
+				$\exists f:\nat\to S$ a bijection.
+				\item \emph{Prop}: A countable union of countable sets is countable.
+				\item \emph{Thm}: Let $f:\real\to\real$ be a monotone function. Then the
+				set of discontinuities of $f$ is countable.
+				\item \emph{Defn}: (Oscillation) Given $f:\real\to\real$ a bounded
+				function. For any point $a\in\real$,
+				define \[\omega[f,a]=\inf\limits_{\epsilon>0}\{\sup\{f(x):
+					|x-a|<\epsilon\}-\inf\{f(x):|x-a|<\epsilon\}\}\]
+				\item \emph{Prop}: $\omega[f,a]\geq0\ \forall a\in\real. f$ is
+					continuous at $a \iff\omega[f,a]=0$. $f$ is discontinous at
+					$a\iff\omega[f,a]>0$.
+					\item \emph{Crl}: Let $D$ be the set of discontinuities of a bounded
+					function $f:\real\to\real$. Then $D$ is the union of a sequence of
+					closed sets, namely $D=\bigcup\limits^{\infty}_{n=1}E_{1/n}$.
+					$D$ is called a $F_{\sigma}$ set. (``F'' stands for closed, $\sigma$
+					stands for union).
+					\item Finally, \textbf{Baire's Theorem}: Given a $F_{\sigma}$ (union of closed)
+			set. Then one of the sets must contain a non-empty, open interval.
+			\item \emph{Prop}: The set of irrationals $\real-\mathbb{Q}$ is not a
+			$F_{\sigma}$ set.
+			\item \emph{Thm}: There is no bounded continuous function
+			$f:\real\to\real$ that is discontinous precisely at the irrational numbers.
+			\end{enumerate}
+	\end{enumerate}
+
+
+	\section{1st C: Connectedness and Continuity}
+	\begin{enumerate}
+		\item \emph{Proposition}: (Open and closed sets in subsets) Let
+		$A\subseteq U\subseteq M$. Then $A$ is closed(open) in $U\iff\exists$ an
+		open(closed) set $B\in M$ such that $A = B\cap U$.
+		\item \emph{Definition}: Two reformulations of \textbf{connected sets}:
+			\begin{enumerate}
+				\item A set \(E\) in M is \textbf{disconnected} if there are nonempty
+					sets \(A,B\) so that \(E=A\cup B\) and
+					\(\overline{A}\cap B=\emptyset=A\cap\overline{B}\).
+				\item Given $\emptyset\neq C\subseteq M$, $C$ is \textbf{connected}
+					$\iff\forall$ subsets in $C$, only $C$ and $\emptyset$ are both open
+					and closed in $C$.
+			\end{enumerate}
+		\item \emph{Proposition (interval property)}: In \(\mathbb{R}\), a set is
+			connected \(\iff\) it is an interval.
+		\item \emph{Proposition}: The union of two overlapping connected sets is
+			connected.
+			\item \emph{Theorem}: Continuous functions preserve connectedness.
+			If $f:M_{1}\to M_{2}$ is continuous, then, if $C\subseteq M_{1}$ is
+			connected, $f(C)\subseteq M_{2}$ is also connected.
+		\item \emph{Intermediate Value Theorem}: Let $I=[a,b]$ be an interval in
+			$\real$. Then $[f(a),f(b)]\subseteq f(I)$. In other words, all points
+			between the two endpoints will be contained in the image of an interval
+			under a continuous function.
+			\item \emph{Definition}: $a,b\in A\subseteq M$. A \textbf{(continuous)
+				path} in A from $a$ to $b$ is a \textbf{continuous function}
+			$f:[0,1]\to A$ so that $f(0)=a, f(1)=b$.
+			\item \emph{Propositions}: Any open ball in
+			$\langle\real^{n},\rho_{2}\rangle$ is path connected.
+			\item \emph{Proposition}: path connected $\implies$ connected. Reverse is
+			true for $\langle\real^{n},\rho_{2}\rangle$ but not in general.
+			\item \emph{Lemma}: Suppose $a,b,c\in A\subseteq M$, and there are paths
+			$a\to b, b\to c$. Then there exists paths $b\to a, a\to c$ in $A$.
+	\end{enumerate}
+
+	\section{2nd C: Total Boundedness and Completeness}
+	Let \(\langle M,\rho\rangle\), \(\langle N,\tau\rangle\) and
+	\(\langle P,\sigma\rangle\) be metric spaces.
+	\begin{enumerate}
+		\item \emph{Definition}: A subset \(A\) of \(M\) is bounded if there exist \(x \in M\) and \(0<R<\infty\)
+		      so that \(A \subseteq B[x,R]\).
+		\item \emph{Definition}: A subset \(A\) of \(M\) is \textbf{totally bounded} if for any
+		      \(\epsilon > 0\), there are finitely many points \(x_1,\dots,x_n\) so that
+		      \(A \subseteq \bigcup^n_{i=1}B[x_i,\epsilon]\).
+		\item \emph{Remark}: If a subset \(A\) of \(M\) is \textbf{totally bounded}, we can request the
+		      center of the bounding (open) balls to be all from A.
+		\item \emph{Proposition}: Totally bounded \(\implies\) bounded.
+		\item \emph{Proposition}: In \(\langle\mathbb{N}^n,\rho_2\rangle\), a subset is totally
+		      bounded \(\iff\) bounded.
+		\item \emph{Theorem}: A subset \(A\) of \(M\) is totally bounded \(\iff\) every sequence
+		      in A has a Cauchy subsequence. (Lion Hunting)
+		\item \emph{Definition (complete)}: A subset \(A\) of \(M\) is \textbf{complete} if every Cauchy
+		      sequence in \(A\) converges to a point in \(A\).
+		\item \emph{Proposition}: Let \((x_k)^\infty_{k=1}\) be a sequence in \(\mathbb{R}^n\).
+		      Then
+		      \begin{enumerate}
+			      \item It is Cauchy wrt \(\rho_2\) \(\iff\) each coordinate is a Cauchy
+			            sequence in \(\langle\mathbb{R},\rho_e\rangle\).
+			      \item It is convergent wrt \(\rho_2\) \(\iff\) each coordinate is a convergent
+			            sequence in \(\langle\mathbb{R},\rho_e\rangle\).
+		      \end{enumerate}
+		\item \emph{Proposition}: given a complete metric space \(M\), a subset \(A\) of \(M\)
+		      is complete \(\iff\) \(A\) is closed in \(M\).
+		\item \emph{Definition (diameter)}: \(\diam A = \sup\{d(x,y):x,y\in A\}\), the maximum
+		      distance between any 2 points in \(A\).
+		\item \emph{Nested Set Theorem}: Let \(M\) be a complete metric space. Suppose that
+		      \((A_n)^\infty_{n=1}\) is a sequence of bounded nonempty closed subsets of M
+		      so that
+		      \begin{enumerate}
+			      \item \(A_1 \supseteq A_2 \supseteq \dots\),
+			      \item \(\lim_{n\to\infty} \diam A_n = 0\)
+		      \end{enumerate}
+		      Then there is exactly one point in \(\bigcap^\infty_{n=1}A_n\).
+		\item \emph{Definition (contraction)}: A function \(T:M\to M\) is a
+		      \textbf{contraction} if there exists \textbf{contraction constant} \(0<C<1\) so that
+		      \(\rho(T(x),T(y))\leq C\rho(x,y)\) for all \(x,y\in M\).
+		\item \emph{Banach Fixed Point Theorem (aka Contraction Mapping Principle)}: \(M\) is a
+		      complete metric space. If \(T:M\to M\) is a contraction with
+		      constant \(C\). Then \(T\) has a unique fixed point, i.e., there is a unique
+		      \(x\in M\) so that \(T(x)=x\). Furthermore, take any \(x_0 \in M\) and define
+		      \(x_n = T(x_{n-1})\) for any \(n\in\mathbb{N}\), then the sequence converges
+		      to the fixed point \(x\) and \(\rho(x_n,x)\leq\frac{C^n}{1-C}\rho(x_0,x_1)\)
+		      for all \(n\in\mathbb{N}\).
+		\item \emph{Baire's Theorem}: Let \(M\) be a complete metric space. Assume that
+		      \(M=\bigcup^\infty_{n=1} F_n\), where each \(F_n\) is a closed set in \(M\).
+		      Then there exists \(n_0 \in \mathbb{N}\) so that \(F_{n_0}\) contains a nonempty
+		      open ball \(B[x,r]\).
+		\item \emph{Definition (isometry)}: Let \(\langle M,\rho\rangle\) and \(\langle N,\tau\rangle\)
+		      be metric spaces. A function \(f:M\to N\) is an \textbf{isometry} if
+		      \(\tau(f(x),f(y)) = \rho(x,y)\) for all \(x,y\in M\).
+		\item \emph{Theorem}: Let \(\langle M,\rho\rangle\) be a metric space. There is a pair
+		      \((N,i)\), where \(\langle N,\tau\rangle\) is a \textbf{complete} metric space,
+		      where \(i:M\to N\) is an isometry, and \(i(M)\) is dense in N. That
+		      is, \(\overline{i(M)} = N\). \((N,i)\) is a \textbf{completion} of \(M\).
+		\item \emph{Theorem (completion is unique up to isometry)}: Let \((N,i)\) and \((P,j)\)
+		      be two completions of a metric space \(\langle M,\rho\rangle\). Then there is
+		      an bijective isometry \(\pi:N\to P\) so that \(\pi\circ i = j\), and
+		      \(\pi^{-1}\) is an isometry too so that \(\pi^{-1}\circ j = i\).
+		\item \emph{Proposition}: Let \(\langle M_i,\rho_i\rangle, i=1,2\) be metric spaces and
+		      let \(f:M_1 \rangle M_2\) be an isometry (not necessarily onto). Let
+		      \(\langle N_i,\tau_i\rangle\) be the completion of \(\langle
+		      M_i,\rho_i\rangle, i=1,2\). There is a unique continuous function
+		      \(\widetilde{f}:N_1 \to N_2\) that extends f, i.e.,
+		      \(\widetilde{f}(x)=f(x)\) for all \(x\in M_1\subseteq N_1\). Moreover, the
+		      extension \(\widetilde{f}\) is an isometry.
+	\end{enumerate}
+
+	\section{3rd C: Compactness}
+	\begin{enumerate}
+		\item \emph{Definition (compact)}: \(E \subseteq M\) is \textbf{compact} if \(E\) is both
+		      \textbf{complete} and \textbf{totally bounded}.
+		\item \emph{Proposition}: In \(\langle\mathbb{R}^n, \rho_2\rangle\), a subset E is
+		      \textbf{compact \(\iff\) closed and bounded}
+		\item \emph{Definition (open covering)}: Let \(E\) be a subset of a metric space
+		      \(\langle M,\rho\rangle\). A family \(\mathcal{G}\) of sets is an
+		      \textbf{open
+			      covering} of E if
+		      \begin{enumerate}
+			      \item Each \(G\in\mathcal{G}\) is an open set in M.
+			      \item \(E\) is covered by \(\bigcup \{G:G\in\mathcal{G}\}\).
+		      \end{enumerate}
+		\item \emph{Definition (Heine-Borel property)}: (Every open cover of E has a finite
+		      subcover.) A subset \(E\) of a metric space has the
+		      \textbf{Heine-Borel property} if for every open covering \(\mathcal{G}\) of \(E\),
+		      there are finitely many \(G_1,\dots,G_n\in\mathcal{G}\) so that \(E\subseteq
+		      G_1\cup\dots\cup G_n\).
+		\item \emph{Theorem (multiple characterization of compactness)}: Let \(E \subseteq
+		      \langle M,\rho\rangle\). The following are equivalent:
+		      \begin{enumerate}
+			      \item E is compact (i.e., totally bounded and complete).
+			      \item \textbf{(Sequential compactness)} Every sequence in \(E\) has a convergent
+			            subsequence (to a point in \(E\)).
+			      \item \textbf{(Bolzano-Weierstrass property, the weakest)}: Every infinite subset of
+			            \(E\) has a cluster point in \(E\).
+			      \item \textbf{(Heine-Borel property)}: Every open cover of \(E\) has a finite subcover.
+		      \end{enumerate}
+		\item \emph{Lebesque covering Lemma}: Given a compact subset \(E\) in a metric space
+		      \(\langle M,\rho\rangle\) and let \(\mathcal{G}\) be an open cover of \(E\).
+		      Then there exist a \textbf{Lebesgue's Number} \(r>0\), so that \(\forall x\in E,
+		      \exists G\in\mathcal{G}\) (depending on \(x\)) so that \(B[x,r]\subseteq G\).
+		\item \emph{Proposition:} compact \(\implies\) closed. A closed subset in a compact set
+		      is compact.
+		\item \emph{Theorem}: (Continuity preserves compactness).
+		\item \emph{\textbf{Extreme Value Theorem}}: Given $f:M\to\real$ continuous,
+		and $E\in M$ a compact set, then $\exists c,d\in E$ such that
+		$f(c)\leq f(x)\leq f(d)\ \forall x\in E$.
+		\item \emph{Theorem}: $f:M_{1}\to M_{2}$ is continuous and bijective. If
+		$M_{1}$ is compact, then $f^{-1}$ is continuous.
+		\item \emph{Definition}: $f:M_{1}\to M_{2}$ is \textbf{uniformly continuous}
+		on $M_{1}$ if $\forall\epsilon>0,\exists\delta>0$ such that we can use the
+		same $\delta$ for any $x,y\in M_{1}$ where
+		$\rho_{1}(x,y)<\delta\implies\rho_{2}(f(x),f(y))$ or equivalently,
+		$y\in B[x,\delta]\implies f(y)\in B[f(x),\epsilon]$. \textbf{uniform
+			continuity $\implies$ (pointwise) continuity}.
+		\item \emph{Theorem}: Continuous function on a compact set is uniformly continuous.
+		\item \emph{Theorem}: Given $E\subseteq M_{1}$, a uniformly continuous
+		function $f:E\to M_{2}$ can be extended to a continuous function on
+		$\overline{E},\ \tilde{f}:\overline{E}\to M_{2}$, defining
+		$\tilde{f}(x)=\lim\limits_{n\to\infty}f(x_{n})$ for some $\seqn{x_{n}}\to x$.
+	\end{enumerate}
+
+	\section{Sequences and Series of Functions}
+	\begin{enumerate}
+		\item \emph{Definition}: Given $\seqn{f_{n}}$ where $f_{n}:M_{1}\to M_{2}$,
+		$\seqn{f_{n}}$ \textbf{converges pointwise} to a function
+		$f:M_{1} \to M_{2}$ if $\forall x\in M_{1}$,
+		$\seqn{f_{n}(x)}\to f(x)\in M_{2}$. That is, given a sequence of function,
+		take a $x\in M_{1}$, subbing it into every function in $\seqn(f_{n})$ yields
+		a sequence in $M_{2}$ which converges to $f(x)$.
+		\item \emph{Definition}: $\seqn{f_{n}}$ \textbf{converges uniformly} to
+		$f:M_{1}\to M_{2}$ if
+		\begin{enumerate}
+			\item $\forall\epsilon>0,\ \exists N\in\nat$ such that
+				$\rho_{2}(f_{n}(x), f(x))<\epsilon$ for all $x\in M_{1}$ whenever
+				$n\geq N$. \textbf{Given epsilon, the $N$ can be shared for all
+				$x\in M_{1}$.}
+			\item
+				$\iff \lim\limits_{n\to\inf}\sup\{\rho_{2}(f(x),f_{n}(x)):x\in M_{1}\}=0$
+		\end{enumerate}
+		\item \emph{Definition}: $\seqn{f_{n}}$ is \textbf{uniformly Cauchy} on
+		$M_{1}$ if given $\epsilon>0,\ \exists N\in\nat$ such that
+		$\rho_{2}(f_{m}(x),f_{n}(x))<\epsilon\forall x\in M_{1}$ whenever $m,n\geq N$.
+		\item \emph{Theorem}: \textbf{(Uniform continuity preserves continuity)} A
+			uniform continuous sequence of functions converges to a continuous
+			function. The limit is not necessarily continuous if convergence is
+			pointwise. Note that a sequence of functions is continuity preserving
+			$\implies$ uniform continuity is \textbf{NOT} true.
+		\item \textbf{Dini's Theorem}: $M$ is a compact metric space. A sequence of
+			pointwise convergent functions $f_{n}:M\to\real$ and is non-decreasing
+			(i.e., $\forall x\in M, f_{1}(x)\leq f_{2}(x)\leq\dots\leq f(x)$)
+			$\implies \seqn{f_{n}}$ converges uniformly (to the same limit).
+		\item \emph{Definition (Series of functions)}: $\forall k\in\nat$, we have
+			$f_{k}:M\to\real$. Define the \textbf{nth partial sum}
+			$s_{n}(x) = \sum\limits^{n}_{k=1}f_{k}(x)$, the function that sums through
+			the $f_{k}$s at a given $x$. The \textbf{infinite series}
+			$\infsrsk{f_{k}(x)}$ converges pointwise (uniformly) on $M$ to a function
+			$f:M\to\real$ if the sequence of partial sums, $\seqn{s_{n}}$ converges
+			pointwise (uniformly) to $f$ on $M$.
+		\item \emph{Theorem}: \textbf{(Weierstrass M-test)} Suppose that
+			$\infsrsk{M_{k}}$ is a convergent numerical series, $M_{k}\geq 0$
+			(non-negative terms) so that $|f_{k}(x)|\leq M_{k}\ \forall x\in M$. Then
+			$\infsrsk{f_{k}}$ is uniformly convergent on $M$.
+		\item \emph{Definition}: Let $a_{k},b\in\real$ for $k\geq 0$. A series of
+		the form $\infsrsk{a_{k}(x-b)^{k}}$ is called the \textbf{power series}.
+		\item \emph{Proposition}: The power series converges \textbf{absolutely and
+			uniformly} on any closed interval in $(b-R,b+R)$, where
+			$R=(\limsup\limits_{k\to\infty}|a_{k}|^{1/k})^{-1}$ is the \textbf{radius
+			of convergence}, and define $\frac{1}{\infty}=0, \frac{1}{0}=\infty$. In
+			$\real-[b-R,b+R]$, power series diverges. At the boundaries, the behavior
+			is undefined. Furthermore, $f:(b-R,b+R)\to\real,f(x)=\infsrsk{a_{k}(x-b)^{k}}$ is
+			continuous on the domain.
+			\item \emph{Definition}: Given $b\in\real$, a real-valued function
+			$f$ is \textbf{(real) analytic at $b$} if
+			\begin{enumerate}
+				\item $f$ is defined on an open interval $I$ containing $b$.
+				\item $\exists$ power series $\infsrsk{a_{k}(x-b)^{k}}$ such that
+				$f(x)=\infsrsk{a_k}(x-b)^{k}\ \forall x\in I$.
+			\end{enumerate}
+			\item \emph{Proposition}: Suppose that $f(x)=\infsrsk{a_{k}(x-b)^{k}}$ has
+			radius of convergence $R>0$. Then $f$ is analytic at any $u\in(b-R,b+R)$.
+			\item \emph{Proposition}: \textbf{(Strong uniqueness property)} Let $I$ be
+			an open interval and $f,g:I\to\real$ be analytic functions on $I$. If
+			$\exists\ \emptyset\neq J\subseteq I$ such that $f(x)=g(x)\ \forall x\in J$,
+			then $f(x)=g(x)\ \forall x\in I$. In words, if two analytic functions are
+			equal in an sub-interval, they are equal throughout.
+	\end{enumerate}
+
+	\section{The metric space $\cmm$}
+	In this section, $C(M_{1},M_{2})$ represents the set of all continuous
+	functions from $M_{1}$ to $M_{2}$, where $\met{1}$ is always \textbf{compact}.
+	The metric space is given the \textbf{uniform metric},
+	$\rho(f,g)=\max\{\rho_{2}(f(x),g(x)):x\in M_{1}\}$.
+
+	\begin{enumerate}
+		\item \emph{Proposition}: Let $\seqn{f_{n}}$ be a sequence in $\cmm$. Then
+		\begin{enumerate}
+			\item $\seqn{f_{n}}$ converges to $f$ in $\cmm\iff\seqn{f_{n}}$ converges
+				uniformly to $f$ in $M_{1}$.
+			\item $\seqn{f_{n}}$ is Cauchy in $\cmm\iff\seqn{f_{n}}$ is uniformly
+				Cauchy in $M_{1}$.
+		\end{enumerate}
+		Therefore $\rho$ is called the \textbf{uniform metric}.
+		\item \emph{Theorem}: $\cmm$ is complete (with the uniform metric)
+			$\iff M_{2}$ is complete.
+		\item \emph{Theorem}: Let $\seqn{F_{n}}$ be a sequence of closed sets in
+			$C[0,1]$, the set of all continuous functions whose domain is
+			$[0,1]\subseteq\real$. If $C[0,1]=\bigcup\limits^{\infty}_{n=1}F_{n}$,
+			then $\exists n_{0}$ such that $F_{n_{0}}$ contains a nonempty open ball
+			$B[f,r]$ for some $f\in C[0,1]$ and some $r>0$.
+		\item \emph{Application}: An application of the theorem above, by defining
+			$F_{n}=\{f:f\in C[0,1], \exists x\in[0,1],\forall y\in[0,1],|y-x|<\frac{1}{n}\implies|f(x)-f(y)|\leq n|y-x|\}$.
+			We will find a function that is continuous on $[0,1]$ but nowhere
+			differentiable.
+
+	\end{enumerate}
+\end{multicols*}
+
 \end{document}
