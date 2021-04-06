@@ -1,0 +1,16 @@
+#+TITLE: Cs5250
+
+* Linking and Loading
+** General structure
+1. ELF Header
+   Stores info about the whole
+2. Program Header
+   Stores
+** Relocation table
+- =.o= files are relocatable object files
+- relocation is the act of combining values with names, "relocating" the
+  variables
+- Offset: the offset (bytes) at the =.text= section where the current variable is
+  reserved a hole and waits to be filled.
+** Program Header
+Stores information about the sections.

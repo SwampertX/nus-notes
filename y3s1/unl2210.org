@@ -1,0 +1,122 @@
+#+TITLE: Unl2210
+* Week 2
+** Lecture 1
+*** Discussion
+Questions
+1. Both the sophisticated naïve realists and the representationalists leverage
+   on the Laws of Nature to explicate the “externality ” of objects.
+   a) What do you understand by the phrase “Laws of Nature”? What are some of
+      their characteristics? Give one example of such a law.
+      - Rules that the external world follow
+      - Consistent everywhere, everytime
+      - Eg. Universal law of Gravitation
+   b) In what way, do you think, the Laws of Nature explicate the externality of
+      objects?
+      - Differentiates dreams and reality
+   c) What is (are) the principal difference(s) between the positions of the
+      sophisticated naïve realists and the representationalists?
+      - Rep: filter - object passes through it and becomes an idea in the mind
+      - Realists: the object enter your mind directly
+2. What are the key criticisms raised by the idealists (those that subscribe to
+   metaphysical idealism) on the premises that are held by the
+   representationalists?
+   - idealists think that everything is idea
+   - even
+3. What is the key idea espoused by the phenomenalists and how does it addresses
+   the problems encountered by the representationalists and idealists?
+   - the ideas are the complete collection of data??
+*** Points in class
+- Space and Time is needed to prove externality (that an object exists)
+- Explication of externality (by means of sense, touch) does not prove its existence
+- The problem with dreams - what if it follows the laws of nature?
+- There is no such thing as scientific proof - only mathematics have proofs.
+*** Summary
+- Realism: Naive - we perceive the objects all the time. Sophiscated - we
+  perceive them in its true form only sometimes.
+- Representationalists: we never perceive the real objects, but only a
+  representation of it. Compare sophisticated realism - representationalists
+  argue what we perceive pass through a filter to form a representation in our
+  minds, but never in its true form.
+- Idealists: if you get the idea (representation), then how can you from your
+  idea to extrapolate that what you perceive exists? If we use our senses to
+  prove some things exist, then does it truly exist without us perceiving?
+- Phenomenalist: in order to solve the problem of idealists, experience is
+  neither mental (as in idealists) or physical (realism). It is sense data -
+  which continue to exist regardless we experience (collect data) them.
+** Lecture 2
+*** Questions
+1. In the theory of knowledge, what are the principal differences between the
+   positions taken by the Rationalists and Empiricists?
+   - Rationalists say knowledge is obtained by reason. Empiricists say
+     knowledge is obtained by sense.
+   - Rationalists: senses are unreliable, see dreams and hallucinations.
+2. A proposition can be labelled as being either analytic or synthetic. How do
+   you distinguish the two and provide examples to exemplify the differences?
+   - Analytic statements are definitions. Predicate is carried by the subject.
+     + All bachelors are unmarried. The property unmarried is the definition of
+       bachelors.
+     + All bodies are extended. It is a body only if it is existent.
+   - Synthetic knowledge are matters of fact. It has something to say about the
+     world. Is it an observation?
+     + The cat is on the mat.
+     + All bodies have weight.
+3. A proposition can be labelled as being either a priori or a posterior. How do
+   you distinguish the two and provide examples to exemplify the differences?
+   - A priori - does not depend on senses.
+   - A posteriori - relies on senses.
+* Week 3
+** Lecture 1
+*** Discussion
+1. In the chapter, “How do we know”, the author showcases some examples of a
+   priori statements due to Descartes and Kant (pg. 40 examples (a) – (e)). In
+   his subsequent section, “The Three Worlds of Modern Science”, he makes a case
+   against a priori knowledge using these examples in his argument. What is his
+   key argument?
+   - my answer: these worlds as possible counterexamples to a priori knowledge
+2. In the case of Mathematical Knowledge, the author (as in Q8), uses the
+   example of 2 + 2 = 4 as a way of discussing a priori-ness of the statement.
+   He also contends that it can also be regarded as a posteriori. Under what
+   conditions does it become the latter?
+   - my answer: becomes a posteriori when applied to real life
+3. What do you think is the author’s position regarding Synthetic a priori knowledge?
+   - my answer: any application of mathematical knowledge is synthetic a priori.
+** Lecture 2
+*** What are numbers?
+- Counting objects
+- *Wittgenstein:* The meaning of the word is its use in language. (What it does)
+- *Logical Positivism:* The meaning of a statement is its verification
+* Week 4
+** Lecture 1
+*** What are natural numbers?
+**** Definition 1
+A set is a natural number if it is
+- Commutative under addition and multiplication
+- Associative under addition and multiplication
+- distributive under mult over add
+**** Definition 2 - the inclusion of 0
+- note that 0 is the additive identity, including it in
+- introduce the idea of inverse, and hence discovering negative numbers via
+  additive inverses
+- Now we are at \mathbb{Z}
+*** Activities
+**** Q1
+a. -x
+   = -x + 0
+   = -x + 0*x
+   = -x + (1 + -1) * x
+   = -x + x + (-1) * x
+   = (-x + x) + (-1) * x
+   = (-1) * x
+b. -x * -y
+   = -1 * -1 * x * y (multiple times of part a and commute)
+   = (-1 * -1) * x * y (-1 * x = inverse(x), let x = -1)
+   = 1 * x * y
+   = x * y
+c. obvious by a, then distributive
+**** Q2
+** Lecture 2
+*** Axiomatic method
+Requirements:
+1. Terms used in the discourse have to be clearly defined
+2. To lay down premises that are assumed to be true (usually self evident)
+3. Logic to move frim one proposition to the next (deductive reasoning)

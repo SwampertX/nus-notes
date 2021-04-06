@@ -1,0 +1,279 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3201 Homework 2}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+% Question: section
+% Solution: subsection, subsubsection
+% Hence remove numberings
+% \setcounter{secnumdepth}{0}
+
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+We denote $Ann_{R}(I)$ as $A$. We want to show that $A$ is a subring of $R$ and
+$RA\subseteq A\supseteq AR$.
+
+\subsection*{Solution}
+\begin{proof}
+\underline{$A$ is a subring:}\\
+First, $A$ is a subgroup of $R$ since $0\in A\neq\emptyset$ and for any $a_{1},a_{2}\in A$, we have
+\[(a_{1}-a_{2})x=a_{1}x-a_{2}x=0-0=0\ \implies\ (a_{1}-a_{2})\in A.\]
+Secondly, $A$ is closed under multiplication:
+\[a_{1}a_{2}x=a_{1}(0)=0\ \implies\ a_{1}a_{2}\in A.\]
+\underline{$A$ is a (two-sided) ideal:}\\
+For any $\sum r_{k}a_{k}\in RA, r_{k}\in R, a_{k}\in A, x\in I$,
+\begin{align*}
+  (\sum r_{k}a_{k})x&=\sum r_{k}(a_{k}x)&& \text{(distributivity, associativity)}\\
+  & =\sum r_{k}(0)=0\ \implies\ RA\subseteq A && (A\text{ annihilates }I)
+\end{align*}
+For any $\sum a_{k}r_{k}\in AR, r_{k}\in R, a_{k}\in A, x\in I$,
+\begin{align*}
+  (\sum a_{k}r_{k})x&=\sum a_{k}(r_{k}x)&& \text{(distributivity, associativity)}\\
+                 &=\sum a_{k}x_{k}=0\ \implies\ AR\subseteq A.&& (\text{$x_{k}\in I$ for all $k$ since $I$ is ideal})\\
+\end{align*}
+\end{proof}
+
+\section*{Problem 2}
+\begin{enumerate}
+  \item Show that every element in $R\setminus M$ is a unit.
+\begin{proof}
+        Suppose otherwise, let $r\in R\setminus M$ be a non-unit. Then $r\in(r)\subseteq M'$ for some
+        maximal ideal $M'$. Since there is only one unique maximal ideal in $R$,
+        we have $r\in M'=M$, a contradiction.
+  \end{proof}
+    \item Show that if the set of nonunits in $R$ is an ideal, then $R$ is local.
+        \begin{proof}
+          Let an arbitrary maximal ideal $M$ be given, we show uniqueness.
+          Denote the set of all non-units be $I$.
+
+          Since $M$ as a (non-trivial) maximal ideal cannot contain any units,
+          we must have $M\subseteq I$ since $I$ collects all the nonunits. On the other
+          hand, since $I$ is a proper ideal (witnessed by $1\notin I$), we have
+          $M=I\subsetneq R$ by the maximality of $M$. Therefore $R$ is local with the
+          unique maximal ideal $I$.
+        \end{proof}
+\end{enumerate}
+
+\section*{Problem 3}
+\begin{enumerate}
+  \item Show the preimage of a prime ideal under a ring homomorphism $\phi:R\to S$ is either
+        the whole ring or a prime ideal.
+\begin{proof}
+  % We show that given any prime ideal $P\subset S$, $\phi^{-1}(P)\neq R\implies\phi^{-1}(P)$ is prime.
+  % We first show that the preimage of any ideal of $\phi(R)$ is also an ideal.
+
+  % Let $I$ be an ideal in $\phi(R)$. Then let $a, b\in\phi^{-1}(I)$. We have
+  Since the ideals in the $R$ containing $\ker\phi$ and the ideals in
+  $\phi(R)\cong R/\ker(\phi)$ are in one-one correspondence (by the Correspondence
+  Theorem), the preimage of an ideal is also an ideal.
+
+  We just need to show the ``primeness'' of the preimage when it is not the
+  whole ring: that given any $ab\in \phi^{-1}(P)\neq R$ where $P$ is a prime ideal in
+  $S$, either $a\in\phi^{-1}(P)$ or $b\in\phi^{-1}(P)$.
+
+  % We say $P\subset\phi(R)$ instead of $S$ because the preimage of $P$ is not the whole
+  % ring by assumption.
+
+  Note that since $ab\in \phi^{-1}(P)$,
+  \[\phi(ab)\in P\implies\phi(a)\phi(b)\in P\implies \phi(a)\in P \wedge \phi(b)\in P.\]
+  Since
+  \[\phi^{-1}(P)\subsetneq R \implies P\subsetneq\phi(R) \implies \phi(a),\phi(b)\in P\subseteq\phi(R)\implies a\in \phi^{-1}(P)\text{
+      or }b\in \phi^{-1}(P).\] Therefore $\phi^{-1}(P)$ is a prime ideal.
+\end{proof}
+
+\item If a ring homomorphism $\phi:R\to S$ is surjective, then the preimage of a
+maximal ideal in $S$ is a maximal ideal in $R$.
+\begin{proof}
+  Suppose otherwise, and let $N\subsetneq S$ be the maximal ideal in $S$ such that its
+  preimage is not maximal in $R$. In particular, $\phi^{-1}(N)$ is contained in
+  some maximal ideal $M$, where $\phi^{-1}(N)\subsetneq M \subsetneq R$. Consider the image under
+  $\phi$:
+  \[\phi^{-1}(N)\subsetneq M\implies N\subsetneq \phi(M)\]
+  but $N$ is maximal in $S$. This implies $\phi(M)=S$, and since $N$ is a strict
+  subset of $\phi(M)$, $\phi(M)$ is a non-trivial ring. Any element in $R-M$ cannot be
+  mapped to zero (otherwise $M=R$ a contradiction), but by surjectivity,
+  \[\phi(M)=S=\phi(R)\ \implies R\setminus M=\emptyset\]
+  contradicting the (proper) maximality of $M$.
+\end{proof}
+\end{enumerate}
+
+
+\section*{Problem 4}
+\begin{enumerate}
+\item \begin{proof}
+  Let us denote the embedding from the ring $R$ to its localization $D^{-1}R$ as
+  $\varphi:r\mapsto\frac{r}{1}$, and define $R'(\cong R)=\varphi(R)\subset D^{-1}R$.
+
+  I claim that $I=\varphi^{-1}(R'\cap J)$ is an ideal in $R$ and $I$ generates $J$, ie
+  $(D^{-1}R)\varphi(I)=J$.
+  \begin{enumerate}
+    \item $I\subseteq R$ is an ideal in $R$.
+
+          \underline{$I$ is a subgroup of $R$:} First, note that
+          $\frac{0}{1}\in R'\cap J\implies 0\in I\neq\emptyset$.
+
+          Let $a,b\in I=\varphi^{-1}(R'\cap J)$ be
+          given. Then $\varphi(a), \varphi(b)\in R'\cap J$. Since $R',J$ are Abelian subgroups of
+          the localization,
+          \begin{align*}
+            \varphi(a)-\varphi(b)\in R'\ \wedge\ \varphi(a)-\varphi(b)\in J&\implies\varphi(a)-\varphi(b)\in R'\cap J\\
+                                         &\implies \varphi(a-b)\in R'\cap J\\
+                                         &\implies (a-b)\in\varphi^{-1}(R'\cap J)=I.
+          \end{align*}
+
+      \underline{$I$ is a subring of $R$:}
+          Let $a,b\in I=\varphi^{-1}(R'\cap J)$ be
+          given. Then $\varphi(a), \varphi(b)\in R'\cap J$. Since $R',J$ are Abelian subgroups of
+          the localization,
+          \begin{align*}
+            \varphi(a)\varphi(b)\in R'\ \wedge\ \varphi(a)\varphi(b)\in J&\implies\varphi(a)\varphi(b)\in R'\cap J\\
+                                         &\implies \varphi(ab)\in R'\cap J\\
+                                         &\implies (ab)\in\varphi^{-1}(R'\cap J)=I.
+          \end{align*}
+          This shows $I$ is also closed under multiplication and hence is a
+          subring of $R$.
+
+      \underline{$I$ is an ideal of $R$:}
+      Given any $r\in R, a\in I$,
+      \begin{align*}
+        \varphi(ra) &= \frac{ra}{1}\\
+        &=\frac{r}{1}\cdot\frac{a}{1}\\
+              &\in R' J && (\varphi(a)=\frac{a}{1}\in (R'\cap J))\\
+        &\subseteq J &&(J \text{ is an ideal}).
+      \end{align*}
+      And since $ra\in RI\subseteq R$, we must have $\varphi(ra)\in(R'\cap J)\implies (ra)\in I$.
+
+  \item $I$ generates $J$, ie. $(D^{-1}R)\varphi(I) = (D^{-1}R)(R'\cap J) = J$.
+
+  Here is a useful characterization: $I=\varphi^{-1}(R'\cap J)=\{r\in R|\frac{r}{1}\in J\}$.
+
+          \underline{($\supseteq$)}: Given any $\frac{r}{d}\in J$ where $r\in R, d\in D$, we have
+          $\frac{1}{d}\cdot\frac{r}{1}\in (D^{-1}R)(R'\cap J)$.
+
+          \underline{($\subseteq$)}: This is trivial since $(R'\cap J)\subseteq J$, which implies
+          $(D^{-1}R)(R'\cap J)\subseteq(D^{-1}R)J\subseteq J$.
+  \end{enumerate}
+\end{proof}
+\item Show if $R$ is a PID, then $D^{-1}R$ is a PID.
+\begin{proof}
+  We show any ideal $J\subset D^{-1}R$ is principal. Let $J$ be given, and by the
+  previous part, we have a $I$ that generates it. Concretely,
+  \begin{align*}
+    J &= (D^{-1}R)\varphi(I)\\
+      &= (D^{-1}R)\varphi(Rr)&& \text{for some $r\in I$ since $R$ is a PID}\\
+      &= (D^{-1}R)\varphi(R)\varphi(r)&& \text{homomorphism}\\
+      &= (D^{-1}R)\frac{r}{1}&& \varphi(R)\subseteq (D^{-1}R)\\
+      &=(\frac{r}{1}).
+  \end{align*}
+  Thus $J$ is also a principal ideal, and $D^{-1}R$ a PID.
+
+\end{proof}
+\end{enumerate}
+
+\section*{Problem 5}
+We first show that
+\begin{lemma*} $N(ab)=N(a)N(b)\forall a,b\in\Z[\sqrt{2}]$. \end{lemma*}
+\begin{proof}
+  For $a, b, c, d\in\Z$,
+  \begin{align*}
+    N[(a+b\sqrt{2})(c+d\sqrt{2})] &= N(ac+2bd+(ad+bc)\sqrt{2})\\
+                                  &=(ac+2bd)^{2}-2(ad+bc)^{2}\\
+                                  &=(ac)^{2}+4(bd)^{2}-2(ad)^{2}-2(bc)^{2}\\
+                                  &=(a^{2}-2b^{2})(c^{2}-2d^{2})\\
+                                  &=N[(c+d\sqrt{2})(a+d\sqrt{2})].
+  \end{align*}
+\end{proof}
+
+
+Now we show that $\Z[\sqrt{2}]$ is a Euclidean Domain.
+\begin{proof}
+Let $\alpha,\beta\in\Z[\sqrt{2}]$. We want to show that there exist $q, r\in\Z[\sqrt{2}]$
+such that $\alpha=q\beta+r$, where $r=0$ or $N(r)<N(\beta)$.
+
+Let $p,q\in\Q$ be such that \[\frac{\alpha}{\beta}\in\Q[\sqrt{2}]=p+q\sqrt{2}.\]
+We can then choose $m,n\in\Z$ such that
+\[|m-p|\leq1/2, |n-q|\leq1/2.\]
+Now \begin{align*}
+      \alpha&=\beta(p+q\sqrt{2})\\
+       &=\beta(m+n\sqrt{2}+(p-m)+(q-n)\sqrt{2})\\
+       &=(m+n)\beta+((p-m)+(q-n)\sqrt{2})\beta\\
+      &=q\beta+r
+    \end{align*}
+    is as desired since
+    \begin{align*}
+      N(r)&=N[(p-m)+(q-n)\sqrt{2}]\cdot N(\beta)&& (\text{lemma})\\
+          &\leq(1/2)^{2}\cdot N(\beta)&&(|m-p|\leq1, |n-q|\leq1/2)\\
+          &=\frac{1}{2}N(\beta)\\
+          &\leq N(\beta). &&(N(\beta)\geq0)
+    \end{align*}
+Thus $\Z[\sqrt{2}]$ with the norm defined is an Euclidian Domain.
+\end{proof}
+
+\end{document}

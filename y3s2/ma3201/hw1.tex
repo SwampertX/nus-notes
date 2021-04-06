@@ -1,0 +1,243 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3201 Homework 1}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+% Question: section
+% Solution: subsection, subsubsection
+% Hence remove numberings
+% \setcounter{secnumdepth}{0}
+
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+Given $\alpha=3(1,2)-5(2,3)+14(1,2,3),\ \beta=6(1)+2(2,3)-7(1,3,2)$, then
+\begin{align*}
+	 & \alpha+\beta   &  & =6(1)+3(1,2)-3(2,3)-7(1,3,2)+14(1,2,3)              \\
+	 & 2\alpha+3\beta &  & =-18(1)+6(1,2)-16(2,3)+21(1,3,2)+28(1,2,3)          \\
+	 & \alpha\beta    &  & = -108(1) + 81(1,2) -21(1,3)-30(2,3) + 90(1,2,3)    \\
+	 & \alpha^{2}     &  & =34(1)-70(1,2)-28(1,3)+42(2,3)-15(1,2,3)+181(1,3,2)
+\end{align*}
+
+\section*{Problem 2}
+\begin{enumerate}
+	\item Since $0\neq1$, then $n>0$. Given that $x^{n}=x\cdot x^{n-1}=0$, we have either
+	      $n=1$ or $n>1$.
+
+	      If $n=1$, then $x\cdot x^{n-1}=x\cdot1=0 \implies x=0$.
+
+	      Otherwise if $n>1$, then $x\cdot x^{n-1}=0$ and both not zero implies
+	      $x, x^{n-1}$ are zero divisors. $\square$
+
+	\item \begin{align*}
+		      (rx)^{n} & = (rx)(rx)\ldots(rx)                                  \\
+		               & = rxrx\cdots rx      &  & \text{(associativity)}      \\
+		               & = r^{n}\cdot x^{n}   &  & \text{($R$ is commutative)} \\
+		               & = r^{n}\cdot0 = 0
+	      \end{align*} thus $rx$ is a nilpotent for all $r\in R$.
+
+	\item $(1+x)(1-x+\ldots+(-1)^{n-1}x^{n-1})=1\pm x^{n}=1\pm0=1$. I claim that $x\neq-1$ (therefore
+	      $1+x\neq0$ will be a unit). Assume the contrary that $x=-1$, then
+	      $x^{n}=\pm1\ \forall n\in\mathbb{Z}_{>0}$, a contradiction to the nilpotency.
+	      Therefore, $(1+x)$ is a unit.
+
+	\item
+	      Note that by (2), $(u^{-1}x)$ is also nilpotent, thus by (3),
+	      $(1+u^{-1}x)$ is a unit. Then since the product of units will be a unit (Remark 1.8.2), $u\cdot(1+u^{-1}x)=u+x$ is also a unit.
+\end{enumerate}
+
+\section*{Problem 3}
+\begin{enumerate}
+	\item Write $\phi(0)=\phi(1+(1)(-1))=\phi(1)+\phi(1)\phi(-1)=\phi(1)(1+\phi(-1))=0$.
+
+	      If $\phi(1)\neq0$ and $\phi(-1)\neq-1$, then $\phi(-1)$(and $1+\phi(-1)$) is a zero divisor.
+
+	      A few observations:
+	      \begin{enumerate}
+		      \item $\phi(1)=0\implies\phi$ is the zero map, since then
+		            $\forall r\in R, \phi(r)=\phi(1\cdot r)=0\cdot\phi(r)=0$.
+		      \item $\phi(-1)=-1$ implies $\phi(1)=\phi(-1)\phi(-1)=(-1)(-1)=1$.
+	      \end{enumerate}
+	      Thus we must have $\phi(1)$ is a zero divisor.
+
+	      In the case where $S$ is an integral domain, then $\phi(1)(1+\phi(-1))=0$ forces
+	      either factor to be $0$. Since by observation 1, $\phi(1)=0$ leads to $\phi$ being
+	      the zero map, we must have the second factor as 0. By the second observation,
+	      $\phi(1)=1$ as desired.
+
+
+	\item I claim that the induced map is the original map restricted to $R^{*}$.
+	      I will verify that units in $R$ are mapped to units in $S$, ie. the new
+	      codomain $S^{*}$ is correct. That is the only thing we need to do
+	      since the homomorphic property of the restricted map is already given
+	      by the original map.
+
+	      Let $ab=ba=1=cd=dc$ for some $a,b,c,d\in R$. Then indeed,
+	      $\phi(a)\phi(b)=\phi(ab)=\phi(1)=1$ we have units mapped to units.
+
+
+	\item Consider the product ring $R\times S$ of two rings $R, S$ both with $1\neq0$, then the
+	      embedding $\phi:R\to R\times S, r\mapsto(r,0)$ maps $1_{r}$ to $(1_R, 0)\neq1_{R\times S}=(1_{R},1_{S})$.
+\end{enumerate}
+
+
+\section*{Problem 4}
+\begin{enumerate}
+	\item We take for granted the fact that $I+J$ is an ideal (proved in
+	      appendix), and just show that
+	      \begin{enumerate}
+		      \item $I,J$ are contained in $I+J$.
+		            \begin{proof}
+			            \[I=\{i+0|i\in I\}\subseteq\{i+j|i\in I, j\in J\}=I+J\] and the proof is symmetric
+			            for $J\subseteq I+J$.
+		            \end{proof}
+		      \item $I+J$ is the smallest ideal containing $I$ and $J$.
+		            In other words, we show for any ideal $K$ containing $I,J$,
+		            $I+J\subseteq K$.
+		            \begin{proof}
+			            Let $K$ be given. Then for any $i\in I, j\in J$, $i\in K$ and $j\in K$.
+			            Since $K$ is an Abelian group wrt addition, $i+j\in K$ by closure
+			            property of the group $K$. Therefore $I+J\subseteq K$ for any ideal $K$
+			            containing $I$ and $J$.
+		            \end{proof}
+	      \end{enumerate}
+
+
+	\item We first show $IJ$ is an ideal.
+	      \begin{proof}
+		      $IJ$ is a subring of $R$ since for any
+		      $\sum^{n}_{k=1}i_{k}j_{k},\sum^{m}_{k=1}x_{k}y_{k}\in IJ$ where $i_{k},x_{k}\in I$ and
+		      $j_{k},y_{k}$ for all $k=1,\ldots,\max(m,n)$,
+		      \begin{enumerate}
+			      \item $0\in IJ\neq\emptyset$, and since $-x_{k}y_{k}=(-x_{k})y_{k}$ can be rewritten as $i_{n+k}j_{n+k}$,
+			            \[\sum^{n}_{k=1}i_{k}j_{k}-\sum^{m}_{k=1}x_{k}y_{k}=
+				            \sum^{n}_{k=1}i_{k}j_{k}+\sum^{m}_{k=1}-x_{k}y_{k}=
+				            \sum^{n+m}_{k=1}i_{k}j_{k} \in IJ\]
+			            Thus $IJ$ is a subgroup of $R$ by the one-step subgroup test.
+			      \item For products of any two elements from $IJ$, its fully expanded form
+			            must have terms of the form
+			            \[i_{1}j_{1}i_{2}j_{2}=[i_{1}(j_{1}i_{2})]j_{2}=[i_{1}r]j_{2}=i_{3}j_{2}\]
+			            for some $i_{1},i_{2},i_{3}\in I, j_{1},j_{2}\in J$ since $I$ is an
+			            ideal. Therefore the product is a sum of finite terms of the form
+			            $i_{k}j_{k}$, which implies $IJ$ is closed under multiplication.
+		      \end{enumerate}
+		      Thus $I+J$ is a subring of $R$. To verify that $I+J$ is an ideal, note that
+		      For any $r\in R, i\in I, j\in J$, \[r(ij)=(ri)j\in IJ\ni i(jr)=(ij)r\] since $I,J$
+		      are ideals. Thus $IJ$ is an ideal.
+	      \end{proof}
+	      Now we show that $IJ$ is contained in $I\cap J$.
+	      \begin{proof}
+		      \begin{align*}
+			                   & IJ=\{\Sigma ij|i\in I,j\in J\}\subseteq\{ir|i\in I,r\in R\}\subseteq I \\
+			                   & IJ=\{\Sigma ij|i\in I,j\in J\}\subseteq\{rj|j\in I,r\in R\}\subseteq J \\
+			      \therefore\  & IJ\subseteq I\cap J
+		      \end{align*}
+	      \end{proof}
+
+	\item Since $n\Z$ are ideals for any $n\in\N$, we have
+	      $2\Z\cap4\Z=4\Z\neq(2\Z)(4\Z)=8\Z$.
+
+	\item We first need that $I\cap J$ is an ideal.
+	      \begin{proof}
+		      We know that $I\cap J$ is a subgroup of $R$. For any $k,l\in I\cap J$, $I\ni{k,l}\in J$,
+		      therefore $kl\in I \wedge kl\in J$ ($I,J$ are rings) implies $kl\in I\cap J$. Thus $I\cap J$ is
+		      closed under multiplication.
+	      \end{proof}
+	      We just need to show that $I\cap J\subseteq IJ$ when $R$ is commutative and $I+J=R$.
+	      \begin{proof}
+		      Let $k\in I\cap J$. Since $I+J=R$, take any $r\in R$ and let $r=i+j\in I+J$.
+		      \begin{align*}
+			      I\cap J & = R(I\cap J)                  &  & (I\cap J \text{ is an ideal})   \\
+			              & = (I+J)(I\cap J)              &  & (R=I+J)                         \\
+			              & = [I(I\cap J)] + [J(I\cap J)] &  & (\text{distributive})           \\
+			              & \subseteq IJ + JI             &  & (I\supseteq I\cap J\subseteq J) \\
+			              & = IJ + IJ = IJ                &  & (R\text{ is commutative})
+		      \end{align*}
+	      \end{proof}
+\end{enumerate}
+\section*{Appendix}
+\begin{lemma*}
+	Given a ring $R$ with $1\neq0$, and two ideals $I+J$, then $I+J$ is also an ideal.
+\end{lemma*}
+\begin{proof}
+	$I+J$ is a subring of $R$ since for any $i_{1}+j_{1},i_{2}+j_{2}\in I+J$,
+	\begin{enumerate}
+		\item $0\in I+J\neq\emptyset$, and
+		      \[i_{1}+j_{1}-(i_{2}+j_{2})=(i_{1}-i_{2})+(j_{1}-j_{2})\]
+		      Thus $I+J$ is a subgroup of $R$ by the one-step subgroup test.
+		\item
+		      \[ (i_{1}-i_{2})\cdot(j_{1}-j_{2})=[i_{1}(j_{1} + j_{2})+i_{2}j_{1}] + i_{1}j_{2}\]
+		      where the first term is the sum of two elements from $I$ postmultiplied, and the
+		      latter an element from $J$ premultiplied. Thus their sum belongs to $I+J$.
+	\end{enumerate}
+	Thus $I+J$ is a subring of $R$. To verify that $I+J$ is an ideal, note that
+	any $r\in R, i\in I, j\in J$, \[r(i+j)=ri+rj\in I + J\ni ir+jr=(i+j)r\] since $I,J$
+	are ideals. Thus $I+J$ is an ideal.
+\end{proof}
+\end{document}

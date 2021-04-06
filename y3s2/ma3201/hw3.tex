@@ -1,0 +1,214 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3201 Homework 3}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\chr}{char}
+
+% Question: section
+% Solution: subsection, subsubsection
+% Hence remove numberings
+% \setcounter{secnumdepth}{0}
+
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+Let $P$ be a prime ideal of a commutative ring $R$ (with $1\ne0$). Let $I,J$ be
+two ideals of $R$ such that $I\cap J\subset P$. Prove that either $I\subset P$ or $J\subset P$.
+\subsection*{Solution}
+\begin{proof}
+  For the sake of contradiction, suppose there is some $i\in I$ and $j\in J$ such
+  that both are not in $P$. Then since both are in ideals, $ij\in I\cap J\subset P$. Since $P$
+  is a prime ideal, we have $ij\in P\implies i\in P \vee j\in P$, a contradiction.
+\end{proof}
+
+\section*{Problem 2}
+Let $\Z[i]$ be the ring of Gaussian integers. Let $I\subset\Z[i]$ be a non-zero ideal.
+Prove that the quotient ring $\Z[i]/I$ is a finite set.
+\subsection*{Solution}
+Recall that $\Z[i]$ is an Euclidean domain. Since it is in particular a
+principal ideal domain, let $I=(r)$. Then we carry out Euclidean division on any
+arbitrary element of $R$, say $\alpha$, we have
+\begin{align*}
+\alpha = qr + \beta &&N(\beta)<N(r).
+\end{align*}
+If $\beta=0$, then $\alpha\in(r)$ is in the kernel. Otherwise $\beta>0$, then there are only
+finitely many $\beta$ such that $N(\beta)=a^{2}+b^{2}<N(r), \{a,b\}\subset\Z$. Therefore, its
+image under the quotient map must also be finite.
+
+\section*{Problem 3}
+Let $p\in\Z$ be a positive prime. We define
+\[\Phi_{p}(x)=\frac{x^{p}-1}{x-1}=x^{p-1}+x^{p-2}+\cdots+1\in\Z[x].\]
+Prove that $\Phi_{p}(x)$ is irreducible.
+\subsection*{Solution}
+\begin{lemma*}
+  Let $R$ be a commutative ring. If $f(x)\in R[x]$ is reducible, then $f(x+1)$ is
+  reducible.
+\end{lemma*}
+\begin{proof}[Proof of Lemma]
+  Let $f(x)=a(x)b(x)$ where $a(x), b(x)$ are not units in $R[x]$. Then
+  $a(x+1), b(x+1)$ cannot be units since their highest powers are preserved,
+  according to the Binomial Theorem. Therefore $f(x+1)=a(x+1)b(x+1)$ witnesses
+  the reducibility of $f(x+1)$.
+\end{proof}
+Now we use the contrapositive of the lemma to show that $\Phi_{p}(x+1)$ is
+irreducible, following the example on the textbook.
+\begin{proof}[Proof of problem]
+  \begin{align*}
+    \Phi_{p}(x+1)&=\frac{(x+1)^{p}-1}{(x+1)-1}\\
+              &=\frac{1}{x}(x^{p}+px^{p-1}+\frac{p(p-1)}{2}x^{p-2}+\ldots+px+1-1)\\
+              &=x^{p-1}+px^{p-2}+\frac{p(p-1)}{2}x^{p-3}+\ldots+p.
+  \end{align*}
+  Since $p\in\Z$ is prime, then all binomial coefficients of the form
+  $\binom{p}{k}, 1\le k<p$ must be a multiple of $p$. By Eisenstein's criteria,
+  $a^{p-1}=0, a^{p-2},\ldots,a^{0}\in(p)$ but $a_{0}=p\notin(p^{2})$ gives us that
+  $\Phi_{p}(x+1)$ is irreducible. By the contrapositive of the lemma above,
+  $\Phi_{p}(x)$ must also be irreducible.
+\end{proof}
+
+\section*{Problem 4}
+\subsection*{Problem 4.1}
+Let $R$ be an integral domain. Prove that the characteristic of $R$ is a prime
+number or $0$.
+\subsubsection*{Solution}
+\begin{proof}
+  For the sake of contradiction, suppose the characteristic of $R,\ c$ is positive
+  but not a prime.\medskip
+
+  \underline{Case 1: $c=1$}
+
+  Then $1=0\implies R$ is a trivial ring, $1\times1=0$ is a zero divisor, a contradiction.\medskip
+
+  \underline{Case 2: $\chr R$ is composite}
+
+  Then $c=ab$ for some $a, b\in\N$ where both $a, b$ are not $1$. Write
+  $a_{R}=\sum^{a}1_{R}, b_{R}\sum^{b}1_{R}$, then we have
+  \begin{align*}
+    ab_{R} &= \underbrace{1_{R}+\ldots+1_{R}}_{ab\ \text{times}}\\
+    &= \overbrace{(\underbrace{1_{R}+\ldots+1_{R}}_{a\ \text{times}})+\ldots+(\underbrace{1_{R}+\ldots+1_{R}}_{a\ \text{times}})}^{b\ \text{times}}\\
+    &=b_{R}\cdot a_{R}=0_{R}.
+  \end{align*}
+  Both $a_{R}, b_{R}$ cannot be $0_{R}$ since otherwise, it would be the
+  characteristic of $R$. This means both are nonzero and thus are zero divisors,
+  contradicting the integral domain assumption.
+
+\end{proof}
+\subsection*{Problem 4.2}
+Let $R$ be a field with $1\ne0$. Prove that the additive group $R$ and the
+multiplicative group $R*$ are never isomorphic.
+\subsubsection*{Solution}
+\begin{proof}
+  It is clear that $R$ can never be finite, since otherwise, $|R|=|R^{*}|+1$ cannot
+  form a bijection.\medskip
+
+  We just consider the case where $R$ is an infinite field. For the sake of
+  contradiction, suppose $\phi:R\to R^{*}$ be an isomorphism. In particular, since it
+  is a homomorphism, it must be that $\phi(0)=1$. Let the characteristic of $R$ be $c$,
+  and we split by cases:\medskip
+
+  \underline{Case 1: $c=2$}
+
+  Then $1+1=0\implies 1=-1$. We have
+  \begin{align*}
+    \phi(1_{R})^{2}&=\phi(1_{R})\cdot\phi(1_{R})=\phi(1_{R}+1_{R})\\
+            &=\phi(0_{R})&& (1_{R}=-1_{R}\implies2_{R}=0_{R})\\
+              &=1_{R} && (\text{group homomorphisms preserve identity}).
+  \end{align*}
+
+  Solving the quadratic equation $x^{2}=1_{R}$ in $R$, we have $\phi(1_{R})=1_{R}$ uniquely (since the
+  other solution $-1_{R}=1_{R}$). This means $\phi(0_{R})=\phi(1_{R})=1_{R}$, violating the bijectivity
+  (in particular, injectivity) of $\phi$. A contradiction.\medskip
+
+  \underline{Case 2: $c\ne2$}
+
+  Since $\phi$ is surjective, there exists some $x\in R$ such that $\phi(x)=-1_{R}\in R^{*}$. Then
+  \begin{align*}
+    \phi(x)=-1_{R}&\implies\phi(x)^{2}=(-1_{R})^{2}\\
+           &\implies\phi(2_{R}x)=1_{R}\\
+           &\implies 2_{R}x=0_{R}&& (\text{since }\ker\phi=\{0_{R}\})\\
+           &\implies x=0_{R} && (\text{characteristic}\ne2\implies2_{R}\ne0_{R})\\
+           &\implies \phi(x)=1_{R} &&\text{but }\phi(0_{R})=1_{R}.
+  \end{align*}
+  Contradiction.
+\end{proof}
+
+\section*{Problem 5}
+Let $R$ be an integral domain. Given $R$ is an Artinian ring (thus fulfills the
+Descending Chain Condition), show that $R$ is a field.
+\subsection*{Solution}
+\begin{proof}
+For any $0\ne a\in R$, we can have a chain of ideals,
+\[(a)\supseteq(a^{2})\supseteq\cdots\supseteq(a^{n})\supseteq\cdots\] and there exists a $k\ge1$ such that
+$(a^{k})=(a^{k+1})$. We thus have a unit $b\in R$ such that
+\begin{align*}
+  a^{k}=ba^{k+1}&\implies a^{k}\cdot1=a^{k}(ab)&& (commutative)\\
+                  &\implies ab=1 && (a\ne0, \text{ integral domain}).
+\end{align*}
+Therefore every non-zero element $a\in R$ is invertible $\implies R$ is a field.
+\end{proof}
+\end{document}

@@ -1,0 +1,33 @@
+#+TITLE: Cs3230
+* Recursion
+** How to show Tower of Hanoi's optimality?
+- Argue that ANY other algorithm takes *at least* as many moves
+- Attempt:
+  1. Before disk n was moved for the 1st time, the n-1 disks on top must be
+     moved away (given by definition of rule)
+  2. After disk n was moved for the last time, the n-1 disks must move to rod 3
+     (target rod) in order to reach to solution.
+* Algorithms
+** Quickselect
+Problem: Given an array of n elements, select the k-th ranked element in O(n) time.
+*** TODO Naive quick select
+*** TODO MOM Select
+** Tower of Hanoi
+Problem: Given n rings with smallest on top and biggest at bottom on a peg, move
+it to a 3rd peg without bigger on smaller.
+*** TODO Solution
+*** TODO Restriction Variants
+** Edit Distance
+Problem: Given two strings of length n, m, and 3 operations - delete, insert,
+substitute a character, find the minimum number of operation to transform one
+string to the other.
+** Longest Increasing Subsequence
+*** TODO LISFirst
+*** LISBigger
+** Text Segmentation
+** TODO N-Queens
+** Subset Sum
+Problem: Given a set with n elements and a target x, find the subsets which sum
+to x.
+** Optimal BST
+** Sugar-packet game

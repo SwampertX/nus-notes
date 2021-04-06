@@ -1,0 +1,162 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3110 Homework 1}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+% Question: section
+% Solution: subsection, subsubsection
+% Hence remove numberings
+% \setcounter{secnumdepth}{0}
+
+
+\begin{document}
+\maketitle
+\section*{H1}
+\begin{enumerate}
+\item When $x>0$, $f'(x)=6x+\frac{4}{x}>0$. Then by exercise (i) on page 14 of
+        Chapter 6 notes, we have $f$ is increasing on $(0,\infty)$.\qed
+  \item $f$ is monotone by (i) on its domain, and is a linear combination of
+        functions differentiable on $(0,\infty)$, namely $1, x^{2},\ln x$. Thus
+        $g(x)=f^{-1}x$ is well-defined. Since $f(1)=2+3(1)^{2}+4(\ln1)=5$ and
+        $f'(1)=6(1)+4/(1)=10\neq0$, by the inverse function theorem,
+        $g'(5)=\frac{1}{f'(1)}=\frac{1}{10}$.\qed
+\end{enumerate}
+
+\section*{H2}
+\begin{enumerate}
+  \item When $x\neq0$,
+        \begin{align*}
+          f'(x)&=e^{x}+2x\cos(\frac{1}{2x})+x^{2}(-\sin(\frac{1}{2x}))(-\frac{1}{2x^{2}})\\
+               &=e^{x}+2x\cos\frac{1}{2x}+\frac{1}{2}\sin\frac{1}{2x}
+        \end{align*}
+        And for the derivative of $f$ at 0,
+        \[\lim_{x\to0}{\frac{f(x)-f(0)}{x-0}}
+        =\lim_{x\to0}\frac{e^{x}+x^{2}\cos\frac{1}{2x}}{x}
+        =\lim_{x\to0}\frac{e^{x}-1}{x} + \lim_{x\to0}x\cos(\frac{1}{2x}).
+        \]
+
+        Using L'Hopital's rule, $\lim_{x\to0}\frac{e^{x}-1}{x}=\lim_{x\to0}e^{x}=1$,
+        and using Squeeze Theorem,
+        \[ -1\leq\cos\frac{1}{2x}\leq1\implies -x\leq x\cos\frac{1}{2x}\leq-x,\] and taking
+        limits when $x\to0$, we have the limit as $0$ for the second term. Thus,
+
+        \[\lim_{x\to0}{\frac{f(x)-f(0)}{x-0}}=1+0=1.\]
+        \[\therefore f'(x)=\begin{cases}
+            e^{x}+2x\cos\frac{1}{2x}+\frac{1}{2}\sin\frac{1}{2x} & x\neq0\\
+            1 & x=0
+          \end{cases}\]
+
+  \item We just check whether the limit $\lim_{x\to0}f(x)$ exists, since when
+        $x\neq0$, $f'$ is clearly continuous.
+        \[\lim_{x\to0} e^{x}+2x\cos\frac{1}{2x}+\frac{1}{2}\sin\frac{1}{2x}
+        = 1 + \frac{1}{2}\lim_{x\to0}\sin\frac{1}{2x} \]
+        But the limit is divergent. To see this, consider the sequence
+        $(x_{n}=\frac{1}{4n\pi})_{n=1}^{\infty}$ and
+        $(y_{n}=\frac{1}{(4n+2)\pi})_{n=1}^{\infty}$. Both $x_{n},y_{n}\to0$, but
+        \[\lim_{n\to\infty}\sin\frac{1}{2x}=\lim_{n\to\infty}\sin(2n\pi)=0\neq\lim_{n\to\infty}\sin\frac{1}{2y_{n}}=
+        \lim_{n\to\infty}\sin((2n+1)\pi)=1.\] Therefore, $f\notin C^{1}(\R).$
+\end{enumerate}\qed
+
+
+\section*{H3}
+Let $f(t)=(1+t)^{n}, t>-1, n=2,3,\ldots$, and we consider two cases.
+\subsubsection*{Case 1: $x\in(0,\infty)$.}
+Apply Mean Value Theorem to $f$ on $[0,x]$, since $f$ is clearly differentiable
+on $\R$. Then we must have a $c\in(0,\infty)$, where
+\begin{align*}
+  f'(c) &=\frac{f(x)-f(0)}{x-0}\\
+  n(1+c)^{n-1}&=\frac{(1+x)^{n}-1}{x}.
+\end{align*}
+Since $1+c>1\implies(1+c)^{n-1}>1$, we must have
+\begin{align*}
+  (1+x)^{n} &= 1 + nx(1+c)^{n-1}\\
+  &> 1+ nx(1).
+\end{align*}
+\subsubsection*{Case 2: $x\in(-1, 0)$.}
+Apply Mean Value Theorem to $f$ on $[x,0]$, since $f$ is clearly differentiable
+on $\R$. Then we must have a $c\in(-1,0)$, where
+\begin{align*}
+  f'(c) &=\frac{f(x)-f(0)}{x-0}\\
+  n(1+c)^{n-1}&=\frac{(1+x)^{n}-1}{x}.
+\end{align*}
+Since $1+c<1\implies(1+c)^{n-1}<1\implies nx(1+c)^{n-1}>nx$ (since $nx < 0$), we must have
+\begin{align*}
+  (1+x)^{n} &= 1 + nx(1+c)^{n-1}\\
+  &> 1+ nx(1).
+\end{align*}\qed
+
+\section*{H4}
+Let $g(x)=(f(x))^{2}-x^{2}$ as per the hint. Since $x\mapsto x^{2}$ is differentiable
+on $\R$ and $f$ is differentiable on $[a,b]\subset\R$, we have $g$ is continuous on
+$[a,b]$ and differentiable on $(a,b)$. Note that
+\[g(b)=(f(b))^{2}-b^{2}=(f(a))^{2}-a^{2}=g(a),\] and thus by Rolle's Theorem,
+\[\exists c\in(a,b), g'(c)=
+  2f'(c)f(c)-2c =0 \implies
+f'(c)f(c)=c.\]\qed
+
+\end{document}

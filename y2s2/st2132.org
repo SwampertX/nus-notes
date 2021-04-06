@@ -1,5 +1,4 @@
 #+TITLE: ST2131 Mathematical Statistics
-
 #+LATEX_HEADER: \newtheorem{thm}{Theorem}[section]
 #+LATEX_HEADER: \newtheorem{crl}{Corollary}[theorem]
 #+LATEX_HEADER: \newtheorem{lemma}{Lemma}[theorem]
@@ -11,6 +10,14 @@
 * Chapter 4 Parameter Estimation
 ** Standard Error
 SE = SD(sample mean)
+** MLE Exact Confidence Intervals
+| Distribution | Fact                                                  | CI1                                                           | CI2 |
+|--------------+-------------------------------------------------------+---------------------------------------------------------------+-----|
+| Normal       | \(\frac{\sqrt{n}(\overline{X}-\mu)}{S} \sim t_{n-1}\) | \(\mu: \overline{X} \pm \frac{S}{\sqrt{n}}t_{n-1}(\alpha/2)\) |     |
+*** Normal Distribution
+Using the fact that \(\frac{\sqrt{n}(\overline{X}-\mu)}{S} \sim t_{n-1}\):
+- CI for \(\mu: \overline{X} \pm \frac{S}{\sqrt{n}}t_{n-1}(\alpha/2)\)
+- CI for
 * Chapter 6 Hypothesis Testing
 
 

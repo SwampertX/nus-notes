@@ -1,0 +1,54 @@
+#+TITLE: Cs3234
+
+* Syntax Cheatsheet
+** Type
+Only have the =term= type. Subtypes are =variable, atom, integer, float, string,
+compound terms= etc.
+*** Compound Term
+Functor (or function symbol) and arguments.
+#+begin_src prolog
+X = f(f(a), X, g(X, 1)).
+#+end_src
+** Functions that return a value
+1. can define as =f(args..., ret)= predicate. Get the results by =f(args..., X).=.
+** List/set comprehension
+#+begin_src prolog
+bagof(var, prop, dest).
+setof(var, prop, dest).
+#+end_src
+* Coq Cheatsheet
+** Tactics
+https://www.cs.cornell.edu/courses/cs3110/2018sp/a5/coq-tactics-cheatsheet.html
+- =symmetry= flips sides of equality.
+- =reflexivity=, =contradiction= concludes the proof of a (sub)goal.
+- =/\= and =\/= represent "and" and "or"
+- =split= splits a Goal of the form =X and Y= into subgoals =X=, =Y=.
+- =destruct H= deconstructs a hypothesis into two *hypotheses* =H=, =H1= if it is
+  a conjunction.
+- =destruct H= deconstructs a goal into two *subgoals* if it is a disjunction.
+* Exam (Midterm) tips
+** Sorting in Prolog might come out
+** Regular language like the arithmetic (tut 2 q1, 2) will come out
+** Proofs for Boolean Algebra will come out
+** Hilbert/Sequent Calculus proofs for eg. De Morgan law will come out
+* Boolean Algebra
+- Not to be confused with model semantics. (The idea of valid assignments etc)
+** Curious detail
+If you swap 1 with 0, =+= with =*=, we will have the same algebra.
+** Definition
+Boolean algebra is a *set* with 3 operations: $\{+,\times, \overline\square\}$.
+The set must contain at least 2 elements (eg, $\{0,1\}$) for it to be non-trivial.
+Curiously, the plus and times act similarly as per in a ring, where 0 is the
+additive identity and 1 the multiplicative identity.
+*** Axioms
+Same as a commutative ring.
+1. Addition and multiplication are associative.
+2. Addition and multiplication are commutative.
+** Some Propositions to prove
+1. Idempotence of $\times:x\times x=x$.
+* Sequent Calculus
+There is a way for Coq to give the proof.
+** Hilbert calculus
+- Can prove all rules on wiki
+** Sequent
+- Can prove all 4 de morgan

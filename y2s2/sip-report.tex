@@ -1,0 +1,428 @@
+\documentclass[a4paper, 12pt, fleqn]{report}
+
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{amssymb}
+\usepackage{relsize}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{scrextend}
+\usepackage{hyperref}
+\usepackage[super]{nth}
+\usepackage{setspace}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage{titlesec}
+\usepackage[style=authoryear]{biblatex}
+\addbibresource{sip-report.bib}
+
+% \titleformat{\chapter}
+% [hang] % shape
+% {\bf\Huge} % format
+% {\thechapter} % label
+% {1ex} % sep
+% {}{} % before-code, after-code
+% \titlespacing{\chapter}{0pt} % left
+% {0pt}{2em} % above, below
+
+\setlength{\mathindent}{2em}
+\setlength{\parindent}{0pt}
+
+\renewcommand{\contentsname}{Table of Contents}
+
+\begin{document}
+
+\hypersetup{
+linktoc=all     %set to all if you want both sections and subsections linked
+}
+
+\pagenumbering{roman}
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+
+        \Large
+        \textbf{Student Internship Programme (SIP) \\
+        Final Project Report}
+
+        \vspace{2cm}
+        \large
+        \textbf{at \\
+        \ \\ Go-Jek Singapore Pte Ltd}
+        
+        \vspace{1cm}
+        \normalsize
+        \textbf{Reporting Period: \\
+        \ \\ 05 2020 to 08 2020}
+
+        \vspace{1cm}
+        by \\
+        \ \\ TAN YEE JIAN
+
+        \vfill
+
+        Department of Computer Science \\
+        \ \\ School of Computing \\
+        \ \\ National University of Singapore \\
+        \ \\ 2019/2020
+        \vspace{1cm}
+    \end{center}
+\end{titlepage}
+
+\section*{}
+\addcontentsline{toc}{chapter}{Title}
+\thispagestyle{plain}
+    \begin{center}
+
+        \Large
+        \textbf{Student Internship Programme (SIP) \\
+        Final Project Report}
+
+        \vspace{2cm}
+        \large
+        \textbf{at \\
+        \ \\ Go-Jek Singapore Pte Ltd}
+
+        \vspace{1cm}
+        \normalsize
+        \textbf{Reporting Period: \\
+        \ \\ 05 2020 to 08 2020}
+
+        \vspace{1cm}
+        by \\
+        \ \\ TAN YEE JIAN
+
+        \vfill
+
+        Department of Computer Science \\
+        \ \\ School of Computing \\
+        \ \\ National University of Singapore \\
+        \ \\ 2019/2020
+
+        \vspace{1cm}
+        Project Title: \textbf{Intern, Machine Learning Engineer}\\
+        Project ID: \textbf{SY192497610}\\
+        Project Supervisor: \textbf{Dr. PRABAWA Adi Yoga Sidi}
+        \vspace{1cm}
+    \end{center}
+
+
+\chapter*{Summary}
+\addcontentsline{toc}{chapter}{Summary}
+
+
+Data and features are the lifeblood of Machine Learning systems. However,
+productionized Machine Learning systems are often independent and spend an
+dispropotionate amount of effort on selecting features and cleaning data which
+are impossible to port over to another project. Feast \footnote{Feast: an open
+  source feature store for machine learning. \url{https://feast.dev}} (FEAture STore) is a
+production feature store that allows teams to define, store, validate, discover
+and serve features to models during both training and inference.
+\newline
+
+ Subject Descriptors:
+\\ \begin{addmargin}[2em]{2em}
+  Machine Learning \\
+  Distributed Storage \\
+  RESTful web services
+\end{addmargin}
+\ \\
+
+ Keywords:
+\\ \begin{addmargin}[2em]{2em}
+  Machine Learning, Data Science, Feature Selection, Distributed Data Storage
+\end{addmargin}
+\ \\ 
+
+ Implementation Software and Hardware:
+\\ \begin{addmargin}[2em]{2em}
+  Java (OpenJDK 11)\footnote{JDK 11 Documentation \url{https://docs.oracle.com/en/java/javase/11/}},
+  Python 3\footnote{Python \url{https://www.python.org/}},
+  Apache KAFKA\footnote{Apache Kafka \url{https://kafka.apache.org/}},
+  Apache SPARK\footnote{Apache Spark \url{https://spark.apache.org/}},
+  Google Cloud\footnote{Google Cloud \url{https://cloud.google.com/}}
+\end{addmargin}
+
+
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+\doublespacing
+
+
+I would like to first and foremost thank \textbf{Go-Jek Singapore Pte Ltd} for
+this internship opportunity, and the Engineering Leads of the \textbf{Data
+  Science Platform} team: my interviewer \textbf{Yu-Xi Lim} and my manager
+\textbf{Willem Pienaar} for this wonderful 3 months working in this inspiring
+team. I would also like to thank \textbf{ShuShu Luo} and \textbf{Felicia Wu} for
+the smooth and enjoyable HR journey.
+\newline
+
+
+In addition, I want to extend my gratitude to my teammates in the \textbf{Feast}
+team for their inspiring work and nurturing presence for this new intern in the
+team. Having the opportunity to work on the development of an open-source,
+impactful system for Machine Learning engineers was eye-opening and really
+satisfying. \newline
+
+
+Last but not least, I would like to thank the the whole \textbf{Data Science
+  Platform} team for the great 3 months of work-from-home internship, who
+despite working remotely, made me feel that I am a part of the team.
+
+\singlespacing
+
+\tableofcontents
+
+
+\newpage
+
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+
+\section{Background and Organisational Structure of Host Organisation}
+Gojek\footnote{Gojek \url{https://gojek.com}} is Southeast Asia’s leading
+on-demand, multi-service tech platform providing access to a wide range of
+services including transport, payments, food delivery, logistics, and many more.
+Founded in 2010 with providing solutions to Jakarta’s ever-present traffic
+problems in mind, Gojek started as a call center with a fleet of only 20
+motorcycle-taxi drivers (ojek). \newline
+
+With the principle of using technology to improve the lives of users, the Gojek
+app was launched in January 2015 for users in Indonesia to provide motorbike
+ride-sharing (GoRide), delivery (GoSend), and shopping (GoMart) services. Today,
+Gojek has transformed into a “Super App”: a one-stop platform with more than 20
+services, connecting users with over 2 million registered driver-partners, and
+500,000 GoFood merchants – with a total of more than 170 million total downloads
+across the region. By providing them access to products and services across
+multiple sectors, Gojek has helped – and continues to help – create more value
+for society, improving efficiency and productivity, as well as boosting
+financial inclusion (\cite{gojekhome}).
+\newline
+
+\section{Principal Activities of Host Organisation}
+Gojek provides a variety of services through it's super app, including Ride
+Hailing, Food Delivery, Digital Payments, Logistics and Livestyle Services. It's
+reach of more than 100 million bookings every month across 4 countries presents
+many interesting challenges and problems in the field of machine learning.
+\newline
+
+Machine learning at Gojek is used for many purposes, from Matchmaking to
+Fraud Prevention, many day-to-day services are run on Machine Learning powered
+systems.
+
+\section{Training Programme within Host Organisation}
+As an intern in the DSP team, I was immediately allocated to one of the few
+project teams from the start of the internship, namely the Feast team. The
+training I received during work do not have a fixed format, but take the form of
+the following activities (non-exhaustive):
+
+\begin{itemize}
+  \item Working independently to investigate and fix a software bug
+  \item Working in pairs for a new feature
+  \item Working independently for a new feature
+  \item Take part in meet-the-customer feedback sessions
+  \item Respond to and resolve issues raised by users
+  \item Take part in team milestone discussions
+  \item Knowledge transfer/sharing by other teammates
+\end{itemize}
+
+\section{Position of Host Unit within Host Organisation}
+I was an Intern, Machine Learning Engineer within the Data Science Platform
+(DSP) team. DSP team is a team in Gojek that holds the mission of ``make machine
+learning fast and simple for everyone''. The DSP team collaborates with data
+scientists and product teams to develop innovative AI solutions, developing
+end-to-end platforms to support production systems deployed within Gojek. As an
+intern, I was treated as an equal in the team and took on tasks that were
+challenging and rewarding to work on, and also worked on solving the technical
+challenges on software systems that the team was maintaining. \newline
+
+\chapter{Training Schedule and Assignments}
+
+\emph{Clarification}: this section was added in retrospect, the tasks assigned
+(thus the training) was related only to the team's release schedule and
+determined at the start of an Agile sprint. No schedule was pre-determined in
+the beginning of the internship.
+
+\section{Training Schedule by Month for the Entire Training Period}
+\begin{enumerate}
+  \item Familiarization of Feast, and manage its deployment within Gojek
+  \item New feature: Google BigQuery\footnote{BigQuery
+    \url{https://cloud.google.com/bigquery/}} as a data source for features
+  \item Maintainence of the BigQuery source feature, and development of Feast
+    User Interface (UI)
+\end{enumerate}
+
+\section{Training Assignments Completed in \nth{1} Month}
+The first month was spend familiarizing with Feast's deployment within Gojek. I
+maintained the \texttt{feature-specifications} repository, which was a
+Git\footnote{Git \url{https://git-scm.com/}} repository of
+\texttt{YAML}\footnote{YAML: YAML Ain't Markup Language \url{https://yaml.org/}}
+files describing the Features\footnote{Feast: Features
+  \url{https://docs.feast.dev/user-guide/features}} in a certain Feature Set
+\footnote{Feast: Feature Sets
+  \url{https://docs.feast.dev/user-guide/feature-sets}}, which are some of the
+most important concepts in Feast. These files will dictate the name of the
+features (similar to columns in a Pandas Dataframe\footnote{pandas.DataFrame API
+  documentation
+  \url{https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html}}),
+the type of the data (for example \texttt{INT64, STRING}), and the source of the
+data, usually from an Apache KAFKA Stream\footnote{Kafka Streams
+  \url{https://kafka.apache.org/documentation/streams/}}. \newline
+
+My tasks for the first month include: improving on the documentation Jupyter
+notebook for Feast, writing Bash and Python scripts to validate the YAML files
+in the \texttt{feature-specifications} repository during the Continuous
+Integration stages, as well as adding static type checking via
+Mypy\footnote{mypy \url{http://mypy-lang.org/}} to the Python Software
+Development Kit (SDK) for Feast.
+
+\section{Training Assignments Completed in \nth{2} Month}
+Feast as a Feature Store accepts data source that provides data in stream (such
+as an Apache KAFKA topic) or in batch (such as a Pandas Dataframe). Prior to the
+new feature I worked on, batch data was usually loaded into Feast via the Python
+SDK, which does not scale when the amount of data increases to the order of
+millions of rows in a table. To improve on this, I packaged an Apache Beam tool
+that creates data pipelines that read from Google's BigQuery data store into
+Feast directly as a Docker\footnote{Docker \url{https://www.docker.com/}} image,
+and deployed in Gojek's internal Apache Airflow\footnote{Apache Airflow
+  \url{https://airflow.apache.org/}} instance. This task solves the scaling
+problem as it leverages Google Cloud's Dataflow\footnote{Dataflow
+  \url{https://cloud.google.com/dataflow/}} pipelines, which can spawn as many
+worker as needed, thus horizontally scalable. \newline
+
+This was a challenging task as I am not only responsible for a small part of a
+tool, but in charge of the end-to-end user experience of the BigQuery tool, from
+a user-provided BigQuery SQL query string to scheduling the loading of the
+specified data into Feast automatically. I had the chance to use Docker as a
+containerization solution to package the tool into an executable image, as well
+as designing user and machine interface to the BigQuery tool, and liasing with
+various Google Cloud products such as BigQuery, Dataflow, Storage\footnote{Cloud
+  Storage \url{https://cloud.google.com/storage}}, and IAM\footnote{Cloud
+  Identity and Access Management \url{https://cloud.google.com/iam}}. In the
+end, I delivered a system that is well documented, optimized for quick
+iterations, also transparent but does not overwhelm the users by exposing too
+many internal details.
+
+\section{Training Assignments Completed in \nth{3} Month}
+The end of July 2020 sees the release of Feast 0.6, which includes the internal
+release of the BigQuery Tool to scale batch data sources. As the last minor
+release (Feast 0.5) was during the first weeks of my internship, I did not
+participate much on that minor release, but as one of the feature contributors
+in Feast 0.6, I was involved in the production release of the new Feast version
+and the various quality assurance tasks that follow the minor release, alongside
+with an internal showcase on the new features of Feast 0.6 that is well received
+by over a hundred employees and managers from the various data science teams.
+\newline
+
+Shortly after the release, I was involved the milestone planning for Feast v0.7,
+after having understood more of the system and its intricacies. Our team held
+meetings with users of Feast (other data science teams within Gojek) that worked
+on different type of Machine Learning problems, and took in their suggestions to
+select the features and improvements for our next minor release. \newline
+
+As Feast starts to take shape in its core functionality, our team decides that
+it is time for us to have a Web-based Graphical User Interface for a more
+intuitive interaction and visualization of the Feast system. This feature was
+also requested by various data science teams to achieve the goal of feature
+sharing across teams. I was tasked to write the REST\footnote{Representational
+  state transfer.
+  \url{https://en.wikipedia.org/wiki/Representational_state_transfer}} HTTP
+endpoints for the Feast UI, as the current Feast system uses gRPC\footnote{gRPC
+  \url{https://grpc.io/}} for interaction. I worked with Java Spring
+Boot\footnote{Spring Boot \url{https://spring.io/projects/spring-boot}} for the
+HTTP endpoints, as well as writing holistic integration tests for it. \newline
+
+At the meantime, I also had to maintain the BigQuery source for Feast by writing
+guides and answering users' questions on the system, as well as solving
+authorization issues and format violations on the use of the system that arises
+with the increasing adoption of the tool, as it provides a centralized, one-off
+way to query from Google BigQuery and carry out scheduled data ingestion into
+Feast.
+
+\chapter{Knowledge and Experience Gained}
+
+\section{Technical Knowledge Gained from Assignments}
+\begin{itemize}
+  \item Gitlab CI, Python and Bash scripting for CI processes. Writing
+    command-line programs with that are short, self-contained, extensible and
+    readable.
+  \item Introductory Google Cloud products (BigQuery, Storage, Compute,
+    Dataflow, IAM) that are related to Data Engineering processes.
+  \item Java Spring Boot as a MVC \footnote{Model-view-controller} framework as
+    well as related libraries/frameworks such as gRPC, RestAssured testing
+    library.
+  \item Containerization of tools using Docker for reproducibility, and its
+    interaction with workflow management platforms such as Apache Airflow.
+  \item Data pipeline tools such as Apache KAFKA, Apache Beam and Google Cloud
+    Dataflow, and how they interact with each other to form a data pipeline.
+\end{itemize}
+
+\section{Organisational/Industry Experience Gained from Assignments}
+Full software development lifecycle using the Agile methodology. Even though I
+was an intern, I participated from planning to release and maintainence of the
+software systems, putting theoretical software engineering knowledge into
+practice.
+
+Production-level machine learning systems that are more than just Jupyter
+notebooks and Pandas dataframe. I also experienced first hand the job of
+solving problems for data scientists and data engineers, by creating and
+maintaining scalable systems that are extensible.
+
+In terms of soft skills, I had the chance to experience a work-from-home
+setting, having to document decisions and instructions in detail as there are no
+more shoulders to tap on for answers. Preparing for internal presentations,
+liasing with open source contributors and putting their contribution to good use
+was eye-opening.
+
+\section{Areas of Applicability of Knowledge and Experience Gained}
+Almost every modern software system today would benefit from knowledge on Continuous
+Integration, scripting and cloud deployment workflows. Many mature companies
+that look for Machine Learning solutions could benefit from experience with the
+Machine Learning lifecycle, having written software on parts of it and
+implementing solutions with the team.
+
+\chapter{Conclusions}
+
+\section{Summary of Work Completed and Training Received}
+I maintained the source of truth for Feast deployment within Gojek, and wrote CI scripts to
+validate specifications and manage the repository of features, as well as
+generating pipeline specification for Apache Airflow for scheduling jobs
+automatically with each merged Merge Request.
+\newline
+
+I also packaged and shipped a tool that brings features from Google BigQuery to
+Feast with just a query SQL, automating everything in between with scripts, and
+readied the tool for productionized usage.
+\newline
+
+Last but not least, I wrote HTTP REST endpoints that was originally gRPC
+endpoints in preparation for a Web-based Graphical User Interface.
+
+\section{Problems Faced}
+Machine learning at the industry level is very different from that of academic
+or research purpose, and the tools related to it (Apache KAFKA, Apache Beam,
+Google BigQuery, Redis) are vastly different from the typical Jupter Notebook,
+Scikit-Learn \footnote{scikit-learn
+  \url{https://scikit-learn.org/stable/index.html}} systems that we develop for
+projects. As such, there were many new frameworks and concepts to learn that can
+be very challenging. \newline
+
+Since hhe whole internship was work-from-home, it posed a serious requirement in
+communicating ideas with the rest of the team, in an asynchronous and detailed
+manner, which is new. With everyone focusing on their own work, it is easy to
+be left behind if someone does not voice up any difficulties or ask for help
+because of the lack of convenience to do so, as compared to in a face-to-face
+setting.
+
+\section{Assessment of Training Experience and Concluding Remarks}
+I am glad to have the chance to work in this project that is highly impactful,
+novel and relevant to the machine learning community, especially that Feast is
+open-source, which makes me feel more proud of the team's contribution to the
+betterment of the society through technology. I am very grateful for the
+multitude of opportunities I have received during this internship and I would
+really love to work for DSP again.
+
+\printbibliography
+\end{document}

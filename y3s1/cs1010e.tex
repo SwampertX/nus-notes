@@ -1,0 +1,65 @@
+% Created 2020-11-15 Sun 16:59
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{minted}
+\author{Tan Yee Jian}
+\date{\today}
+\title{Assignment 7 Report}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={Assignment 7 Report},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.91 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+This is the last assignment for this module, and last report from me. Good job
+everyone for coming this far!
+
+Everyone had some understanding for OOP, but not everyone can produce the most
+succinct and least error-prone code. Only a couple have gotten full marks. To
+get full marks, you must use existing code as much as possible, as copy-pasting
+is always a big source for error.
+
+As for inheritance, please remember that child classes inherit all functions by
+default. There is no need to override and use \texttt{super().act()} in the body
+\textbf{only} - it is redundant code.
+\section{Berserker}
+\label{sec:org2fa93b9}
+We discussed this question in tutorial, and I apologize in advance if I did not
+stress that you will need to make sure that strength will return to normal when
+HP is back up. Other than that, everyone got this part.
+\section{Archmage}
+\label{sec:org4f3908c}
+Most people forgot to check if the opponent is alive before using \texttt{got\_hurt()}.
+Other than that, a good number edited the \texttt{act()} function instead of the
+\texttt{cast()} function and got penalized. I feel this is a reasonable one since
+\texttt{KABOOM} is intuitively a spell, and using \texttt{cast()} is just natural.
+
+When you are doing normal attacks, do not copy the code, but instead, use
+\texttt{super().cast()}.
+\section{Necromancer}
+\label{sec:orga4854e6}
+This part sees more success than the previous parts, despite having higher
+marks. Some of you used \texttt{count\_alive(team)!=0} and I would suggest using
+\texttt{> 0} instead. This can sieve out weird bugs such as, for some reason,
+\texttt{count\_alive()} was wrongly implemented.
+\end{document}

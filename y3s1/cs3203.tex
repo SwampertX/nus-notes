@@ -1,0 +1,66 @@
+% Created 2020-09-06 Sun 17:19
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{minted}
+\author{Tan Yee Jian}
+\date{\today}
+\title{Iteration 1}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={Iteration 1},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.91 (Org mode 9.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Design Decisions}
+\label{sec:orgf1c65ee}
+\subsection{Parent API}
+\label{sec:org647e0d9}
+\begin{itemize}
+\item Structure: a hashmap
+\begin{center}
+\begin{tabular}{llll}
+key(int) & Parent(int) & Parent*(Hashmap<int>) & Parent* List<Stmt*>[StmtType]\\
+\hline
+ &  &  & \\
+\end{tabular}
+\end{center}
+\item Hashmap
+\begin{center}
+\begin{tabular}{llll}
+key(int) & Child(int) & Child*(Hashmap<int>) & Parent* List<Stmt*>[StmtType]\\
+\hline
+ &  &  & \\
+\end{tabular}
+\end{center}
+\item \begin{center}
+\begin{tabular}{lllll}
+StmtType & parent List<Stmt*>[StmtType] & parent* & child & child*\\
+\hline
+while &  &  &  & \\
+\end{tabular}
+\end{center}
+\item Using int for parent/child since to return statement, can query statement table
+\item \texttt{Hashmap<int>} caters for \texttt{checkIfParentHolds}, while \texttt{List<Stmt*>} caters for
+\texttt{getAllChildStatements}
+\end{itemize}
+\end{document}

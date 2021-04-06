@@ -191,3 +191,427 @@ Suppose that \( f: \mathbb{R} \rightarrow \mathbb{R} \) is nondecreasing. If \(a
    \limsup_{k \rightarrow \infty} f(x_n) < f(x)
    \]
    \(\square\)
+* Week 8 Assignment
+1.
+   To show \(f\) is not 1-1, we will show that we can find \(x, x'\) in
+   \([a,c]\) where
+   \[x \neq x' \quad \text{but} \quad f(x) = f(x')\]
+   which implies \(f\) is not 1-1.
+
+   Given that \(f(b) > \max\{f(a), f(c)\}\), we will show only the case of \(f(a) >
+   f(c)\).
+
+   If \(f(a) = f(c)\), then \(x = a, x' = c\) where \(a<b<c \implies a \neq
+   c\) is what we wanted. The case of \(f(a) < f(c)\) can be proved similarly as
+   the proof given below.
+
+   Assuming we have \(f(b) > f(a) > f(c)\). Since \(f\) is continuous, and
+   \([a,b)\) is an interval in \(\mathbb{R}\), intermediate value theorem gives
+   us
+
+   \[[f(a), f(b)) \subseteq f([a,b)) \]
+
+   and we can thus choose
+
+   \[x \in [a,b) \quad \text{such that}  \quad f(x) \in [f(a), f(b))\].
+
+   Now, since \(f(c) < f(a)\) by assumption, we must have
+
+   \[[f(a), f(b)) \subseteq [f(c), f(b))\]
+
+   Thus, we can also find a \(x'\) such that
+
+   \[x' \in (b,c] \quad \text{such that} \quad f(x') = f(x) \in [f(a), f(b))
+   \subseteq [f(c), f(b))\]
+
+   since the intermediate value theorem guarantees that all the values in \([f(c),
+   f(b))\) must be also present in the image of \((b,c]\), \([f(c), f(b))\).
+
+   Thus we have found our \(x, x'\), and result follows. \(\square\)
+
+2.
+   a. Note that \(x \in \{x\}\). \({x}\) is connected since its only possible
+      subsets are either \(\emptyset\) or itself. Thus it is impossible to find
+      a subset \(S\) such that \(\emptyset \neq S \neq \{x\}\) (much less that
+      \(S\) is both open and close). \(\square\)
+   b. \[x \sim y \implies \exists E \subseteq M, \quad x, y \in E
+      \implies y \sim x\] \(\square\)
+   c. Since \(x \sim y\), \(y \sim z\), let \(\{x, y\} \subseteq E\) and
+      \(\{y, z\} \subseteq F\) such that \(E, F\) are both connected and are
+      subsets of \(\langle M, \rho \rangle\).
+
+      Since \(y \in E, y \in F \implies E \cap F \neq \emptyset\), by theorem,
+      \(E \cup F\) must be also connected and thus \(\{x, y, z\} \subseteq (E
+      \cup F)\).
+
+      \[\therefore x \sim z\] \(\square\)
+3. We have shown in class that an open, connected set in \(\langle \mathbb{R}^n,
+   \rho_2 \rangle\) must
+   be path connected. Therefore, for any \(f(a), f(b)\) in \(f(G)\), where
+   \(a, b\) are in \(G\), there exists a path \(g\) from a to b in \(G\), such
+   that \(g: [0,1] \rightarrow G\) is continuous and \(g(0) = a, g(1) = b\).
+
+   We claim that \(f \circ g\) is a path from \(f(a) to f(b)\). First, by
+   continuity in metric spaces, since \(g\) is continuous in \([0,1]\), and
+   \(f\) is continuous in \(G\), then \(f \circ g:[0,1] \rightarrow f(G)\) is
+   continuous.
+
+   Furthermore,
+   \[f \circ g(0) = f(g(0)) = f(a)\], and \[f \circ g(1) = f(g(1)) = f(b)\]
+
+   Which shows \(f \circ g\) is indeed a path from \(f(a)\) to \(f(b)\) in
+   \(f(G)\). Since we can always find a path for any two points, \(f(a)\) and
+   \(f(b)\) in \(f(G)\), therefore \(f(G)\) is connected. \(\square\)
+* Week 9 Assignment
+1.
+   #+BEGIN_proof
+   I claim that \(\overline{E}\) must be totally bounded. Proof follows.
+
+   If \(E\) is closed, then \(E = \overline{E}\) and we are done. Otherwise,
+   given \(\epsilon > 0\),
+   \[\exists x_1 \dots x_n \quad \text{such that} \quad \bigcup\limits_{i=1}^{n}
+   B[x_i, \epsilon/2] \supseteq A\]
+
+   then a cluster point \(x \in \overline{E} - E\) can be as close to E as
+   possible. Specifically, with \(\epsilon\) given as above,
+   \[B[x, \epsilon/2] \cap E \neq \emptyset\]
+   Let \(y\) be a point in the intersection. Since \(y \in E\), \(\exists x_k\)
+   such that
+   \[\rho(y, x_k) < \epsilon/2\]
+   Therefore
+   \[\rho(x, x_k) \leq \rho(x,y) + \rho(y, x_k) < \epsilon/2 + \epsilon/2 =
+   \epsilon \]
+   which implies
+   \[x \in B[x_k, \epsilon] \subseteq \bigcup\limits_{i=1}^{n}B[x_i,\epsilon]
+   \supseteq A \]
+   Therefore \(\overline{E}\) is totally bounded.
+   #+END_proof
+2.
+   #+BEGIN_proof
+   As per the hint, we show by contradiction. Assume that \(\langle M,
+   \rho\rangle\) has the Nested Set Property but /not/ complete.
+
+   Then there must exist a Cauchy sequence, \((x_n)^{\infty}_{n=1}\) that is not
+   convergent.
+
+   Since \((x_n)^{\infty}_{n=1}\) is Cauchy, given \(\epsilon = \frac{1}{k}\), \(k = 1,
+   2, \dots\) there exist \(N_k \in \mathbb{N}\) such that \(\forall p, q > N_k\),
+
+   \[\rho(x_p, x_q) < \frac{1}{k}\]
+
+   And we can choose \(N_k\) such that \(N_1 \leq N_2 \leq \dots\) . Let
+   /below is added/
+   \[F_k = \{x_n: n \geq N_k\}\]
+   which implies we have the sets \(F_1 \supseteq F_2 \supseteq \dots \) as
+   desired, as we define \(F_k\) to be further "tails" of the sequence with
+   decreasing diameter \(\frac{1}{k}\).
+   /added ends/
+
+   We claim the sequence of sets we generated, \((F_k)^{\infty}_{k=1}\) are all
+   closed, since if the sets (containing just members of the sequence) have
+   cluster points, it implies that the sequence will converge to the cluster
+   points as per definition. So in lack of the cluster points, the sets are closed.
+
+   Then we again notice that the diameter of each set, \(\text{diam} F_k = 1/k\)
+   converges as per the nested set theorem:
+   \[lim_{n\rightarrow \infty} \text{diam} F_n = lim_{n\rightarrow \infty}
+   \frac{1}{k} = 0\]
+   and by the Nested Set Theorem, we have \(\bigcap^{\infty}_{n=1} F_n \neq
+   \emptyset\). Let the point at the intersection be \(x\), and we claim that it
+   is the limit of this Cauchy sequence.
+
+   Let \(\epsilon > 0\) be given. We can choose \(k \in \mathbb{N}\) such that
+   \(k > \frac{1}{\epsilon}\). Then \(\forall n > N_k \iff x_n \in F_k\),
+   \[\rho(x,x_n) \leq \text{diam} F_k = \frac{1}{k} < \epsilon\]
+   And thus it shows that \((x_n)^{\infty}_{n=1}\) is convergent (to \(x\)). A
+   contradiction.
+   #+END_proof
+3.
+   #+BEGIN_proof
+   If there is such a \(y \in M\) such that \(f(y) = \inf\{f(z): z \in M\}\),
+   then we are done, since \(f(y) \leq f(x)\) by definition. Otherwise, if there
+   is no such \(y\), let \(w = \inf\{f(z) \in M \}\). Since no \(y \in M\)
+   attains \(w\) via \(f\), we define \((x_n)^{\infty}_{n=1}\) such that
+   \[w < f(x_k) \leq w + \frac{1}{k} \]
+   for all \(k = 1, 2, \dots\). We claim that \((x_n)^{\infty}_{n=1} \subseteq
+   M\) is Cauchy. Since \(M\) is complete, it must also be convergent, to say
+   \(x \in M\). Furthermore, since \(f\) is continuous,
+   \((f(x_n))^{\infty}_{n=1}\) will also converge to \(f(x)\). Since we have
+   \[w < f(x_k) \leq w + \frac{1}{k} \]
+   Taking limits as \(k\) tends to \(\infty\), we have \(w = f(x)\), which is a
+   contradiction. Therefore \(y = x\) and \(f(y) \leq f(x)\) for all \(x \in M\)
+   as desired.
+
+   _Proof of claim that \((x_n)^{\infty}_{n=1}\) is Cauchy:_
+
+   Let \(\epsilon > 0\) be given. Choose \(N \in \mathbb{N}\) such that
+   \(\frac{1}{N} > \epsilon\). Then for all \(i, j > N\) (/I wrote \(i,n\) previously/), 
+   \[w < f(x_i), f(x_j) \leq w + \frac{1}{N} \]
+   which from the inequality in the question, let \(a = x_i\) and \(b = x_j\),
+   there is a point \(x \in M\) so that
+   /added missing bracket below/
+   \[\rho(x_i, x_j) + f(x) \leq \frac{1}{2}(f(x_i) + f(x_j)) \leq \max\{f(x_i), f(x_j)\}\]
+
+   Note that \(\max\{f(x_i), f(x_j)\} < w + 1/N\) and \(w < f(x)\) since \(w\)
+   is the infimum, we have
+
+   \[\rho(x_i, x_j) < w + 1/N - w = 1/N < \epsilon\]
+
+   and therefore \((x_n)^{\infty}_{n=1}\) is Cauchy.
+   #+END_proof
+* Cheatsheet
+** Chapter 1
+1. *Definition*: a field is the 5-tuple \(<\mathbb{F},+,\dot,e,u\), where \(F\)
+   is the
+   1. *Definition*: a field is the 5-tuple
+      \(\langle\mathbb{F},+,\cdot,e,u\rangle\), where \(\mathbb{F}\) is a set
+      containing at least the elements $e$ and $u$, where $e\neq u$, and
+      satisfies: For any $a,b,c\in\mathbb{F}$
+      a. (commutative add) $a+b=b+a$
+      b. (associative add) $(a+b)+c=a+(b+c)$
+      c. (additive identity) $a+e=a$
+      c. (additive inverse) \(\forall a\in\mathbb{F},\exists\)
+
+** TODO eLecture 10 - Connectedness
+1. *Definition (Disconnected)*:
+   1. A set \(E\) in M is /disconnected/ if there are nonempty sets \(A,B\) so
+      that \(E=A\cup B\) and \(\overline{A}\cap B=\emptyset=A\cap\overline{B}\).
+   2.
+2. *Proposition (interval property)*: In \(\mathbb{R}\), a set is connected
+   \(\iff\) it is an interval.
+3.
+** eLecture 13 - Total Boundedness
+1. *Definition*: A subset \(A\) of \(M\) is bounded if there exist \(x \in M\) and \(0<R<\infty\)
+    so that \(A \subseteq B[x,R]\).
+2. *Definition*: A subset \(A\) of \(M\) is /totally bounded/ if for any
+   \(\epsilon > 0\), there are finitely many points \(x_1,\dots,x_n\) so that
+   \(A \subseteq \bigcup^n_{i=1}B[x_i,\epsilon] \).
+3. *Remark*: If a subset \(A\) of \(M\) is /totally bounded/, we can request the
+   center of the bounding (open) balls to be all from A.
+4. *Proposition*: Totally bounded \(\implies\) bounded.
+5. *Proposition*: In \(\langle\mathbb{N}^n,\rho_2\rangle\), a subset is totally
+   bounded \(\iff\) bounded.
+6. *Theorem*: A subset \(A\) of \(M\) is totally bounded \(\iff\) every sequence
+   in A has a Cauchy subsequence. (Lion Hunting)
+** eLecture 14 - Completeness
+1. *Definition (complete)*: A subset \(A\) of \(M\) is /complete/ if every Cauchy
+   sequence in \(A\) converges to a point in \(A\).
+2. *Proposition*: Let \((x_k)^\infty_{k=1}\) be a sequence in \(\mathbb{R}^n\).
+   Then
+   a. It is Cauchy wrt \(\rho_2\) \(\iff\) each coordinate is a Cauchy
+      sequence in \(\langle\mathbb{R},\rho_e\rangle\).
+   b. It is convergent wrt \(\rho_2\) \(\iff\) each coordinate is a convergent
+      sequence in \(\langle\mathbb{R},\rho_e\rangle\).
+3. *Proposition*: given a complete metric space \(M\), a subset \(A\) of \(M\)
+   is complete \(\iff\) \(A\) is closed in \(M\).
+4. *Definition (diameter)*: \(\diam A = \sup\{d(x,y):x,y\in A\}\), the maximum
+   distance between any 2 points in \(A\).
+5. *Nested Set Theorem*: Let \(M\) be a complete metric space. Suppose that
+   \((A_n)^\infty_{n=1}\) is a sequence of bounded nonempty closed subsets of M
+   so that
+   a. \(A_1 \supseteq A_2 \supseteq \dots\),
+   b. \(\lim_{n\rightarrow\infty} \diam A_n = 0\)
+   Then there is exactly one point in \(\bigcap^\infty_{n=1}A_n\).
+6. *Definition (contraction)*: A function \(T:M\rightarrow M\) is a
+   /contraction/ if there exists /contraction constant/ \(0<C<1\) so that
+   \(\rho(T(x),T(y))\leq C\rho(x,y)\) for all \(x,y\in M\).
+7. *Banach Fixed Point Theorem (aka Contraction Mapping Principle)*: \(M\) is a
+   complete metric space. If \(T:M\rightarrow M\) is a contraction with
+   constant \(C\). Then \(T\) has a unique fixed point, i.e., there is a unique
+   \(x\in M\) so that \(T(x)=x\). Furthermore, take any \(x_0 \in M\) and define
+   \(x_n = T(x_{n-1})\) for any \(n\in\mathbb{N}\), then the sequence converges
+   to the fixed point \(x\) and \(\rho(x_n,x)\leq\frac{C^n}{1-C}\rho(x_0,x_1)\)
+   for all \(n\in\mathbb{N}\).
+8. *Baire's Theorem*: Let \(M\) be a complete metric space. Assume that
+   \(M=\bigcup^\infty_{n=1} F_n\), where each \(F_n\) is a closed set in \(M\).
+   Then there exists \(n_0 \in \mathbb{N}\) so that \(F_{n_0}\) contains a nonempty
+   open ball \(B[x,r]\).
+** eLecture 15 - Completion
+Let \(\langle M,\rho\rangle\), \(\langle N,\tau\rangle\) and
+\(\langle P,\sigma\rangle\) be metric spaces.
+1. *Definition (isometry)*: Let \(\langle M,\rho\rangle\) and \(\langle N,\tau\rangle\)
+   be metric spaces. A function \(f:M\rightarrow N\) is an /isometry/ if
+   \(\tau(f(x),f(y)) = \rho(x,y)\) for all \(x,y\in M\).
+2. *Theorem*: Let \(\langle M,\rho\rangle\) be a metric space. There is a pair
+   \((N,i)\), where \(\langle N,\tau\rangle\) is a *complete* metric space,
+   where \(i:M\rightarrow N\) is an isometry, and \(i(M)\) is dense in N. That
+   is, \(\overline{i(M)} = N\). \((N,i)\) is a /completion/ of \(M\).
+3. *Theorem (completion is unique up to isometry)*: Let \((N,i)\) and \((P,j)\)
+   be two completions of a metric space \(\langle M,\rho\rangle\). Then there is
+   an bijective isometry \(\pi:N\rightarrow P\) so that \(\pi\circ i = j\), and
+   \(\pi^{-1}\) is an isometry too so that \(\pi^{-1}\circ j = i\).
+4. *Proposition*: Let \(\langle M_i,\rho_i\rangle, i=1,2\) be metric spaces and
+   let \(f:M_1 \rangle M_2\) be an isometry (not necessarily onto). Let
+   \(\langle N_i,\tau_i\rangle\) be the completion of \(\langle
+   M_i,\rho_i\rangle, i=1,2\). There is a unique continuous function
+   \(\widetilde{f}:N_1 \rightarrow N_2\) that extends f, i.e.,
+   \(\widetilde{f}(x)=f(x)\) for all \(x\in M_1\subseteq N_1\). Moreover, the
+   extension \(\widetilde{f}\) is an isometry.
+** eLecture 16 - Compactness
+1. *Definition (compact)*: \(E \subseteq M\) is /compact/ if \(E\) is both
+   /complete/ and /totally bounded/.
+2. *Proposition*: In \(\langle\mathbb{R}^n, \rho_2\rangle\), a subset E is
+   *compact \(\iff\) closed and bounded*
+3. *Definition (open covering)*: Let \(E\) be a subset of a metric space
+   \(\langle M,\rho\rangle\). A family \(\mathcal{G}\) of sets is an /open
+   covering/ of E if
+   1. Each \(G\in\mathcal{G}\) is an open set in M.
+   2. \(E\) is covered by \(\bigcup \{G:G\in\mathcal{G}\}\).
+4. *Definition (Heine-Borel property)*: (Every open cover of E has a finite
+   subcover.) A subset \(E\) of a metric space has the
+   /Heine-Borel property/ if for every open covering \(\mathcal{G}\) of \(E\),
+   there are finitely many \(G_1,\dots,G_n\in\mathcal{G}\) so that \(E\subseteq
+   G_1\cup\dots\cup G_n\).
+5. *Theorem (multiple characterization of compactness)*: Let \(E \subseteq
+   \langle M,\rho\rangle\). The following are equivalent:
+   a. E is compact (i.e., totally bounded and complete).
+   b. *(Sequential compactness)* Every sequence in \(E\) has a convergent
+      subsequence (to a point in \(E\)).
+   c. *(Bolzano-Weierstrass property, the weakest)*: Every infinite subset of
+      \(E\) has a cluster point in \(E\).
+   d. *(Heine-Borel property)*: Every open cover of \(E\) has a finite subcover.
+6. *Lebesque covering Lemma*: Given a compact subset \(E\) in a metric space
+   \(\langle M,\rho\rangle\) and let \(\mathcal{G}\) be an open cover of \(E\).
+   Then there exist a /Lebesgue's Number/ \(r>0\), so that \(\forall x\in E,
+   \exists G\in\mathcal{G}\) (depending on \(x\)) so that \(B[x,r]\subseteq G\).
+7. *Proposition:* compact \(\implies\) closed. A closed subset in a compact set
+   is compact.
+* Week 10 Assignment
+1.
+       #+BEGIN_proof
+       Given an open covering \(\mathcal{G}\) of \(E = \{x_0\} \cup
+       \bigcup^{\infty}_{n=1}K_n\), we want to find a finite subcover.
+
+       First, \(x_0\) must belong to some open cover \(G\in\mathcal{G}\). Then since \(G\) is
+       open, there exists \(r>0\) such that \(B[x_0,r]\subseteq G\). I claim that
+       \(G\) contains infinitely many \(K_n\), that is, there is a
+       \(N\in\mathbb{N}\) such that for all \(n>N\),
+       \(G\supseteq\bigcup^{\infty}_{n=N}K_n\).
+
+       To prove the claim, we use the \(r\) as given above (such that
+       \(B[x_0,r]\subseteq G\)). We have \(N_1,N_2\in\mathbb{N}\) such that
+       \[\forall x\in K_n, n\geq N_1,\rho(x,x_0)<r/2\]
+       due to the convergence of \((x_n)^{\infty}_{n=1}\). Also,
+       \[\forall x\in K_n, n\geq N_2,\diam{K_n}<r/2\]
+       due to the convergence of the diameters. Set \(N=\max\{N_1,N_2\}\), then we
+       have
+
+       \begin{align*}
+       \forall x\in K_n, n\geq N, \rho(x,x_0) &\leq \rho(x,x_n)+\rho(x_n,x_0)\\
+       &< \diam K_n + r/2\\
+       &< r/2 + r/2\\
+       &< r\\
+       \therefore x \in B[x_0,r]
+       \end{align*}
+
+       which implies \(K_n, K_{n+1},\dots\subseteq B[x_0,r]\subseteq G \implies
+       \{x_0\}\cup\bigcup^{\infty}_{n=N}K_n \subseteq G\) as desired.
+
+       Now, we only have finitely many compact sets \(K_1,\dots,K_{N-1}\) left.
+       Clearly \(\mathcal{G}\) must also be an open covering for each of them,
+       which compactness gives us finite subcovers for each \(K_1,\dots,K_{N_1}\).
+       The union of all these subcovers with \(G\) as found above is an open
+       covering for \(E\), and furthermore is a finite union of finite sets, which
+       must be a finite set too. Then we have found our finite subcover given an
+       arbitrary open covering \(\mathcal{G}\), and thus \(E\) satisfies the
+       Heine-Borel property and is compact.
+       #+END_proof
+2.
+    #+BEGIN_proof
+    \(\bigcup_{x\in M}B[x,r_x]\) must be an open covering of \(M\) (trivially
+    because it definitely contains all the points in \(M\))
+    where \(r_x\) is such that \(f(B[x,r_x])\) is a finite set.
+
+    Since \(M\) is compact, we use the Heine-Borel property: given the open
+    covering \(\bigcup_{x\in M}B[x,r_x]\), there must be a finite subcover, i.e.
+    \(x_1,\dots,x_n\) such that
+
+    \begin{align*}
+     M &\subseteq \bigcup\limits^{n}_{i=1}B[x_i,r_{x_i}]\\
+     \therefore f(M) &\subseteq f(\bigcup\limits^{n}_{i=1}B[x_i,r_{x_i}])\\
+     &=\bigcup\limits^{n}_{i=1}f(B[x_i,r_{x_i}])
+    \end{align*}
+
+    which \(\bigcup\limits^{n}_{i=1}f(B[x_i,r_{x_i}])\) is a finite union of
+    finite sets, and therefore its subset, \(f(M)\) must also be finite.
+    #+END_proof
+3.
+    #+BEGIN_proof
+    Since our domain is a closed set, which means for every
+    \(x\in\overline{E}\), there is a sequence that converges to \(x\). I claim
+    that \(\widetilde{f}:\overline{E}\rightarrow\overline{F}\) such that
+    \(\widetilde{f}(x) = \lim_{n\rightarrow\infty}f(x_n)\), where
+    \((x_n)^{\infty}_{n=1}\) is a sequence in \(M\) converging to \(x\), is the
+    function we desired. But we need to check a few things, namely that 1.
+    \(\widetilde{f}\) is well-defined, 2. \(\widetilde{f}(x)=f(x)\) given \(x\in
+    E\), and lastly, 3. \(\widetilde{f}\) is continuous.
+
+    1. _Proof: \(\widetilde{f}\) is well-defined._\\
+       Choose two sequences in \(M\) that converges to \(x\),
+       \((x_n)^{\infty}_{n=1}\) and \((y_n)^{\infty}_{n=1}\). We want to show
+       that
+       \[\lim_{n\rightarrow\infty}x_n=\lim_{n\rightarrow\infty}y_n=\widetilde{f}(x)\].
+
+       Consider the sequence \((x_1, y_1, x_2, y_2,\dots)\). We claim that since
+       the two sequences forming it are convergent hence Cauchy, the new
+       sequence is also
+       Cauchy. If so, then the sequence \((f(x_1), f(y_1), f(x_2), f(y_2),\dots)\)
+       is also Cauchy since \(f\) preserves Cauchy sequences. Since \(N\) is
+       complete, then \((f(x_1), f(y_1), f(x_2), f(y_2),\dots)\) converges to some
+       value in \(N\). Then its subsequences, \((f(x_n))^{\infty}_{n=1}\) and
+       \((f(x_n))^{\infty}_{n=1}\) must both converge to the same value, which is
+       \(\widetilde{f}(x)\) by definition, which gives us
+       \(\lim_{n\rightarrow\infty}x_n=\lim_{n\rightarrow\infty}y_n=\widetilde{f}(x)\)
+       as desired. This shows that   \(\widetilde{f}\) is well-defined.
+
+       Now we will fill in the proof for the claim that
+       \((x_1,y_1,x_2,y_2,\dots)\) is Cauchy.
+       Since \((x_n)^{\infty}_{n=1}\) and \((y_n)^{\infty}_{n=1}\) are both
+       convergent, then given any \(\epsilon>0\), there exists
+       \(N_1,N_2\in\mathbb{N}\) such that
+       \[\forall n>N_1, \rho(x_n,x)<\frac{\epsilon}{2}\] and
+       \[\forall n>N_2, \rho(y_n,x)<\frac{\epsilon}{2}\].
+
+       Therefore, letting \(N = \max\{N_1,N_2\}\), given any \(\epsilon>0\),
+       given \(p,q>N\), we note that
+       \begin{align*}
+        \rho(x_p, y_q) \leq \rho(x_p,x) + \rho(x,y_q) < \frac{\epsilon}{2}\\
+        \rho(x_p, x_q) \leq \rho(x_p,x) + \rho(x,x_q) < \frac{\epsilon}{2}\\
+        \rho(y_p, y_q) \leq \rho(y_p,x) + \rho(x,y_q) < \frac{\epsilon}{2}\\
+       \end{align*}
+
+       which shows that any two terms from \(x_N\) onwards is at most
+       \(\epsilon\) apart with each other, hence \(x_1,y_1,x_2,y_2,\dots\) is
+       Cauchy.
+    2. _Proof: \(\widetilde{f}(x)=f(x)\) for all \(x\in E\)_\\
+       Using well-definedness we shown above, it is sufficient to examine any
+       sequence in \(\overline{E}\) that converges to \(x\). Namely, the
+       sequence \((x,x,\dots)\) is such a convergent sequence, and thus,
+       \[\forall x\in E, \widetilde{f}(x)=\lim_{n\rightarrow\infty}f(x)=f(x)\].
+    3. _Proof: \(\widetilde{f}\) is continuous._\\
+       We prove this by contradiction. Suppose \(\widetilde{f}\) is not
+       continuous at \(a\in\overline{E}\). Then \(\exists\epsilon>0\) such that
+       \(\forall\delta>0,
+       \rho(x,a)<\delta\implies\tau(\widetilde{f}(x),\widetilde{f}(a))\geq\epsilon\).
+
+       For that given \(\epsilon\), we choose the sequence
+       \((x_n)^{\infty}_{n=1}\) from \(E\) such that
+       \[\rho(x_k,a)<\frac{1}{k}\].
+       We claim that \((x_n)^{\infty}_{n=1}\) converges to \(a\). To show that,
+       let \(\epsilon'>0\) be given. Then we can choose \(N\) such that
+       \(\frac{1}{N}<\epsilon'\), thus for any \(n\geq N\),
+       \[\rho(x_n,a)<\frac{1}{n}\leq\frac{1}{N}<\epsilon'\], which shows that
+       \((x_n)^{\infty}_{n=1}\) converges to \(a\).
+
+       Therefore \((x_n)^{\infty}_{n=1}\) is also Cauchy. The image of this
+       sequence under \(f\), \((f(x_n))^{\infty}_{n=1}\) is Cauchy since
+       \(f\) preserves Cauchy sequences. Then under completeness of \(\langle
+       N,\tau\rangle\), \((f(x_n))^{\infty}_{n=1}\) converges to
+       \(\widetilde{f}(a)\). However, by definition of convergence of sequences,
+       this implies that for any
+       \(\epsilon>0\), \(\exists N\in\mathbb{N}\) such that \(\forall n>N\),
+       \[\tau(f(x_n),\widetilde{f}(a))
+       =\tau(\widetilde{f}(x_n),\widetilde{f}(a))
+       <\epsilon\],
+       a contradiction. Therefore \(\widetilde{f}\) is continuous.
+    #+END_proof

@@ -1,4 +1,4 @@
-% Created 2020-02-18 Tue 18:39
+% Created 2020-05-01 Fri 20:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,101 +14,256 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage[citestyle=numeric,bibstyle=apa, hyperref=true,backref=true,maxcitenames=3,url=true,backend=biber,natbib=true] {biblatex}
+\addbibresource{final.bib}
 \author{Tan Yee Jian}
 \date{\today}
-\title{UPI2211 Utopia}
+\title{UPI2211 Final Paper}
 \hypersetup{
  pdfauthor={Tan Yee Jian},
- pdftitle={UPI2211 Utopia},
+ pdftitle={UPI2211 Final Paper},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.4)}, 
+ pdfcreator={Emacs 28.0.50 (Org mode 9.4)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\section{Week 6 Monday}
-\label{sec:orge807332}
-\subsection{More's Utopia: Foreign Politics, War and Morals in Utopia}
-\label{sec:orgff63ad2}
-\subsubsection{Foreign Politics}
-\label{sec:org36e1b85}
-\begin{itemize}
-\item Idealism
-\begin{itemize}
-\item Human nature is a treaty by itself, humans are united via feelings and
-emotions
-\item And it is more effective than treaties
-\end{itemize}
-\item Cynicism
-\begin{itemize}
-\item Giving rewards to people who kill the enemy king, as loyalty is impossible and
-people only care about themselves
-\end{itemize}
-\end{itemize}
-\subsubsection{Policies}
-\label{sec:orgb449fa9}
-\begin{itemize}
-\item Do not involves citizens in foreign wars
-\begin{itemize}
-\item Only on a voluntary basis
-\item Unless Utopia is invaded, then people are tasked to defend
-\item Send whole families to war instead, boost morale
-\item Compare to ``international army'' who fight for others causes
-\end{itemize}
-\item Tolerant of religious plurality
-\begin{itemize}
-\item However disallows/looksdown on atheists
-\item All religions held in a same church - everything is common to all religions
-\end{itemize}
-\end{itemize}
-\subsection{Discussions}
-\label{sec:orgef34807}
-\subsubsection{Warfare: hypocrisies and contradictions}
-\label{sec:org25023fa}
-\begin{itemize}
-\item Utopians hire Venalians to fight for themselves
-Problems:
-\begin{itemize}
-\item ``Utopians do not care how many Venalians they send to their deaths'' (p.94)
-\item They don't care if Venalians are enticed by money to fight one another
-\item Saying that Venalians are ``naturally designed for war'' prevent Utopians to
-question the moralities of their policies
-\item Double standards on the value of human life, regarding Utopians and Venalians
-\item Can they always be the richest country?
-\end{itemize}
-\end{itemize}
+\section{Introduction}
+\label{sec:org15df530}
+In the Smart Nation Launch Speech in 2014 \cite{lhl2014_smart_nation}, Singapore
+Prime Minister Lee Hsien Loong announced the Smart Nation initiative to make
+Singapore into ``a nation where people live meaningful and fulfilled lives,
+enabled seamlessly by technology.'' In his speech, he listed numerous ways where
+technology is deployed to create a better living environment for all
+Singaporeans, from taking care of the elderly using an alert and monitoring
+system to telemedicine which delivers healthcare to the homes, portraying a
+Utopia full of technological solutions that are promised for Singaporeans. In an
+era of rapid technological advancements, where everyone is connected virtually,
+where modes of work and play are revolutionized by artificial intelligence, the
+push for Smart Nation seems apt. In this initiative, Singapore goes further to
+embrace technology as the deciding factor for Singapore's future and declare it
+the path for Singapore to be a Utopia for its people.
 
-\subsubsection{Group discussion questions}
-\label{sec:org0cf27ec}
-\begin{itemize}
-\item Are these policies what More thought was the ideal manner of interstate behavior?
-\begin{itemize}
-\item Is this Thomas More or Morus? Probably Thomas More
-\item Are they ideal? Probably in a efficiency sense, but does it go against their morals?
-\item Their reasons for going to war are quite petty
-\item Utopia is built on a practical rather than a moral objective
-\begin{itemize}
-\item For example, religion + afterlife is to regulate moral behaviors
-\item Did he want to eliminate the class system? Probably not(?)
-\end{itemize}
-\end{itemize}
-\item Is a non-contradictory utopia possible? Efficient == moral?
-\begin{itemize}
-\item Not killing civilians is a efficient/moral way of waging war.(less lives lost) But reasons for waging war might not be moral
-\item Impossible. Why?
-\begin{itemize}
-\item There is just so much you can control. Things can never be absolutely equal
-\item There will always be tradeoffs? Also, what is moral then may not be moral now (ie no freedom of choice to live life)
-\end{itemize}
-\end{itemize}
-\item Is Utopia satiric? If so, why did he still alternate between possible and satiric policies?
-\begin{itemize}
-\item He wants people to think about his policies
-\item Blurs the line between utopia and dystopia - good place and noplace
-\item Cover up what he really thought with ridiculous ideas?
-\end{itemize}
-\end{itemize}
+However, having technology-based solutions to daily problems, and imagining a
+Smart Nation as a Utopia for all Singaporeans are very different. As with other
+Utopias, the Smart Nation initiative aims to create an ideal life in every
+aspect for Singaporeans by using ``smart'' solutions, which are technological
+solutions. In Lee's Speech \cite{lhl2014_smart_nation}, he says:
+
+\begin{quote}
+We want to transform our lives for the better, and we have what it takes to
+achieve this vision – the capabilities and the daring to pull it all together
+and make a quantum leap forward. I am looking forward to living in a Smart
+Nation – better living for all of us; stronger communities in our society; and
+more opportunities for all.
+\end{quote}
+
+where he promises to carry out the Smart Nation initiative to form a better
+society for the whole nation, deeming it as a Utopia. However, promising Smart
+Nation as a Utopia brings about its dangers, as this inherently implies that
+technological solutions are always beneficial and empowering, and as much as
+Utopias are societies which we might aspire to work towards, they carry their
+flaws as literary texts such as Plato's Republic and Skinner's Walden Two
+might reveal.
+
+In this paper, I argue that Singapore's Smart Nation initiative has its gaps
+from being a Utopia, and there are threats by equating them. I will highlight
+the threats of equating Singapore's Smart Nation initiative as a Utopia by
+showing the inadequacy of technology as a panacea, the potential loss of
+democracy under the Smart Nation initiative, and lastly, the gaps between the
+Smart Nation Singapore envisioned and a Utopia.
+
+\section{Technology is not a silver bullet}
+\label{sec:org123f904}
+First of all, there is no denying that technology often improves lives for the
+better. For example, Smart Nation deploys a series of technological solutions to
+everyday living in Singapore, from more well-known solutions such as e-payment
+platforms PayLah! and PayNow, to the less-known Moments of Life (MOL)
+applications targeting families and aging population \cite{smart_nation}. As
+Singaporeans try out these solutions for themselves, we naturally wonder whether
+tech solutions are truly the only ways to solve problems. However, as the
+Smart Nation initiative is thoroughly focused on creating ``Digital Economy,
+Digital Government and Digital Society'', sometimes the most glorious solution
+does not yield the best results. When we look at digital technology as a hammer,
+then everything else we see will look like nails - we will try to force our
+solutions onto whatever problems we come across and omit the wealth of other
+more effective, alternative solutions.
+
+Technology might give us a worse solution or even exacerbate the existing
+problem. More importantly, technology is usually a useful tool for us to
+implement a solution to problems developed by the humanities. These problems
+often arise when we frame Smart Nation as a Utopia, the best society that we
+come across, which implies adopting technology as the only solution.
+
+\subsection{Low-tech, better solutions}
+\label{sec:org04f5ac2}
+Using the right technology to tackle a focused problem can be very effective,
+but there is always a tendency to over-complicate high-tech solutions. If we
+keep the mindset where Smart Nation is a Utopia and we must digitize as much as
+possible, we might end up missing out on better solutions that are more
+straightforward in many cases. For example, when Cinnamon College's dining hall
+had to restrict the number of users to 50, students first suggested a
+webcam-based artificial intelligence system to count the number of magnetic
+buttons left on the board and transmit this data via the internet to the
+students. As later realized, reducing the number of chairs in the dining hall
+to 50 achieved the same effect with a higher rate of compliance than the digital
+solution - if the students are not going to squat for the entirety of their
+meals, there will always be less than 50 students eating in the dining hall at
+the same time.
+\subsection{Technology might exacerbate the problem}
+\label{sec:orgeaee021}
+Not every problem in the world can be solved by merely building an app,
+especially when the app is the root cause of the problem. For example,
+hackathons sometimes target a certain underprivileged community for the
+participants to develop applications for, such as the elderly or the autistic
+community. However, as the elderly are new to technological solutions, they
+might not benefit from the application developed at all as their living
+condition possibly cannot afford a smartphone or stable internet connection.
+Applications developed for special needs children might make them more reliant
+on the applications' content and overlook the intention of helping them to
+integrate into society or learn valuable skills, instead of delving into the
+virtual world the application has created. This example demonstrates that not
+all problems can be solved by technological solutions, much less framing Smart
+Nation as a Utopia and hence exaggerating the effectiveness of such solutions.
+\subsection{Technology implementations depend on solid humanities solutions}
+\label{sec:org7944843}
+The predictive power of machine learning models is undeniable, as we have
+increasingly accurate image recognition skills built into the cameras of our
+smartphones, and spot-on search results and advertisements on the applications
+that we use. However, the results would be far from Utopian if the data
+predicted is not used to society's benefit. This is harder than it sounds,
+since the machines learn essentially human-labeled data, and extrapolates them
+based on our existing biases. For example, using machine learning to pile
+through data of applicants of any kind makes sense - these jobs are often
+time-consuming and tedious, and machines excel at doing such repetitive work.
+However, it needs a sample of who are the people usually accepted, and it might
+extrapolate the data from there \cite{racist_robots}.
+
+For example, applicants for a job will provide their personal background
+information, from education to family background, and their living areas.
+However, a bad model that filters such applications may be trained to look for
+some common correlation between rejected applicants, such as being of a certain
+race or living under the same postcode. This creates a problem, where people
+from a poor neighborhood lacking proper education will be discriminated in
+getting the job, or merely because of the race of their neighbors. Furthermore,
+predictive analytics may even create a self-fulfilling prophecy.
+
+In Cathy O'Neil's book, \emph{Weapons of Math Destruction} \cite{wmd} how mathematical
+models may go wrong, a crime prediction system, \emph{PredPol} was used to forecast
+the number of crime happenings in a neighborhood in Reading, Pennsylvania
+\cite{lum16_to_predic_serve}. The bias happens when the law enforcement team begin
+more patrols in the neighborhood - they catch more people committing petty
+crimes such as littering or causing a nuisance, hence making the predictive model
+accurate, and more importantly, they are missing out on the unpredictable,
+higher risk crime due to the effective prediction system which generates a
+metric which they now can never omit. \cite{wmd}
+
+In this case, technology can only aid our effort in preventing crime or
+increasing efficiency in selecting applicants, but a lot of human intervention
+and understanding of the intricacies of the model is essential for the effective
+execution of these objectives. These problems can likely be prevented if we do
+not over-rely on the technological, ``smart'' part of the solutions, and fall back
+to our logical mind to investigate or improve the system before deploying it,
+rather than worshipping such solutions as the panacea for building a city and
+making all its decisions right away. Framing smart cities as a Utopia dismisses
+the notion of other solutions being valuable and can lead to harmful outcomes.
+\section{The loss of democracy}
+\label{sec:org7e1ad13}
+Lying at the core of smart urbanism is data. The generation of data relies on
+digitization of real-world information. From our movements to personal identity,
+to the temperature and crowdedness of the surroundings, all the data with what
+is happening is being recorded down with the help of new technology.These data
+are the lifeblood of smart solutions, where these numbers are crunched and
+analyzed to make decisions \cite{kong18_ideol_align_smart_urban_singap}. This can
+decide from things as small as automatically change the temperature of air
+conditioner, inform someone with the congestion situation of a certain
+expressway, to suggesting you what to purchase and prompting for your decisions,
+to filling your news feed with targeted news, messages, and advertisements.
+
+The loss of democracy begins with the stakeholder who owns the most data - they
+get to decide with the greatest level of accuracy and have the most opportunity
+to affect someone's life. Huge tech companies such as Google and Facebook hold
+most of our data, as we post any photos on Instagram, comment on a post on
+Facebook, or link to a service via Google accounts. This prompts the creation of
+an online reenactment of the physical world, and from the various apps and services
+linked to a central account, a huge number of deductions can already be made by
+the company. However, data collection will only get more pervasive in the case
+of Smart Nation, as not only virtual data is being collected, we are submitting
+our real-life data, such as consuming pattern at supermarkets, daily movement
+trajectories, even to preference in food choices via location stamps to the
+``digitization'' of our society.
+
+Even today, Singapore is already deemed as a data-controlled society.
+\cite{Helbing2019} Having data consolidated at the hands of any party will give
+them immense power to do the ``big nudge'' - nudging people's decisions using big
+data. The pervasiveness of a single search engine can cause numerous people to
+consume information from the same source, that predominate a country's thoughts,
+even including the lawmakers. Most importantly, this directly threatens the
+plurality and diversity of the people. This can be viewed as a kind of
+conditioning, similar to that in Walden Two, where the people are condition to
+get rid of hateful emotions such as anger and jealousy \cite{walden_two},
+consolidating data to aid a city's decision-making process will directly
+sacrifice the already limited diversity of Singapore.
+
+\section{Is a perfect Smart Nation a Utopia, already?}
+\label{sec:org5a0a762}
+After 5 years of the announcement of the Smart Nation initiative, Singapore is
+far from fully implementing smart solutions for the whole nation yet. It is
+difficult as misuses and lack of uptake are prevalent in the community when new
+technological solutions and measures are first announced. Examples are the
+elderly emergency button and the mobile payment solution. When the elderly
+emergency button was first introduced, the elderly were unaccepting of the new
+gadget, some might not use it and deem it as troublesome. And the receptionists
+are stressed due to the responsibility to immediately respond whenever the panic
+button is sounded by any elderly \cite{kong18_ideol_align_smart_urban_singap}.
+Similarly to the mobile payment system, businesses, especially smaller ones are
+less keen to take up the new system due to the inherent complexity, considering
+many food stalls and a good number of people dealing with payments are those who
+are not tech-savvy, which include the older generation \cite{elderly_shun_tech}.
+This gap in implementation is obvious in any creation of new Utopian community,
+for example, in Plato's Republic, the creation of Kallipolis requires the
+important ``noble lie'' for its citizen to work and live together for the land,
+and protect it from any external invaders \cite{republic}.
+
+A series of smart solutions will look good on any metric, but when it comes to
+solving the root causes of problems, it might still be lagging. Singapore is
+facing an aging population, and there has been a multitude of apps and gadgets
+targeted to solve them, from teaching them to use instant messaging or video
+calls, or installing panic buttons, but that still does not solve the problem of
+isolation for the elderly \cite{kong18_ideol_align_smart_urban_singap}. Many crave
+human interaction, and shoving them with new applications and smartphones will
+make them feel like the environment is hostile to them since it put more stress
+on them and does not address the root cause of solidarity.
+
+Having smart solutions will indeed increase our efficiency, but the inherent
+convenience might make us take the daily chores which forge our interpersonal
+connections for granted. For example, tasks that we used to have to talk to
+people in front of the counters to get done are now replaced by automated
+applications and online procedures, and we lose the ability to connect,
+understand and emphasize with one another, with different professions this way.
+As Jared from the MCCY mentioned, in setting their tasks to onboard new citizens
+into the Singaporean community, they often ``make some of the tasks difficult''
+to prompt the participants to take initiative in finishing the tasks themselves,
+such as leaving individual groups to create chat groups on \emph{WhatsApp} on their
+own. This way, Jared argues, can make them more involved in the process of
+bonding and hence make their orientation process more memorable and effective. I
+agree with this argument since it connects with the thought that a good life is
+not necessarily one where everyone is given what they wanted, but one where
+their effort is valued and rewarded
+\cite{fouriezos90_task_diffic_increas_thres_rewar_brain_stimul}.
+
+\section{Conclusion}
+\label{sec:orge7c1f21}
+In all, technology is not a bad solution for many modern problems. For many
+problems, technology equips us with an extra tool to effectively deliver our
+solution with, especially with big data and artificial intelligence, but these
+come with their hidden danger as well, when technology is deemed as the only
+best solution to create a Utopia. To retain our democracy and free will
+in decision making, extensive humanities research have to be carried out so that
+a Smart Nation can make the right policies to benefit its people.
+\printbibliography
 \end{document}

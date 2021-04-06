@@ -468,37 +468,15 @@ top=14mm,headsep=3mm]{geometry}
 		\item \emph{Definition}: $E\subseteq M, E$ is \textbf{dense in M} if
 			$\overline{E}=M$. For example, $\mathbb{Q}$ is \textbf{dense} in
 			$\langle\real,\rho_{e}\rangle$.
-			\item  Baire's Theorem:
+		\item
 			\begin{enumerate}
-				\item \emph{Prop}: Given $f:\real\to\real$ nondecreasing, set
-				\[J_{f}(a)=\inf\{f(x):x>a\}-\sup\{f(x):x<a\},\] the ``jump'' function
-				at point $a$ of the nondecreasing function.
-				$J_{f}(a)\geq0,J_{f}(a)=0\iff f$ is continuous at $a$.
-				\item \emph{Lemma}: If $a_{1},\dots,a_{n}$ are points in an interval
-				$(u,v)$, then $J_{f}(a_{1})+\dots+J_{f}(a_{n})\leq f(v)-f(u)$.
-				\item \emph{Defn}: A set is \textbf{countable} if it is either finite or
-				$\exists f:\nat\to S$ a bijection.
-				\item \emph{Prop}: A countable union of countable sets is countable.
-				\item \emph{Thm}: Let $f:\real\to\real$ be a monotone function. Then the
-				set of discontinuities of $f$ is countable.
-				\item \emph{Defn}: (Oscillation) Given $f:\real\to\real$ a bounded
-				function. For any point $a\in\real$,
-				define \[\omega[f,a]=\inf\limits_{\epsilon>0}\{\sup\{f(x):
-					|x-a|<\epsilon\}-\inf\{f(x):|x-a|<\epsilon\}\}\]
-				\item \emph{Prop}: $\omega[f,a]\geq0\ \forall a\in\real. f$ is
-					continuous at $a \iff\omega[f,a]=0$. $f$ is discontinous at
-					$a\iff\omega[f,a]>0$.
-					\item \emph{Crl}: Let $D$ be the set of discontinuities of a bounded
-					function $f:\real\to\real$. Then $D$ is the union of a sequence of
-					closed sets, namely $D=\bigcup\limits^{\infty}_{n=1}E_{1/n}$.
-					$D$ is called a $F_{\sigma}$ set. (``F'' stands for closed, $\sigma$
-					stands for union).
-					\item Finally, \textbf{Baire's Theorem}: Given a $F_{\sigma}$ (union of closed)
-			set. Then one of the sets must contain a non-empty, open interval.
-			\item \emph{Prop}: The set of irrationals $\real-\mathbb{Q}$ is not a
-			$F_{\sigma}$ set.
-			\item \emph{Thm}: There is no bounded continuous function
-			$f:\real\to\real$ that is discontinous precisely at the irrational numbers.
+				\item \textbf{Baire's Theorem}: Given a $F_{\sigma}$ (union of closed)
+					set. Then one of the sets must contain a non-empty, open interval.
+				\item \emph{Prop}: The set of irrationals $\real-\mathbb{Q}$ is not a
+					$F_{\sigma}$ set.
+				\item \emph{Thm}: There is no bounded continuous function
+					$f:\real\to\real$ that is discontinous precisely at the irrational
+					numbers.
 			\end{enumerate}
 	\end{enumerate}
 
@@ -508,7 +486,7 @@ top=14mm,headsep=3mm]{geometry}
 		\item \emph{Proposition}: (Open and closed sets in subsets) Let
 		$A\subseteq U\subseteq M$. Then $A$ is closed(open) in $U\iff\exists$ an
 		open(closed) set $B\in M$ such that $A = B\cap U$.
-		\item \emph{Definition}: Two reformulations of \textbf{connected sets}:
+		\item \emph{Definition}: Two formulations of \textbf{connected sets}:
 			\begin{enumerate}
 				\item A set \(E\) in M is \textbf{disconnected} if there are nonempty
 					sets \(A,B\) so that \(E=A\cup B\) and
@@ -541,20 +519,22 @@ top=14mm,headsep=3mm]{geometry}
 
 	\section{2nd C: Total Boundedness and Completeness}
 	Let \(\langle M,\rho\rangle\), \(\langle N,\tau\rangle\) and
-	\(\langle P,\sigma\rangle\) be metric spaces.
+	\(\langle P,\sigma\rangle\), $\met{1}, \met{2}$ be metric spaces.
 	\begin{enumerate}
-		\item \emph{Definition}: A subset \(A\) of \(M\) is bounded if there exist \(x \in M\) and \(0<R<\infty\)
-		      so that \(A \subseteq B[x,R]\).
-		\item \emph{Definition}: A subset \(A\) of \(M\) is \textbf{totally bounded} if for any
-		      \(\epsilon > 0\), there are finitely many points \(x_1,\dots,x_n\) so that
-		      \(A \subseteq \bigcup^n_{i=1}B[x_i,\epsilon]\).
+		\item \emph{Definition}: A subset \(A\) of \(M\) is \textbf{bounded} if
+			there exist \(x \in M\) and \(0<R<\infty\) so that \(A \subseteq B[x,R]\).
+		\item \emph{Definition}: A subset \(A\) of \(M\) is \textbf{totally bounded}
+			if for any \(\epsilon > 0\), there are finitely many points
+			\(x_1,\dots,x_n\) so that \(A \subseteq \bigcup^n_{i=1}B[x_i,\epsilon]\).
+			\begin{enumerate}
+				\item \textbf{Characterization}: A subset \(A\) of \(M\) is totally bounded
+					\(\iff\) every sequence in A has a Cauchy subsequence. (Lion Hunting)
+			\end{enumerate}
 		\item \emph{Remark}: If a subset \(A\) of \(M\) is \textbf{totally bounded}, we can request the
 		      center of the bounding (open) balls to be all from A.
 		\item \emph{Proposition}: Totally bounded \(\implies\) bounded.
 		\item \emph{Proposition}: In \(\langle\mathbb{N}^n,\rho_2\rangle\), a subset is totally
 		      bounded \(\iff\) bounded.
-		\item \emph{Theorem}: A subset \(A\) of \(M\) is totally bounded \(\iff\) every sequence
-		      in A has a Cauchy subsequence. (Lion Hunting)
 		\item \emph{Definition (complete)}: A subset \(A\) of \(M\) is \textbf{complete} if every Cauchy
 		      sequence in \(A\) converges to a point in \(A\).
 		\item \emph{Proposition}: Let \((x_k)^\infty_{k=1}\) be a sequence in \(\mathbb{R}^n\).
@@ -602,13 +582,12 @@ top=14mm,headsep=3mm]{geometry}
 		      be two completions of a metric space \(\langle M,\rho\rangle\). Then there is
 		      an bijective isometry \(\pi:N\to P\) so that \(\pi\circ i = j\), and
 		      \(\pi^{-1}\) is an isometry too so that \(\pi^{-1}\circ j = i\).
-		\item \emph{Proposition}: Let \(\langle M_i,\rho_i\rangle, i=1,2\) be metric spaces and
-		      let \(f:M_1 \rangle M_2\) be an isometry (not necessarily onto). Let
-		      \(\langle N_i,\tau_i\rangle\) be the completion of \(\langle
-		      M_i,\rho_i\rangle, i=1,2\). There is a unique continuous function
-		      \(\widetilde{f}:N_1 \to N_2\) that extends f, i.e.,
-		      \(\widetilde{f}(x)=f(x)\) for all \(x\in M_1\subseteq N_1\). Moreover, the
-		      extension \(\widetilde{f}\) is an isometry.
+		\item \emph{Proposition}: Let \(f:M_1 \rangle M_2\) be an isometry (not
+			necessarily onto) and \(\langle N_i,\tau_i\rangle\) be the completion of
+			\(\langle M_i,\rho_i\rangle,\ i=1,2\). Then there is a unique continuous
+			function \(\widetilde{f}:N_1 \to N_2\) that extends f, i.e.,
+			\(\widetilde{f}(x)=f(x)\) for all \(x\in M_1\subseteq N_1\). Moreover, the
+			extension \(\widetilde{f}\) is an isometry.
 	\end{enumerate}
 
 	\section{3rd C: Compactness}
@@ -659,10 +638,11 @@ top=14mm,headsep=3mm]{geometry}
 		$y\in B[x,\delta]\implies f(y)\in B[f(x),\epsilon]$. \textbf{uniform
 			continuity $\implies$ (pointwise) continuity}.
 		\item \emph{Theorem}: Continuous function on a compact set is uniformly continuous.
-		\item \emph{Theorem}: Given $E\subseteq M_{1}$, a uniformly continuous
-		function $f:E\to M_{2}$ can be extended to a continuous function on
-		$\overline{E},\ \tilde{f}:\overline{E}\to M_{2}$, defining
-		$\tilde{f}(x)=\lim\limits_{n\to\infty}f(x_{n})$ for some $\seqn{x_{n}}\to x$.
+		\item \emph{Theorem}: Given $E\subseteq M_{1}$ and $M_{2}$ is complete, a
+			uniformly continuous function $f:E\to M_{2}$ can be extended to a
+			continuous function on $\overline{E},\ \tilde{f}:\overline{E}\to M_{2}$,
+			defining $\tilde{f}(x)=\lim\limits_{n\to\infty}f(x_{n})$ for some
+			$\seqn{x_{n}}\to x$.
 	\end{enumerate}
 
 	\section{Sequences and Series of Functions}
@@ -671,7 +651,7 @@ top=14mm,headsep=3mm]{geometry}
 		$\seqn{f_{n}}$ \textbf{converges pointwise} to a function
 		$f:M_{1} \to M_{2}$ if $\forall x\in M_{1}$,
 		$\seqn{f_{n}(x)}\to f(x)\in M_{2}$. That is, given a sequence of function,
-		take a $x\in M_{1}$, subbing it into every function in $\seqn(f_{n})$ yields
+		take a $x\in M_{1}$, subbing it into every function in $\seqn{f_{n}}$ yields
 		a sequence in $M_{2}$ which converges to $f(x)$.
 		\item \emph{Definition}: $\seqn{f_{n}}$ \textbf{converges uniformly} to
 		$f:M_{1}\to M_{2}$ if
@@ -685,12 +665,13 @@ top=14mm,headsep=3mm]{geometry}
 		\end{enumerate}
 		\item \emph{Definition}: $\seqn{f_{n}}$ is \textbf{uniformly Cauchy} on
 		$M_{1}$ if given $\epsilon>0,\ \exists N\in\nat$ such that
-		$\rho_{2}(f_{m}(x),f_{n}(x))<\epsilon\forall x\in M_{1}$ whenever $m,n\geq N$.
-		\item \emph{Theorem}: \textbf{(Uniform continuity preserves continuity)} A
-			uniform continuous sequence of functions converges to a continuous
-			function. The limit is not necessarily continuous if convergence is
-			pointwise. Note that a sequence of functions is continuity preserving
-			$\implies$ uniform continuity is \textbf{NOT} true.
+		$\rho_{2}(f_{m}(x),f_{n}(x))<\epsilon\ \forall x\in M_{1}$ whenever $m,n\geq N$.
+		\item \emph{Theorem}: \textbf{(Uniform continuity preserves (uniform)
+			continuity)} A uniform continuous sequence of (uniformly) continuous
+			functions converges to a (uniformly) continuous function. The limit is not
+			necessarily continuous if convergence is pointwise. Note that a sequence
+			of functions is continuity preserving $\implies$ uniform continuity is
+			\textbf{NOT} true.
 		\item \textbf{Dini's Theorem}: $M$ is a compact metric space. A sequence of
 			pointwise convergent functions $f_{n}:M\to\real$ and is non-decreasing
 			(i.e., $\forall x\in M, f_{1}(x)\leq f_{2}(x)\leq\dots\leq f(x)$)

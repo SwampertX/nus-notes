@@ -1,0 +1,484 @@
+#+TITLE: Cs1010e
+
+* Week 2
+** Some Computing/Programming concepts
+*** Tools
+1. What is an IDLE?
+
+   IDLE has two parts - an *Editor*, and a *Shell*.
+
+2. What is an Editor?
+
+   Python programs are *plain text files*, ie, file consist of text without
+   formatting. This is different from *rich text files* like =.docx= (that
+   contains text formatting).
+
+   Therefore the *Editor* in IDLE can be used to write python programs, and save
+   them in =.py= format. You can use *ANY* other plain text editor to write a
+   python program too! An example is Notepad in Windows.
+
+3. Where is the Editor in IDLE?
+
+   =File -> New File=.
+
+4. What editors are nice to use?
+
+   I recommend [[https://www.jetbrains.com/pycharm/download/][PyCharm]], a powerful Integrated
+   Development Environment (IDE, Editor and more, usually with debugger), or
+   [[https://code.visualstudio.com/Download][VSCode]]. If you want to be amazed, check out Vim and Emacs. Sticking to
+   IDLE/Notepad is of course fine.
+
+   Tips for IDLE users: when editing a file (in editor mode), go to =Options ->
+   Toggle Line Numbers= for easier debugging - your errors will tell you which
+   line got wrong.
+
+5. What is a Shell then?
+
+   It is also known as REPL, Read-Eval-Print-Loop. As the name suggests, it
+   gives you a prompt: =>>>= and whatever you type after that, after you press
+   Enter, your code will be *Read*, *Evaluated*, results *Printed* out. Then
+   this process *Loops*, back to you typing, then Python will *Read*, *Eval*…
+   Yup, you got what I mean.
+
+   This is a quick way to test out program fragments. For long programs, use a
+   text editor.
+
+*** Quick Notes
+1. The assignment operator (or, the equal === sign) is different from that of
+   math.
+   #+BEGIN_SRC python
+a = 3
+b = 4
+a = b # what, 3 = 4??
+   #+END_SRC
+   The trick here is to remember:
+
+   #+BEGIN_QUOTE
+   Evaluate RHS, then give result to LHS.
+   #+END_QUOTE
+
+   Then you will see that =a= gets the value of =b=. Now both =a= and =b= have
+   value 4.
+
+2. Functions in Python are actually procedures - a shorthand for doing several
+   things. For example, if your mum says: "/help me buy the groceries!/", she
+   actually meant that you should:
+
+   - First find a way to go to your favourite grocery store (physical or online)
+   - Then select the things you need
+   - Pay for them
+   - ...
+
+Not all procedures return something (for example, the groceries). She can also
+ask you to clean up your room which you don't need to return anything, so it is
+just a procedure. If you want to return something in Python, use the =return=
+keyword, otherwise =None= will be returned. (more on that later)
+*** Some things I wish to share with you:
+    #+BEGIN_QUOTE
+    “Programs must be written for people to read, and only incidentally for
+    machines to execute.”
+    #+END_QUOTE
+** Lesson plan
+*** Introduction/ice breakers
+**** Self intro
+**** Quick survey
+***** Collect tele handles in group
+***** Then send them the survey link
+https://docs.google.com/forms/d/e/1FAIpQLSdA1JD4RaEi29XkhRioIIjyWmWBsS_EDHdotBuAsZhtj2AYEQ/viewform?usp=sf_link
+**** PPT
+Outline:
+- Operations - arithmetic, relational, types
+- String slicing - start stop step
+  + Negative step size
+- How to sort strings?
+- Precedence
+- Type Casting
+  + Is =1= True or false? is a string true or false?
+- Variables
+  + What about the assignment
+- Turtle
+**** Some of my extra points
+***** Functions are NOT machines
+They are actually procedures that can sometimes act as machines
+***** The Equal sign is not Equal
+Eval RHS, then give to LHS
+*** Questions
+- Junyong Tan wants to be in this tutorial
+** Assignment 1 Report
+*** General Comments
+Some students included =>>>= from the IDLE Console into your solution, causing
+them to fail, even though after removing the =>>>= answers would be correct.
+These symbols are there to prompt you to enter some Python statement to run
+(evaluate) and print out the answers - they are not part of the code.
+
+It is heartening to see students using variables and functions to abstract your
+code, ie writing =solve_quardratic(a, b, c)= functions. Please keep it up as it
+is a good practice.
+
+About style: just like writing English, good styling (ie. a space after
+punctuations, /exactly/ one space between consecutive words) make the essay easy
+to read. In programming, we call it /Coding Style/. In Python we write
+variable/function names in Snake Case (ie. =the_third_letter=, =is_prime=) and
+so on. Using a IDE like VSCode or PyCharm means you can get auto-styling or
+style suggestions for free. Minor styling issues are commented.
+*** Question 1
+Most students got this part correct, some attempted to create a function that
+solves quadratic equations in general, but face one problem - how does it return
+two different roots? Turns out, a function in Python can return multiple values!
+#+BEGIN_SRC python
+from math import sqrt
+def solve_quadratic(a, b, c):
+    det = b * b - 4 * a * c
+    return (-b + sqrt(det))/2/a, (-b - sqrt(det))/2/a
+ans1, ans2 = solve_quadratic(a, b, c)
+#+END_SRC
+*** Question 2
+All students got this part correct with very few exceptions.
+*** Question 3
+All students got this part correct. Some students deployed loops or functions to
+abstract, although loops made more sense, since a function that draws a line
+then turns 36 degress is hardly reusable in other cases.
+* Week 3
+** Lesson Plan
+*** Pointers
+**** Loops
+- start from 0, end is exclusive
+  #+BEGIN_SRC python
+# not good
+for i in range(0, 5):
+    pass
+# good
+for i in range(5):
+    pass
+  #+END_SRC
+- we can write =for _ in range(n)= if we do not use the value in the for loop
+  body.
+#+BEGIN_SRC python
+    for _ in range(5):
+        forward(100)
+        left(50)
+#+END_SRC
+**** =in= relationship
+- For example, strings and lists allow the use of =in= to check whether an
+  element is in the collection.
+  #+BEGIN_SRC python
+"a" in "abc" # true
+"" in "abc" # true
+3 in [1, 2, 3] # true
+"ab" in "abc" # true
+[1] in [1] # false
+  #+END_SRC
+- To check bounds of a numerical value:
+  #+BEGIN_SRC python
+# 2 >=0 and 2 < 3
+2 in range(3) # true
+3 in range(1,3) # false
+  #+END_SRC
+**** add-equals etc...
+#+BEGIN_SRC python
+# shorthand for a = a + 1
+a += 1
+# shorthand for b = b / 2
+b /= 2
+#+END_SRC
+**** Useful functions
+#+BEGIN_SRC python
+sum([1, 2, 3]) == 6
+ord('A') == 65
+#+END_SRC
+*** Admin
+- any questions on assignment 1 report?
+- Quizzes
+*** Slides
+- Functions
+- Control flow
+* Week 4
+** Assignment 2 Report
+*** General remarks
+1. You should not be calling your functions unless specifically stated. Just
+   need to write the function that does the job, the grader will do it for you.
+2. Failing test cases usually mean your code is wrong (or you are not following
+   the rules eg by printing out extra stuff). Please make sure the test cases
+   pass for full marks.
+3. No =pass= in your solution please. It is for when you don't want to define a
+   function, you will put =pass= as your placeholder.
+4. Python is *SUPER* particular with indentation - don't use a mixture of tabs
+   and spaces. The usual practice is to use 2 *spaces* or 4 *spaces*, which is
+   usually equivalent to 1 =TAB=. You can change the settings in IDLE or your IDE.
+*** Q1-3 Turtle
+- This is the easy part, but remember to use loops - for loops, specifically.
+  Since you have a clear number of time to loop (eg. number of sides, number of
+  petals which are given).
+- Only use =while= loops if you are not sure when to stop.
+*** Q4
+- Some of you have weird (but correct) counting:
+  #+BEGIN_SRC python
+def check_age():
+    print('Enter age:')
+    age = int(input())
+    count=0
+    while age <1 or age >100:
+        count +=1
+        print('Enter age:')
+        age = int(input())
+    count +=1
+    print('Your age is', age)
+    print('Number of attempts =', count)
+  #+END_SRC
+    Where your count should technically start with 1 instead of the weird
+  increment before printing. Count is tracking the times you ask, so when you
+  ask user to enter for the first time the counter is already 1.
+*** Q5
+- Many of you have off-by-one error. To check from =1= to =n= inclusive, your
+  range should be =range(1, n+1)=. Costly mistake! [[https://www.reddit.com/r/ProgrammerHumor/comments/560o14/there_are_two_kinds_of_errors_off_by_one_errors/][Obligatory joke]]
+- The best solutions are really short:
+  #+BEGIN_SRC python
+def find_winners(f, m, n):
+    winners = 0
+    for i in range(f, n+1, f): # why does this work?
+        if str(m) in str(i):
+            winners += 1
+    return winners
+  #+END_SRC
+** Assignment 3 Pre-requisite Knowledge
+1. Integer division - force answer to be integer
+   #+BEGIN_SRC python
+9 / 3 # 3.0
+9 // 3 # 3
+3 / 2 # 1.5
+3 // 2 # 1
+   #+END_SRC
+2. Lower, Upper, Count functions for strings
+   #+BEGIN_SRC python
+"abcdefg".count("a") == 1
+"aAAAa".lower() == "aaaaa"
+"aAAAa".upper() == "AAAAA"
+   #+END_SRC
+3. [[https://docs.python.org/3/library/random.html]]
+**
+* Week 5
+* Week 6
+** PE Stuff
+Most stuff are already given in the PE instructions, just read it again.
+1. Ensure your LumiNUS and Coursemology submissions are *character-by-character
+   identical*. Meaning, comments, test cases, whitespaces (spaces, empty lines)
+   should all be preserved. If you think =printTestCases= or whatever should not
+   be in Coursemology, then you should delete it from LumiNUS before submitting.
+2. Using VLC/OBS or whatever screen record software is fine, but make sure you
+   self-support and troubleshoot should (touch wood) any error happen. I
+   recommend just use whatever you have practised over Mock PE.
+3. IDEs are allowed. For example PyCharm, VSCode.
+4. All the very best!
+** Assignment 4 Notes
+- Question 2: The only recommended solution is to keep track of 3 variables, and go
+  through the original list *just once* to extract the top 3 variables.
+- In Question 2, all list-mutating functions such as =insert=, =remove=, =pop=,
+  =sort= etc will all be banned on coursemology - so make sure you test your
+  solution on Coursemology regularly.
+- Hint is to try writing a function that
+  1. Uses a for loop to go through every element in list (list comprehension is
+     not allowed)
+  2. Keeps track of a max element, and compare it with every element you see
+  3. At the end of the loop, the element should contain the maximum element in
+     the list.
+- Once you finish the above, move on to max 2/3 elements, the idea is similar.
+* Assignment 3 Report
+** General
+Recursive solutions are usually very easy to write - but inefficient. In some
+cases, there are ways to optimize recursion (Check out [[https://en.wikipedia.org/wiki/Tail_call#By_language][Tail Call Optimized
+Languages]]) but in general, it is pretty slow. In this course, use loops
+whenever you can, but also feel free to use recursion for small cases.
+** Question 1 - Anagram
+Most did well. For those who didn't, one logic is as below:
+1. Since spaces are not allowed, if the length =s1=, =s2= are different, then
+   they cannot be anagrams of each other.
+2. For every letter in =s1=, =s2= should have the same amount. No need to check
+   the other way (every letter in =s2=), since, suppose there is some letter in
+   =s2= which =s1= doesn't have, but =s2= is already as long as =s1= after this
+   check. Now this extra letters in =s2= will make =s2.len() > s1.len=, a
+   contradiction.
+** Question 2,3 - Binomial Coefficients
+*** Iterative
+Easy to understand and implement, but you MUST use =//= instead of =/= for
+division then =int()=. Reason being that decimal numbers (which results of =/=)
+are saved in, in Python, has limited accuracy. If you answer has many digits
+(say 100++), it can only record up till a certain amount. This will cause your
+answer to be slightly off once you round it off with =int()=.
+
+On the other hand, if you use =//=, Python can keep track of integers of any(*)
+length without losing accuracy. Limited by your computer's memory (RAM), that
+is.
+*** Recursive
+Recursion can be hard to understand, but there are essentially two parts:
+1. Base case - to stop infinite recursive calls. In this case, if $\binom{n}{k}$ where
+   $n=k$ or $k=0$, answer will be 1.
+2. Recursive step - break into a "smaller" case. In this case,
+   $\binom{n}{k}=\binom{n-1}{k-1}+\binom{n-1}{k}$. An equivalent expression can
+   be written by python functions - essentially calling the same function with
+   reduced parameters.
+**
+** Question 4 - Comparing iterative vs recursive solutions
+Many of you noticed that recursive solution is slower than iterative solution,
+and that will get you partial credits. Explanations I accepted include:
+- Recursive solutions are easier to think of and express. (YJ: that is true.)
+- Recursive solutions take up more memory since many functions are called. (YJ:
+  this is the function call stack being, well, stacked up pretty high.)
+- In the recursive solution, one function call leads to two more, and every one
+  of those 2 more - it is increasing exponentially. (YJ: very valid reason. It
+  has a exponential runtime.)
+** Question 5 - Monte Carlo PI
+Most get this question, but those who don't did not attempt the question at all.
+General idea is you have a circle embedded inside a square, and imagine if you
+throw darts, probability of falling in the circle = area ratio of circle to
+square. There is a PI there in the ratio, and we can substitute "empirical"
+probability obtained by simulation to be that ratio, and move terms such that PI
+is obtained.
+* Week 7
+* Week 9
+** Assignment 4 Report
+*** Q2 Biggest 3
+- This is one of the most dubious questions of the semester, since
+  1. There are many tools you can use, such as max(), min(), sorting, list mutation
+     (=remove(), insert(), append()=)... But using any of them will defeat the
+     purpose of the question.
+  2. It's good to know that not all languages can be as expressive as python.
+     For example, to insert an element into an array (in the heap) in C, you
+     have to
+     1. Call =malloc()= to allocate more memory if your list runs too long.
+     2. Shift all the elements after your target one space back, using
+        =memcpy()= or a for loop.
+     3. Finally insert your element.
+     In these cases, it is more obvious that the question is testing you on
+     implementation skills.
+- The optimal method is as below:
+      #+BEGIN_SRC python
+ def max3(seq):
+  max1, max2, max3 = seq[0], seq[1], seq[2]
+  # TODO: arrange such that max1 >= max2 >= max3
+  for i in seq[3:]:  # definitely have to start from 3
+      if i > max1:
+          max1, max2, max3 = i, max1, max2
+      elif i > max2:
+          max1, max2, max3 = max1, i, max2
+      elif i > max3:
+          max1, max2, max3 = max1, max2, i
+  return (max1, max2, max3)
+#+END_SRC
+- If you use other things than the first 3 values in the list as your top 3, you
+  might fall into a trap.
+  1. For example, if you use zeroes as your initial values, consider the list:
+     =[-1, -1, -1]=, and your code will return =0,0,0=.
+- If you want to assign values to multiple variables, The =a, b, c = 1, 2, 3=
+  syntax can be useful! You can also use it to swap two values easily:
+  =a, b = b, a=
+- Bubble sort
+  1. The idea of bubble sort is to swap neighbours which are not in order, ie
+     left is greater or equal to right.
+  2. You might notice that after every round of swapping shifts the *greatest*
+     element to the rightmost end. Some people did that 3 times to get the
+     result.
+  3. This is still slower than just going through the elements *once* and
+     collect the top 3 as per the optimal method.
+*** Q4 Burger with combo
+- Take note of multiple combos in an order. For example, if
+  =burger, fries, drink = 2, 3, 2=, then there should be 2 combos and deduct
+  *20* dollars from the bill.
+*** Bonus questions
+- Q5 "Irresistible Lucky Burger" was a bit tedious than Q6, I believe Q6 is more
+  doable and everyone should try it out.
+- Name and fame: one person who attempted both and did well in both; some others
+  had the correct logic but minor mistakes here and there. Good job to everyone
+  who tried, please keep trying!
+- Idea for q5 is to first create the "middle" of the burger using
+  =itertools.product()=, then you sandwich the buns top and bottom. This will
+  create an exhaustive list of burgers you can make given the size of the
+  burger. You just need to check the price and return the correct burgers after
+  that.
+- Q6 is straightforward list manipulation, but the complexity comes with the
+  padding before and after, as well as the cases at the two ends of the lists.
+* Assignment 5 Report
+The code for this report is getting longer and I hope that it means you are
+getting more comfortable with writing Python code! However when it comes to
+code, we usually prefer short and idiomatic code, rather than long and elaborate
+ones.
+
+If /really/ need be, please break down your code into separate functions with
+nice names, which improves readability by a lot.
+** Q1 Decipher
+1. Remember the handy trick of checking if a key exists in a dictionary:
+   =if key in dict=. Do not assume only alphabets (or any other combination) are
+   the only ones covered in the =guide= dictionary!
+2. Some noteworthy ways to get a translation that are more Pythonic:
+   #+BEGIN_SRC python
+guide = {'a':'1', 'b':'2'} # yada yada
+ans = ''
+# method 1
+for char in msg:
+    ans += guide[char] if char in guide else char
+# method 2
+# joining up elements (translated characters) in list with empty strings
+ans = ''.join([guide[char] if char in guide else char])
+# method 3
+# .get(elem, fallback) returns fallback if elem is not in the target dictionary
+for char in msg:
+    ans += guide.get(char, char)
+   #+END_SRC
+** Q2 Map (File I/O)
+1. When you are checking for treasure, you will sometimes spill out of the map
+   size. Do not hardcode the size to prevent that! In fact, adjust your
+   boundaries to =range(1, row-1)= and =range(1, col-1)= for example. (Think in
+   terms of the map why this works!)
+** Q3 =is_ancestor= and =is_related=
+1. One cool trick is that two people are related if and only if then their
+   topmost ancestors must be the same. Thus you only need to check if their
+   topmost ancestors (by using while loops or recursion) are the same.
+* Assignment 6 Report
+This assignment is well done with a lot of full marks.
+** Question 1: =check_valid_move()=
+Most got it correct.
+1. Some people forgot that the cells in the game are 1-indexed, while Python is
+   0-indexed. This means you need =game[(inp-1)//3][(inp-1)%3]= to get the cell
+   that the =inp= goes into.
+2. Wait, is it =(inp-1)%3= or =inp%3-1=? You need to figure out which one might
+   induce problems for specific inputs. Try taking =inp= as a multiple of 3.
+3. Quite a number check through all nine cells, which is fine. But in a
+   generalized version of the game, you will need to check through $n^2$ cells,
+   which is /very/ slow compared to checking *the* cell that =inp= goes into.
+** Question 2: =check_win()=
+Most got it correct, just check for all the cases of horizontal, vertical, and
+the two diagonals. Some people split the cases where it is all ="X"= or all
+="O"=, but you can merge these cases by returning any entry in the row/column/diagonal.
+** Question 3: =pd_map()=
+One of the harder questions, but surprisingly many got it correct; some even had
+very short solutions. The main idea is to fix a house (by its coordinate), find
+the *squared distance* to all the shops, and deduce from there. Taking square
+roots is not necessary, as $a^2 \geq b^2 \implies |a| \geq |b|$.
+* Assignment 7 Report
+This is the last assignment for this module, and last report from me. Good job
+everyone for coming this far!
+
+Everyone had some understanding for OOP, but not everyone can produce the most
+succinct and least error-prone code. Only a couple have gotten full marks. To
+get full marks, you must use existing code as much as possible, as copy-pasting
+is always a big source for error.
+
+As for inheritance, please remember that child classes inherit all functions by
+default. There is no need to override and use =super().act()= in the body
+*only* - it is redundant code.
+** Berserker
+We discussed this question in tutorial, and I apologize in advance if I did not
+stress that you will need to make sure that strength will return to normal when
+HP is back up. Other than that, everyone got this part.
+** Archmage
+Most people forgot to check if the opponent is alive before using =got_hurt()=.
+Other than that, a good number edited the =act()= function instead of the
+=cast()= function and got penalized. I feel this is a reasonable one since
+=KABOOM= is intuitively a spell, and using =cast()= is just natural.
+
+When you are doing normal attacks, do not copy the code, but instead, use
+=super().cast()=.
+** Necromancer
+This part sees more success than the previous parts, despite having higher
+marks. Some of you used =count_alive(team)!=0= and I would suggest using
+=> 0= instead. This can sieve out weird bugs such as, for some reason,
+=count_alive()= was wrongly implemented.

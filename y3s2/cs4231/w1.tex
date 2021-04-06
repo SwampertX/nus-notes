@@ -1,0 +1,44 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[ruled]{algorithm2e}
+\usepackage{minted}
+
+\usetikzlibrary{automata,positioning}
+
+\title{CS4231 Week 1 Assignment}
+\author{Tan Yee Jian}
+\date{\today}
+
+% \newcommand{\problem*}{\section*{Problem}}
+\newcommand{\problem}[1]{\section*{Problem #1}}
+\newcommand{\solution}{\subsection*{Solution}}
+
+\begin{document}
+\maketitle
+\problem{1}
+Devise a mutual exclusion algorithm for \emph{n} processes by using
+\emph{Peterson's 2-mutual-exclusion algorithm} as a black-box.
+\solution
+Intuitively, we create a ``tournament bracket'' for the processes, and for each
+pair in the ``bracket'', the processes are promoted to the next level using
+\emph{Peterson's Algorithm}.
+
+Formally, we have the processes as leaves in a binary tree, and for each
+non-leaf node in the tree, its value is the ``winning'' process among its
+children, chosen by \emph{Peterson's Algorithm}.
+
+\begin{minted}{java}
+  class Whatever implements Lock {
+    public Whatever(int N) {
+
+    }
+  }
+\end{minted}
+
+\end{document}

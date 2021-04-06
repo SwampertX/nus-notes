@@ -1,0 +1,184 @@
+\documentclass[10pt]{article}
+
+\usepackage[
+a4paper,landscape,
+total={284mm,170mm},
+bottom=7mm,
+top=14mm,headsep=3mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{multicol}
+\setlength{\columnsep}{4mm}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\rat}{\mathbb{Q}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+\newcommand{\ltri}{\triangleleft}
+\newcommand{\module}{MA2202S }
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\aut}{Aut}
+\DeclareMathOperator{\inn}{Inn}
+
+\fancyhf{}
+\rhead{Page \thepage/\pageref{LastPage}}
+\lhead{Made by Tan Yee Jian (\texttt{@swampertx})}
+\chead{\module Cheat Sheet}
+
+\title{\module Cheatsheet}
+\author{Tan Yee Jian}
+\date{\today}
+
+% philosophy: group results based on topic
+
+\begin{document}
+\begin{center}
+  \Large{\textbf{\module Cheat Sheet}}
+\end{center}
+\begin{multicols*}{3}
+  \section{Normal Subgroups}
+  \begin{enumerate}
+    \item $N\ltri G$ is equivalent to for all $g\in G$:
+      \begin{enumerate}
+          \item $gng^{-1}\in N$ for all $n\in N$.
+        \item $gNg^{-1}\subseteq N$
+        \item $gNg^{-1}=N$
+        \item $gN=Ng$
+      \end{enumerate}
+      \item $N\ltri G, K\leq G$. Then $N\cap K\ltri K$.
+      \item $K\ltri H\leq G$. Then if $N\ltri G$, $NK\ltri NH$.
+  \end{enumerate}
+
+  \section{Cyclic Groups}
+  \begin{enumerate} \item $|G|=n$ is cyclic is iff:
+      \begin{enumerate}
+        \item There is a \textbf{unique} subgroup of order $d$ for every
+          positive divisor $d$ of $n$.
+          \item $\gcd(\varphi(n),n)=1$.
+      \end{enumerate}
+    \item $|G|=n$ is cyclic if:
+    \begin{enumerate}
+      \item $|G|=pq$ and $p>q, p\not\equiv 1(\mod q)$.
+    \end{enumerate}
+    \item $\aut(C_{n})\cong C_{\phi(n)}$
+  \end{enumerate}
+
+  \section{Homomorphism}
+  \begin{enumerate}
+    \item The kernel of a homomorphism is a normal subgroup.
+  \end{enumerate}
+
+  \section{Simple Groups}
+  \begin{enumerate}
+    \item For $n\geq5,A_{n}$is simple.
+    \item If $|G|=n, G$ simple, then
+    \begin{enumerate}
+      \item $|G|\mid k!$ for any subgroup of index $k$. Furthermore, if not
+      $k=|G|=2$, then $|G|\mid k!/2$.
+    \end{enumerate}
+  \end{enumerate}
+
+  \section{Abelian Groups}
+  \begin{enumerate}
+    \item A group $G$ is Abelian iff
+    \begin{enumerate}
+      \item $G/Z(G)$ is cyclic.
+      \item All Sylow subgrops are normal and Abelian.
+    \end{enumerate}
+  \end{enumerate}
+
+  \section{X-groups, X-Composition series}
+  \begin{enumerate}
+    \item $G$ is a \textbf{$X$-group} if $X$ acts on $G$ such that
+    $x\cdot(g_{1}g_{2})=(x\cdot g_{1})(x\cdot g_{2})$. \begin{enumerate}
+      \item $H\leq G$ is a \textbf{$X$-subgroup} if $x\cdot H\subseteq H$.
+      \item $H\ltri G$ is \textbf{$X$-normal} if $x\cdot H\subseteq H$.
+      \item $H\leq G$ is \textbf{$X$-simple} if it has no $X$-subgroups. $H$ might
+      not be simple.
+    \end{enumerate}
+    \item If $X=\inn(X)$, then \begin{enumerate}
+      \item $H\ltri G \iff H\ltri_{X}G$
+      \item $H$ simple in $G\iff H$ is $X$-simple in $G$
+      \item $G/N$ simple $\iff G/N$ is $X$-simple.
+    \end{enumerate}
+    \item $G$ has composition series $\iff$ $G/H$ and $H$ has composition series.
+    \item (Zassenhaus' Lemma) $A_{1}\ltri A_{2}$,$B_{1}\ltri B_{2}$ are
+    $X$-subgroups of G, then \[\frac{A_{1}(A_{2}\cap B_{2})}{A_{1}(A_{2}\cap B_{1})}\cong\frac{B_{1}(A_{2}\cap B_{2})}{B_{1}(A_{1}\cap B_{2})} \]
+    \item (Dedekind Modular Law) $AB\cap C=A(B\cap C)$.
+    \item $G=H\times K, H, K$ simple. How many composition/chief series?
+    \begin{enumerate}
+      \item If $K$ is non-Abelian, then ${1}\ltri H\ltri G$ and
+      ${1}\ltri K\ltri G$ are the only chief/composition series.
+      \item If both are Abelian ($\implies C_{p}$): if $C_{p}\times C_{q}$ then same
+      as above, otherwise $C_{p}\times C_{p}$ then  there are $p+1$ normal subgroups.
+    \end{enumerate}
+    \item Isomorphic $\implies$ isomorphic X-composition series. Converse is false.
+  \end{enumerate}
+
+  \section{Nilpotent and Soluble Groups}
+  \begin{enumerate}
+    \item $[H,N]\leq N$.
+    \item $H,K\ltri G\implies [H,K]\ltri G$ and $[H,K]\leq H\cap K$.
+    \item Nilpotent group iff:\begin{enumerate}
+      \item Any maximal subgroup must be normal.
+      \item Cannot have self-normalizing subgroups.
+      \item All Sylow p-subgroups are normal.
+      \item Is a direct product of all its Sylow subgroups.
+      \item $\gamma_{n}={1}$, where $\gamma_{n}=[\gamma_{n-1},G]$.
+      \item $\zeta_{n}=G$, where $\zeta_{i}/\zeta_{i-1}=Z(G/\zeta_{i-1})$. (pre-image of center
+      of quotient group)
+    \end{enumerate}
+  \end{enumerate}
+
+  \section{p-groups}
+  \begin{enumerate}
+    \item For each divisor, there is a normal subgroup of that order.
+    \item Every chief and composition factor are $\cong C_{p}$, composition length = power.
+    \item Every chief series is a composition series but converse is false.
+  \end{enumerate}
+\end{multicols*}
+\end{document}

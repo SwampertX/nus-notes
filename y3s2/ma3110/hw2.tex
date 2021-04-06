@@ -1,0 +1,177 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3110 Homework 2}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+% Question: section
+% Solution: subsection, subsubsection
+% Hence remove numberings
+% \setcounter{secnumdepth}{0}
+
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+Let $f:(a,b)\to\R$ be differentiable on $(a,b)$ and let $c\in(a,b)$. Prove that if
+the limit $\lim_{x\to c}f'(x)=L$ exists, then $f'(c)=L$.
+\subsection*{Solution}
+As per the hint, we note that the difference quotient has numerator and
+denominator both tend to $0$ as $x$ approaches $c$ and $f$ is differentiable on $(a,b)$:
+\begin{align*}
+  f'(c)&=\lim_{x\to c}\frac{f(x)-f(c)}{x-c}\\
+  &=\lim_{x\to c}\frac{f'(x)-0}{1-0} && \text{(L'hopital's Rule)}\\
+  &=\lim_{x\to c}f'(x)=L && \text{(assumption)}.
+\end{align*}
+
+\section*{Problem 2}
+The fucntion $g:[-1,1]\to\R$ is such that $g'''$ exists on
+$[-1,1], g(0)=g(1)=0,g(1)=1$ and $g'(0)=0$.
+\begin{enumerate}
+  \item Show that there exists $c\in(0,1)$ such that
+        $\frac{g''(0)}{2!}+\frac{g'''(c)}{3!}=1$.
+        \begin{proof}
+          Apply Taylor's Theorem to $g$ on $[0,1]$, and let $x=1, x_{0}=0$, we
+          have
+          \begin{align}
+            g(1)&=g(0)+g'(0)x+\frac{1}{2}g''(0)x^{2}+\frac{1}{6}g'''(c)x^{3}\\
+1&=0+0x+\frac{1}{2}g''(0)(1)^{2}+\frac{1}{6}g'''(c)(1)^{3}\\
+            \therefore \frac{1}{2}g''(0)+\frac{1}{6}g'''(c)=1
+          \end{align}
+          for some $c\in(0,1)$ as desired.
+        \end{proof}
+  \item Show that there exists $d\in(-1,1)$ such that $g'''(d)\geq 3$.
+        \begin{proof}
+          Apply Taylor's Theorem to $g$ on $[-1,0]$, and let $x=-1, x_{0}=0$, we
+          have
+          \begin{align}
+            g(-1)&=g(0)+g'(0)x+\frac{1}{2}g''(0)x^{2}+\frac{1}{6}g'''(c')x^{3}\\
+0&=0+0x+\frac{1}{2}g''(0)(-1)^{2}+\frac{1}{6}g'''(c')(-1)^{3}\\
+            \therefore \frac{1}{2}g''(0)-\frac{1}{6}g'''(c')=0
+          \end{align}
+          for some $c'\in(-1,0)$. Taking (3)-(6), we have
+          \begin{align*}
+            1 = g'''(c') + g'''(c)\\
+            6 = g'''(c') + g'''(c)
+          \end{align*}
+          Without loss of generality, we must have $g'''(c)\geq g'''(c')$ or
+          $g'''(c)\leq g'''(c')$. In any case, one of them must be at least $3$.
+          Therefore, let it be $d\in(-1, 1)$ and we are done.
+        \end{proof}
+\end{enumerate}
+
+\section*{Problem 3}
+Let $f(x)=(1+3x)^{2/3},\ x>-1/3$.
+\begin{enumerate}
+\item Find the values of $f'(0),f''(0)$ and $f'''(0)$.
+        \begin{proof}
+          \begin{align*}
+            f'(x)=(2/3)(1+3x)^{-1/3}(3)=2(1+3x)^{-1/3}, &&f'(0)=2(1)=2.\\
+            f''(x)=(2)(-1/3)(1+3x)^{-4/3}(3)=-2(1+3x)^{-4/3}, &&f''(0)=-2(1)=-2.\\
+            f'''(x)=(-2)(-4/3)(1+3x)^{-7/3}(3)=8(1+3x)^{-7/3}, &&f'''(0)=8(1)=8.
+          \end{align*}
+        \end{proof}
+
+  \item Use Taylor's Theorem to prove that for $x>-1/3,\ f(x)\le1+2x-x^{2}+4x^{3}/3$.
+        \begin{proof}
+          Applying Taylor's theorem to $f$ with $x_{0}=0$,
+          \begin{align*}
+            f(x) &=f(0)+f'(0)x+\frac{1}{2}f''(0)x^{2}+\frac{1}{6}f''(0)x^{3}+R_{3}(x)\\
+            &=1+2x+\frac{1}{2}(-2)x^{2}+\frac{1}{6}8x^{3}+R_{3}(x)\\
+            &=1+2x-x^{2}+\frac{4}{3}x^{3}+R_{3}(x)\\
+          \end{align*}
+          Where $R_{3}(x)=\frac{1}{24}f^{(4)}(c)x^{4}$ for some $c>-1/3$, and
+          \[f^{(4)}(x)=(8)(-7/3)(1+3x)^{-10/3}(3)=-56(1+3x)^{-10/3}. \]
+          Since $x>-1/3\implies(1+3x)^{-10/3}>0$, and $x^{4}$ is always
+          non-negative, therefore the only negative coefficient forces $R_{3}(x)\le0$. We thus have
+          \begin{align*}
+            f(x) &=1+2x-x^{2}+\frac{4}{3}x^{3}+R_{3}(x)\\
+            &\le1+2x-x^{2}+\frac{4}{3}x^{3} && (R_{3}\le0).
+          \end{align*}
+        \end{proof}
+\end{enumerate}
+
+\section*{Problem 4}
+Let $h:[0,2]\to\R$ be defined by
+\[h(x)=\begin{cases}
+    4x, & x\text{ is rational}\\
+    4, & x\text{ is irrational}
+  \end{cases}
+\] and let $P=\{0,1/2,1,3/2,2\}$. Find the upper sum $U(h,P)$ of $h$ with
+respect to the partition $P$.
+\subsection*{Solution}
+\begin{proof}
+  \begin{align*}
+U(H,P)=&\sum^{4}_{i=1}(x_{i}-x_{i-1})M_{i-1} &&\text{where }M_{i-1}=\sup{f(x)|x\in[x_{i-1},x_{i}]}\\
+    =&(\frac{1}{2}-0)(\sup\{4,4(\frac{1}{2}),4(0)\})\\
+    &+(1-\frac{1}{2})(\sup\{4,4(1),4(\frac{1}{2})\})\\
+    &+(\frac{3}{2}-1)(\sup\{4,4(\frac{3}{2}),4(1)\})\\
+       &+(2-\frac{3}{2})(\sup\{4,4(2),4(\frac{3}{2})\})\\
+    =&\frac{1}{2}[4+4+6+8]=2+2+3+4=11.
+  \end{align*}
+\end{proof}
+\end{document}

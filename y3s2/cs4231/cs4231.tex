@@ -1,0 +1,208 @@
+% Created 2021-01-17 Sun 17:29
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{minted}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{note}{Note}[theorem]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{observation}{Observation}[section]
+\linespread{1.1}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\setcounter{secnumdepth}{0}
+\author{Tan Yee Jian}
+\date{\today}
+\title{CS4231 Problem Set 1}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={CS4231 Problem Set 1},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.91 (Org mode 9.5)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Question 1}
+\label{sec:org6ac39ce}
+Devise a mutual exclusion algorithm for \texttt{n} processes by using
+\textbf{Peterson's 2-mutual-exclusion algorithm} as a black-box.
+\subsection{Solution}
+\label{sec:orgac2ced8}
+Intuitively, we create a ``tournament bracket'' for the processes, and for each
+pair in the ``bracket'', the processes are promoted to the next level using
+\textbf{Peterson's Algorithm}.
+
+Formally, we have the processes as leaves in a binary tree, and for each
+non-leaf node in the tree, its value is determined by the ``winning'' process among its
+two children, chosen (recursively) by \textbf{Peterson's Algorithm}.
+\subsection{Correctness Proof}
+\label{sec:orgb3464bb}
+\subsubsection{1. Mutual Exclusion}
+\label{sec:org2939db8}
+\begin{lemma}
+Every node can have at most one process at any time.
+\end{lemma}
+\begin{proof}
+We do by induction from the leaf layer to the root layer. We initialized the
+leaf layer with exactly one process per node, which is the base case. From one
+layer to the next, Peterson's Algorithm is run, which ensures the next layer has
+at most one process at any time. This completes the induction.
+\end{proof}
+Suppose that more than one process enters the critical section, this means at
+the root position, more than 2 processes could enter the critical section. Two
+cases can occur:
+\begin{enumerate}
+\item There are more than 2 processes running Peterson's Algorithm for the root
+node
+\item There are exactly 2 processes running Peterson's Algorithm for the root node.
+\end{enumerate}
+
+Case 2 guarantees mutual exclusion by Peterson's Algorithm. Case 1 is impossible
+by the lemma.
+\subsubsection{2. Progress}
+\label{sec:orgda254c0}
+By the nature of a binary tree, the root node is recursively the parent of all
+leaves, and by the setup of the algorithm, the processes will compete for the
+root node, which is the ability to enter the critical section.
+\subsubsection{3. Starvation-freedom}
+\label{sec:orgeb41952}
+This is guaranteed by Peterson's Algorithm.
+\section{Textbook Problems}
+\label{sec:org15cb0f4}
+\subsection{Problem 2.1(a)}
+\label{sec:org09587cb}
+Setting \texttt{turn} to itself causes starvation.
+\begin{center}
+\begin{tabular}{ll}
+\hline
+process 0 & process 1\\
+\hline
+\texttt{wantCS[0] = true} & \\
+\texttt{turn = 0} & \\
+ & \texttt{wantCS[1] = true}\\
+ & \texttt{turn = 1}\\
+ & Enter CS\\
+ & Exit CS\\
+ & \texttt{wantCS[1] = false}\\
+ & \texttt{wantCS[1] = true}\\
+ & \texttt{turn = 1}\\
+ & Enter CS\\
+ & \ldots{}\\
+\hline
+\end{tabular}
+\end{center}
+\subsection{Problem 2.1(b)}
+\label{sec:org631546d}
+It violates mutual exclusion as per below. The idea is that one process takes
+advantage of the gracefulness of the other process, but the other process have
+not declared that they want CS. That flag is hence false and in a while loop,
+the AND operator allows entry.
+\begin{center}
+\begin{tabular}{lll}
+\hline
+process 0 & process 1 & turn, wantCS\\
+\hline
+\texttt{turn = 1} &  & \texttt{1, \{false, false\}}\\
+ & \texttt{turn = 0} & \texttt{0, \{false, false\}}\\
+ & \texttt{wantCS[1] = true} & \texttt{0, \{false, true\}}\\
+ & Enter CS & \\
+\texttt{wantCS[0] = true} &  & \texttt{0, \{true, true\}}\\
+Enter CS &  & \\
+\hline
+\end{tabular}
+\end{center}
+\subsection{Problem 2.3}
+\label{sec:org3edfde1}
+When a process is still choosing a number (ie. value in \texttt{choosing[i]} is
+\texttt{true}), its \texttt{number[i]} is constantly changing. Another process might read its
+intermediate number while still choosing, and wrongly decides to enter the CS.
+Usually this is not a problem, but consider only two numbers but without the
+\texttt{choosing} array:
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Process 0 & Process 1 & number\\
+\hline
+\texttt{number[0] = 0} &  & \{0,0\}\\
+ & \texttt{number[1] = 0} & \\
+ & \texttt{number[1]++} & \{0,1\}\\
+ & Enter CS (number[0] = 0) & \\
+\texttt{number[0]++} &  & \{1,1\}\\
+Enter CS (Smaller ID) &  & \\
+\hline
+\end{tabular}
+\end{center}
+\subsection{Problem 2.4}
+\label{sec:orgdbaf8d9}
+Dekker's Algorithm is correct. Proof is as follows.
+\subsubsection{Mutual Exclusion}
+\label{sec:orge1626ef}
+We shall give a direct proof. Without loss of generality, let P0 be in the CS.
+We show that P1 cannot be in the CS at the same time.
+\begin{enumerate}
+\item Case 1: When P0 first read \texttt{wantCS[1]}, value is false.
+\label{sec:orge89c9e7}
+Then P0 either
+\begin{enumerate}
+\item haven't started requesting CS,
+\item is in the outer while loop (which allows it to set \texttt{wantCS[1]} to false), or
+\item has just released CS.
+\end{enumerate}
+
+The middle case is of interest, as the other cases do not violate mutual
+exclusion. We have two further cases:
+\begin{enumerate}
+\item Case 1.1: \texttt{turn} is initialized to 1
+\label{sec:orgbae90b7}
+In which case, P1 will not get the chance to hit the line that sets \texttt{wantCS[1]}
+to false, since it cannot enter the if clause. That leaves us with the two
+scenarios in Case 1 that do not violate ME.
+\item Case 1.2 \texttt{turn} is initialized to 0
+\label{sec:orge9d7291}
+After setting \texttt{wantCS[1]} to false, it busy waits in the inner while loop, until
+P0 exits CS and toggles \texttt{turn}. Hence it cannot enter CS before P0 has finished.
+\end{enumerate}
+\item Case 2: When P0 first read \texttt{wantCS[1]}, value is true.
+\label{sec:orgdda7bb4}
+\begin{enumerate}
+\item Case 2.1: \texttt{turn} is initialized to 1
+\label{sec:org68a4748}
+This is an impossible case because then P0 will be stuck in the inner while loop
+due to \texttt{turn =} 1= and not enter CS, violating the assumption.
+\item Case 2.2 \texttt{turn} is initialized to 0
+\label{sec:orgcb05cb7}
+P0 patiently waits for \texttt{wantCS[1]} to be set false after P1 exits the CS.
+\end{enumerate}
+\end{enumerate}
+\subsubsection{Progress}
+\label{sec:org37b2a44}
+If a process skips the while loop, then we are done. Suppose not, then both
+processes enter while loop. Suppose \texttt{turn =} 0=, then P1 is forced to set its
+\texttt{wantCS[1]} to false and busy wait. This guarantees P0 will pick up this change
+and exit the while loop and enter the CS. The case for \texttt{turn =} 1= is symmetric.
+\subsubsection{No Starvation}
+\label{sec:org1914085}
+The only place able to switch \texttt{turn} is after exiting CS. This ensures each
+process have a chance to run. Suppose the process correponding to the \texttt{turn}
+does not want to run, the other process can run by skipping the entire while
+loop.
+\end{document}

@@ -1,0 +1,20 @@
+#+TITLE: Cs3203
+* Advanced SPA
+* Iteration 1
+** Design Decisions
+*** Parent API
+- Structure: a hashmap
+  | key(int) | Parent(int) | Parent*(Hashmap<int>) | Parent* List<Stmt*>[StmtType] |
+  |----------+-------------+-----------------------+-------------------------------|
+  |          |             |                       |                               |
+- Hashmap
+  | key(int) | Child(int) | Child*(Hashmap<int>) | Parent* List<Stmt*>[StmtType] |
+  |----------+------------+----------------------+-------------------------------|
+  |          |            |                      |                               |
+-
+  | StmtType | parent List<Stmt*>[StmtType] | parent* | child | child* |
+  |----------+------------------------------+---------+-------+--------|
+  | while    |                              |         |       |        |
+- Using int for parent/child since to return statement, can query statement table
+- =Hashmap<int>= caters for =checkIfParentHolds=, while =List<Stmt*>= caters for
+  =getAllChildStatements=

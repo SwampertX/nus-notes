@@ -1,0 +1,108 @@
+\documentclass[5pt, a4paper,landscape]{article}
+
+\usepackage[a4paper, total={290mm,200mm}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{multicol}
+
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+  \def\svgwidth{\columnwidth}
+  \import{./figures/}{#1.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+
+\title{ST2132 Cheatsheet}
+\author{Tan Yee Jian}
+\date{\today}
+
+\begin{document}
+
+\begin{center}
+	{\textbf{ST2132 Cheatsheet}}
+\end{center}
+
+\begin{multicols*}{3}
+	\textbf{2 Normal and Related Distributions}
+
+
+	\hrulefill
+
+	\textbf{4 Something}
+
+	\begin{itemize}
+		\item \textbf{Standard Error} = SD(sample mean)
+	\end{itemize}
+
+	\hrulefill
+
+	\textbf{6 Hypothesis Testing}
+	\begin{itemize}
+		\item
+		      \textbf{Statistical hypothesis} is an assertion/conjecture about
+		      the distribution of one or more random RVs.
+		\item
+		      \textbf{Simple hypothesis}: a SH that completely specifies the
+		      distribution. \textbf{Complex hypothesis}: otherwise
+		\item
+		      When deciding which of two hypothesis is true, the \underline{first} is
+		      called the \textbf{null hypothesis \(H_0\)}, and the \underline{other},
+		      \textbf{alternative hypothesis \(H_A\) or \(H_1\)}
+		\item
+		      The decision rule is based on a \textbf{test statistic}.
+		\item
+		      The decision rule has typically 2 possible conclusions: \textbf{reject,
+			      or do not reject} \(H_0\).
+		\item
+		      \textbf{Type I error:} rejecting \(H_0\) when it is true.
+		      $P(\textbf{Type I error})=\alpha$ is called \textbf{significance level}
+		      of the test.
+
+		      \textbf{Type II error:} \textbf{accepting} (do not reject) \(H_0\) when it
+		      is false. $P(\textbf{Type II error})=\beta$, and $(1-\beta)$ is the
+		      \textbf{power} of the test.
+	\end{itemize}
+\end{multicols*}
+\begin{tabular}{c|c|c|c|c}
+	Distribution                                                       & PDF      &
+	$E(X)$                                                             & $Var(X)$ & Facts \\
+
+	\hline
+	Normal                                                             &
+	$f(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$ &
+	$\mu$                                                              &
+	$\sigma$                                                           &
+	$X_i\sim N(\mu_i,\sigma_i^2)\implies X_1\pm X_2\sim
+		(\mu_1\pm\mu_2,\sigma_1^2+\sigma_2^2)$                                                \\
+	Gamma                                                              &
+\end{tabular}
+\end{document}
