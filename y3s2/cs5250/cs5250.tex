@@ -1,0 +1,164 @@
+% Created 2021-03-18 Thu 11:33
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{minted}
+\author{Tan Yee Jian}
+\date{\today}
+\title{Week 8: Memory}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={Week 8: Memory},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.4.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{The memory hierachy}
+\label{sec:org869e480}
+\begin{center}
+\begin{tabular}{lllll}
+ & L1 Cache & L2 Cache & Main Memory & Secondary Memory\\
+\hline
+clock cycle & a few & tens & hundreds & millions\\
+size & word (4-8B) & block(8-32B) & 1-4blocks & very huge\\
+\end{tabular}
+\end{center}
+\section{Principle of Caching: Locality}
+\label{sec:org215dd61}
+\begin{itemize}
+\item Temporal locality: repeatedly use the same data
+\item Spatial locality: use nearby data
+\end{itemize}
+\section{Virtual vs Physical addressing}
+\label{sec:orgd91745f}
+\begin{itemize}
+\item Every process has illusion that it owns all \(2^{64}\) bits of memory in its
+virtual memory
+\begin{itemize}
+\item What if runs out of a certain limit? Out-Of-Memory (OOM) error
+\end{itemize}
+\item Supports ``Modern OS Features'':
+\begin{itemize}
+\item Protection: don't use other process's memory
+\item Translation: ``use disk swap''
+\item Sharing: Map multiple virtual pages to a sams physical page
+\end{itemize}
+\end{itemize}
+\section{Address Translation}
+\label{sec:org0b479d6}
+\begin{itemize}
+\item Given page size = 4k, we have offset = 12 bits (2\textsuperscript{12}=4k)
+\item Address = virtual page \# + offset
+\begin{itemize}
+\item Virtual page \# leads to an entry in page table, with
+\begin{enumerate}
+\item A valid bit
+\item A next level virtual page \#
+\end{enumerate}
+\end{itemize}
+\item Page fault: page is not in main memory
+\end{itemize}
+\subsection{Caching address traslation}
+\label{sec:org8aebf55}
+\begin{itemize}
+\item Problem with caching:
+\begin{itemize}
+\item Cache that contains memory (physical page) is only relevant only when
+address is \textbf{translated} which is expensive
+\item Enter \textbf{TLB}, which caches virtual address translation
+\begin{itemize}
+\item Smaller, 128-256 entries max
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\section{Paging in Linux x86}
+\label{sec:orgac2ba53}
+\begin{itemize}
+\item 4KB a page
+\item \texttt{PG} bit in register \texttt{CR0} toggles paging
+\item Root page table given by (40bits) ``page directory base register'' in \texttt{CR3}
+\end{itemize}
+\subsection{x86-64 paging}
+\label{sec:org543a478}
+\begin{itemize}
+\item only \textbf{48} bits are used. 48 = 9 + 9 + 9 + 9 + 12
+\item \begin{center}
+\begin{tabular}{rl}
+Page Level & Name\\
+\hline
+4 & PLM4\\
+3 & Directory Ptr\\
+2 & Directory\\
+1 & Table\\
+\end{tabular}
+\end{center}
+\item Each process has its own CR3 hence root page table value.
+\item Run through:
+\begin{enumerate}
+\item Get CR3 hence RPT address.
+\item RPT + first 9 bits = addr of Level 2 page table.
+\item Addr from 2 + next 9 bits = addr of Level 3 Page table.
+\end{enumerate}
+\end{itemize}
+\subsubsection{The CR3 Register}
+\label{sec:orga3b70f7}
+\begin{center}
+\begin{tabular}{llr}
+63:M & M-12 & 11:0\\
+\hline
+reserved & RPT addr & PCID\\
+\end{tabular}
+\end{center}
+\subsubsection{Reserve bits must be sign-extended}
+\label{sec:org872a8f6}
+IE if the most significant (non-reserved) bit is 1, then the reserved is 1 and vv.
+\subsubsection{Process Context ID = Address Space ID}
+\label{sec:orgf6190e4}
+\begin{itemize}
+\item ASID is different across processes (even though RPT might b the same)
+\end{itemize}
+\subsection{Linux memory map}
+\label{sec:orgc6e86fe}
+\begin{itemize}
+\item If the 48th bit is 0 -> user space
+\item Otherwise -> kernel space (half the Virtual Address Space)
+\item Note that all are sign-extended
+\end{itemize}
+\subsection{Master Kernel Page Table}
+\label{sec:orgc7d6a6c}
+\begin{itemize}
+\item Every process has own page table
+\item Of which contains the same MKPT
+\item MKPT maps the whole physical memory, unlike user process
+\end{itemize}
+\subsection{TLB}
+\label{sec:org14412de}
+\begin{itemize}
+\item Q: When is it flushed?
+A: Always by kernel. For eg when CR3 is changed
+\end{itemize}
+\subsection{Page Table Isolation (previously KAISER)}
+\label{sec:orgdfa3377}
+Only kernel process has the full kernel page table.
+User process has only enough kernel page table to enter kernel mode (to prevent attacks).
+\subsection{Virtual memory area (\texttt{vm\_area\_struct})}
+\label{sec:org679efed}
+\end{document}

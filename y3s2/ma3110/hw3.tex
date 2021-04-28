@@ -1,0 +1,176 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3110 Homework 3}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+\newcommand{\bigint}{\displaystyle\int}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+\begin{document}
+\maketitle
+\section*{Problem H1}
+Let $F(x)=\bigint_{x}^{x^{3}}\frac{\cos(t^{2})}{t}dt$ for $x\ge 1$. Find $F'(x)$ for $x\ge 1$.
+\subsection*{Solution}
+\begin{proof}
+Let $f(x)=\displaystyle\frac{\cos(x^{2})}{x}, G(x)=\bigint_{1}^{x}f(t)dt$. Then
+by the Fundamental Theorem of Calculus I, since $f$ is continuous on $[1,\infty)$, we
+have $G'(x)=f(x)$ for any $x\in[1,\infty)$. Then $\forall x\ge 1$,
+\begin{align*}
+F(x)&=\bigint_{x}^{x^{3}}\frac{\cos(t^{2})}{t}dt\\
+&=\bigint_{1}^{x^{3}}\frac{\cos(t^{2})}{t}dt - \bigint_{1}^{x}\frac{\cos(t^{2})}{t}dt\\
+&=G(x^{3})-G(x).\\
+  \therefore F'(x)&=3x^{2}G'(x^{3})-G'(x) &&\text{chain rule}\\
+  &=3x^{2}f(x^{3})-f(x) &&\text{FTC(I)}\\
+  &=\frac{3}{x}\cos(x^{6})-\frac{\cos(x^{2})}{x}.
+\end{align*}
+\end{proof}
+
+\section*{Problem H2}
+Let $f$ and $g$ be continuous functions on $[a,b]$ and let $H:[a,b]\to\R$ be
+defined
+by \[H(x)=\left(\int_{a}^{x}f(t)dt\right)\left(\int_{x}^{b}g(t)dt\right)\quad\text{for all
+  } x\in[a,b].\]
+Prove that there exists $c\in(a,b)$ such that
+\[g(c)\int_{a}^{c}f(x)dx=f(c)\int_{c}^{b}g(x)dx.\]
+\subsection*{Solution}
+\begin{proof}
+We notice that
+\begin{align*}
+H(a)=\left(\int_{a}^{a}f(t)dt\right)\left(\int_{a}^{b}g(t)dt\right)=0=
+\left(\int_{a}^{b}f(t)dt\right)\left(\int_{b}^{b}g(t)dt\right)=H(b).
+\end{align*}
+Let $F(x)=\bigint_{a}^{x}f$ and $G(x)=\bigint_{b}^{x}g$. We rewrite $H$ into
+products of $F$ and $G$:
+\begin{align*}
+H(x)&=\left(\int_{a}^{b}f(t)dt\right)\left(\int_{x}^{b}g(t)dt\right)\\
+  &=(F(x))(-G(x))
+\end{align*}
+Since $f$ and $g$ are continuous, $F$ and $G$ are differentiable on $[a,b]$ by
+Tutorial 6 Question 3, and $F'=f, G'=g$ on $(a,b)$. Thus by Rolle's theorem,
+there exists $c\in(a,b)$ such that $H'(c)=0$. Since $F$ and $G$ are differentiable
+on $(a,b)$, we can use the product rule to differentiate $H$:
+\begin{align*}
+  H'(c)=0&=F'(c)(-G(c))+F(c)(-G'(c))\\
+  0&=f(c)\int_{c}^{b}g(t)dt+\left(\int_{a}^{c}f(t)dt\right)(-g(c))
+\end{align*}
+Therefore
+\[f(c)\int_{c}^{b}g(t)dt=g(c)\int_{a}^{c}f(t)dt,\quad \text{for some }c\in(a,b).\]
+\end{proof}
+
+\section*{Problem H3}
+Suppose that $f$ is continuous on $[a,b]$. Prove that there exists $c\in(a,b)$
+such that \[\int_{a}^{b}f=f(c)(b-a).\]
+\subsection*{Solution}
+\begin{proof}
+  Define \[F(x)=\int_{a}^{x}f,\quad x\in[a,b].\]We note that $f$ is continous on $[a,b]$
+  implies that $F$ is differentiable on $[a,b]$. Therefore we can apply Mean
+  Value Theorem to $F$ on the interval $[a,b]$: there exists some $c\in(a,b)$ such
+  that
+  \begin{align*}
+    F'(c)&=\frac{F(b)-F(a)}{b-a}&&\text{Mean Value Theorem}\\
+    \therefore f(c)&=\frac{1}{b-a}\left(\int_{a}^{b}f-\int_{a}^{a}f\right) &&\text{FTC(I), definiton}\\
+    &=\frac{1}{b-a}\left(\int_{a}^{b}f\right)
+  \end{align*}
+  Moving terms, we have \[\int_{a}^{b}f=f(c)(b-a).\]
+\end{proof}
+
+\section*{Problem H4}
+Using the Riemann integral of a suitable chosen function, find the limit
+\[\lim_{n\to\infty}\frac{1}{n^{2}}\sum_{k=1}^{n}k\sin\left(\frac{\pi k^{2}}{n^{2}}\right).\]
+\subsection*{Solution}
+\begin{proof}
+Let \[f(x)=x\sin(\pi x^{2}),\ P_{n}=\{0,\frac{1}{n},\ldots,\frac{n}{n}\},\
+\xi^{(n)}=P_{n}\setminus\{0\}.\]
+Then we can rewrite the summation into a Riemann sum:
+\begin{align*}
+  &\lim\ntoinf\sum_{k=1}^{n}\frac{1}{n}\cdot\frac{k}{n}\sin\left(\pi\left(\frac{k}{n}\right)^{2}\right)\\
+  =&\lim\ntoinf S(f, P_{n})(\xi^{(n)})\\
+  =&\int_{0}^{1}f&&n\to\infty\implies\|P_{n}\|\to0,\text{ Corollary 7.4.3}\\
+  =&\frac{1}{2\pi}\int_{0}^{1}2\pi x\sin(\pi x^{2})dx\\
+  =&\frac{1}{2\pi}[-\cos(\pi\cdot1^{2})+\cos(\pi\cdot0^{2})]=\frac{1+1}{2\pi}=\frac{1}{\pi}.
+\end{align*}
+\end{proof}
+
+\section*{Problem H5}
+In each part, determine if the improper integral converges. Justify your answers.
+\subsection*{Part H5(i)}
+\[\int_{1}^{\infty}\frac{\sin^{2}x}{x^{2}}dx.\]
+\subsubsection*{Solution}
+\begin{proof}
+  Recall that if \[f(x)=\frac{\sin^{2}x}{x^{2}}\] is non-negative over $[1,\infty)$,
+  then the improper integral converges $\iff$ $F(x)=\int_{1}^{x}f$ is bounded for all
+  $x\ge 1$. First notice that for any $x\ge1$, we have
+  \begin{align*}
+    0\le (\sin x)^{2}\le 1 \implies 0\le f(x)=\frac{\sin^{2}x}{x^{2}}\le \frac{1}{x^{2}}.
+  \end{align*}
+  Which shows $f$ is nonnegative on $[1,\infty)$. Now we only need to show that
+  $F(x)$ is bounded above. By Theorem 7.2.6(iii), we have
+  \begin{align*}
+    \frac{\sin^{2}x}{x^{2}}\le \frac{1}{x^{2}}
+    \implies
+    \int_{1}^{t}\frac{\sin^{2}x}{x^{2}}&\le \int_{1}^{t}\frac{1}{x^{2}}\\
+                                    &= (-\frac{1}{t}+\frac{1}{1})\\
+                                    &=1-\frac{1}{t}\\
+                                    &<1&&\forall t\in[1,\infty).
+  \end{align*}
+  Hence the improper integral converges.
+\end{proof}
+\subsection*{Part H5(ii)}
+\[\int_{0}^{1}\frac{x}{1-x^{2}}dx.\]
+\subsubsection*{Solution}
+\begin{proof}
+  Note that
+  \[f(x)=\frac{x}{1-x^{2}}\]
+  is unbounded as $x\to1$. Let us rewrite the improper integral as
+  \begin{align*}
+    \int_{0}^{1}\frac{x}{1-x^{2}}dx
+    &=\lim_{t\to1^{-}}-\frac{1}{2}\int_{0}^{t}\frac{-2x}{1-x^{2}}dx\\
+    &=-\frac{1}{2}\lim_{t\to1^{-}}\left[\ln(1-x^{2})\right]^{x=t}_{x=0}\\
+    &=-\frac{1}{2}\lim_{t\to1^{-}}(\ln(1-t^{2})-\ln(1))&&\text{ then let }t'=(1-t^{2})\to0,\\
+    &=-\frac{1}{2}\lim_{t'\to0^{+}}\ln(t')\\
+    &=\infty.
+  \end{align*}
+  Therefore the improper integral diverges.
+\end{proof}
+\end{document}

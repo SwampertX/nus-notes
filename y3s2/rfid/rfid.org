@@ -1,0 +1,27 @@
+#+TITLE: Rfid
+
+* Problem statement
+Given a RFID reader that can detect and count collisions up to =k= (currently
+k=1), devise a RFID counting algorithm.
+* Week 9
+** What I did
+- Try to design the single-set, non-collision protocol froms scratch
+** What I learnt
+1. We don't know how many tags are there, therefore we don't know what kind of
+   =p= we should set so that the slots will not be =1= or =0= all the time
+   (which carries no information)
+2. Once we decide a suitable =p= which gives =0= and =1=, we can carry out many
+   experiments which will give us estimations of =np=.
+3. For example:
+   a. We start form $p=1/2, 1/3, \cdots$ and find the first probability where we
+      get an empty slot. Say $1/k$.
+   b. Then we run it $l$ times. We expect
+** Questions to ask
+1. I now know the process better, and have a natural algorithm for collision.
+   Should I go ahead and analyze?
+   Answer: Definitely.
+2. How do I know my algorithm is good/okay? Do I need to do literature survey?
+   Answer: Not much literature, no need.
+3. How do you come up with algorithms that are non-intuitive? Get inspiration
+   from other fields?
+   Answer: We just need to analyze the speedup. No need for novel algorithms.

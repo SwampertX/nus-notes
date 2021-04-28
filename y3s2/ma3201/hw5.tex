@@ -1,0 +1,282 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3201 Homework 5}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+\usepackage{tocloft}
+\usepackage[thinc]{esdiff}
+\renewcommand{\thesection}{Question \arabic{section}}
+\renewcommand{\thesubsection}{Part \arabic{section}(\roman{subsection})}
+\renewcommand{\thesubsubsection}{Solution}
+\cftsetindents{subsection}{1.5em}{4.5em}
+\cftsetindents{subsubsection}{3.8em}{5.5em}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+\newtheorem{claim}{Claim}
+\newtheorem*{claim*}{Claim}
+
+\begin{document}
+\maketitle
+% \tableofcontents
+\section{}
+\subsection{}
+\subsubsection{}
+\begin{claim*}
+If $e$ is central idempotent, so is $(1-e)$.
+\end{claim*}
+\begin{proof}[Proof of claim]
+  \begin{align*}
+    &{(1-e)}^{2}=1-e-e+e^{2}=1-e\\
+    &(1-e)r=1r-er=r-re=r(1-e).
+  \end{align*}
+\end{proof}
+\begin{proof}
+With the claim above, it suffices to show for any central idempotent $e\in R$,
+$eM$ is a submodule of $M$. Let $e$ be given, then we show the submodule
+criterion: for any $m_{1},m_{2}\in M, r\in R$,
+\begin{align*}
+  em_{1}+r\cdot(em_{2})
+  &=em_{1}+(re)m_{2}\\
+  &=em_{1}+(er)m_{2}&&(er=re)\\
+  &=em_{1}+e\cdot(rm_{2})\\
+  &=e(m_{1}+rm_{2})\\
+  &\in eM&&(RM\subset M).
+\end{align*}
+Since $e\cdot0=0\in eM\ne\emptyset$, $eM$ is a submodule of $M$.
+\end{proof}
+\subsection{}
+\begin{proof}
+  We first show $eM$ and $(1-e)M$ have trivial intersection. Suppose
+  $x=em=(1-e)m'$ for some $m, m'\in M$, then
+  \begin{align*}
+    e(x)&=e(em)=em=x\\
+    \text{but } e(x) &= e(1-e)m' = em' - em' = 0\\
+  \end{align*}
+  Combining, we have that any $x\in eM\cap(1-e)M$ must be $0$, hence the intersection
+  is trivial.
+  Consider the map
+  \[\phi:M\to eM\oplus(1-e)M,\ m\mapsto(em, (1-e)m).\]
+  We show this is an isomorphism. Let $e$ be central idempotent,
+  $m_{1},m_{2}\in M, r\in R$.
+
+  \underline{Homomorphism:}
+  \begin{align*}
+    \phi(m_{1}+rm_{2})
+    &=(e(m_{1}+rm_{2}), (1-e)(m_{1}+rm_{2}))\\
+    &=(em_{1}+e(rm_{2}), (1-e)m_{1}+(1-e)(rm_{2}))\\
+    &=(em_{1}, (1-e)m_{1}) + ((re)m_{2}, [r(1-e)]m_{2})
+    &&\text{direct sum, central idempotence}\\
+    &=\phi(m_{1}) + r(em_{2}, (1-e)m_{2})&&\text{direct sum of modules}\\
+    &=\phi(m_{1}) + r\phi(m_{2}).
+  \end{align*}
+
+  \underline{Injectivity:}
+  \begin{align*}
+    \ker\phi=\{m\in M|em=0=(1-e)m\in M\}
+  \end{align*}
+
+  For any $m\in \ker\phi$, $em=m-em\implies m=0$. Therefore the kernel is trivial.
+
+  \underline{Surjectivity:}
+  Let $(em,(1-e)m')\in em\oplus(1-e)M$ be given.
+  Note that $e(1-e)=e-e^{2}=0=(1-e)e$. Then
+  \begin{align*}
+    &\phi(em+(1-e)m')\\
+    =&(e^{2}m+e(1-e)m', (1-e)em+{(1-e)}^{2}m')\\
+    =&(em, (1-e)m').
+  \end{align*}
+
+  Therefore $M\cong eM\oplus(1-e)M$.
+\end{proof}
+\section{}
+\begin{proof}
+  Denote the map as $\phi$. We check for homomorphism and its kernel.
+
+\underline{R-module homomorphism:} We check $\phi(m+rn)=\phi(m)+r\phi(n)$ for any
+$m,m'\in M, r\in R$.
+
+For simplicity, we write
+\[(m+A_{1}M,\ m+A_{2}M,\ldots,\ m+A_{n}M)\text{ as }(m+A_{i}M).\]
+
+Then
+\begin{align*}
+  \phi(m+rm')
+  &=(m+rm'+A_{i}M)\\
+  &=(m+A_{i}M) + (rm'+A_{i}M)\\
+  &=\phi(m) + r\cdot(m'+A_{i}M)&&(A_{i}\text{ is an ideal for all $i$ })\\
+  &=\phi(m) + r\cdot\phi(m').
+\end{align*}
+
+On the other hand, the kernel:
+\begin{align*}
+  \ker\phi&=\{M|m+A_{i}M=A_{i}M, i=1,\ldots,n\}\\
+  &=\{m\in M|\bigwedge_{i=1}^{n}(m\in A_{i}M)\}\\
+  &=A_{1}M\cap A_{2}M\cap\cdots\cap A_{n}M.&&(\forall i,\ A_{i}M\subset M)
+\end{align*}
+\end{proof}
+
+\section{}
+Let $\phi:M\to M/A_{1}M\oplus M/A_{2}M\oplus\ldots\oplus M/A_{n}$ be the map as defined
+in the previous question.
+\\
+We only show the $n=2$ case, and by properties of direct sum (in particular,
+cartesian product), we can repeatedly apply this process till the $n$ desired
+and show what the question asked for, as long as we have that
+$A_{1}A_{2}\ldots A_{n-1}+A_{n}=R$.
+\begin{claim} % Claim 1
+  Given $A_{i}+A_{j}=R$ for any $i\ne j$, then $A_{1}A_{2}\ldots A_{n-1}+A_{n}=R$.
+\end{claim}
+\begin{proof}[Proof of Claim 1]
+  It then sufficies to just show that $A_{1}\ldots A_{n-1}+A_{n}\ni1$. Let
+  $x_{k}\in A_{k}$ be such that $x_{k} + x_{n}=1$. Then,
+  \begin{align*}
+    1&=(x_{1}+x_{n})(x_{2}+x_{n})\ldots(x_{n-1}+x_{n})\\
+       &\in x_{1}x_{2}\ldots x_{n-1} + A_{n}\\
+       &\in A_{1}A_{2}\ldots A_{n-1} + A_{i}
+  \end{align*}
+  as desired.
+\end{proof}
+\begin{claim} % Claim 2
+  Given $A_{1}+A_{2}=R$, $(A_{1}A_{2})M=A_{1}M\cap A_{2}M$.
+\end{claim}
+\begin{proof}[Proof of Claim 2]
+  Recall in Homework 1, we showed if two ideals $I,J$ of a ring $R$ such that
+  $I+J=R$, then $IJ=I\cap J$. Therefore,
+  \begin{align*}
+    A_{1}A_{2}M &= (A_{1}\cap A_{2})M\\
+    &=\{(\sum_{\text{finite}}rm) \in M|r\in A_{1}\wedge r\in A_{2}\}\\
+    &=\{(\sum_{\text{finite}}rm) \in M|r\in A_{1}\}\cap\{(\sum_{\text{finite}}rm) \in M|r\in A_{2}\}\\
+    &=A_{1}M\cap A_{2}M.
+  \end{align*}
+\end{proof}
+\begin{claim} % Claim 3
+  $\phi:M\to M/A_{1}M\oplus M/A_{2}M$ is surjective, given $A_{1},A_{2}$ are ideals such that $A_{1}+A_{2}=R$.
+\end{claim}
+\begin{proof}[Proof of Claim 3]
+  It suffices to show that $(0,1),(1,0)$ are in the image of $\phi$. Since
+  $A_{1}+A_{2}=R$, let $a_{1}+a_{2}=1\implies a_{1}m+a_{2}m=m$ for any $m\in M$,
+  where $a_{1}\in A_{1},\ a_{2}\in A_{2}$. Then
+  \begin{align*}
+    \phi(a_{1}m)&=(a_{1}m+A_{1}M,\ a_{1}m+A_{2}M)\\
+    &=(A_{1}M,\ 1\cdot m - a_{2}m+A_{2}M)&&(a_{1}m=m-a_{2}m)\\
+    &=(0,1)\in M/A_{1}M \oplus M/A_{2}M\\
+    \phi(a_{2}m)&=(a_{2}m+A_{1}M,\ a_{2}m+A_{2}M)\\
+    &=(1\cdot m-a_{1}m + A_{1}M,\ A_{2}M)&&(a_{2}m=m-a_{1}m)\\
+    &=(1,0)\in M/A_{1}M \oplus M/A_{2}M.
+  \end{align*}
+  Thus $\phi$ is surjective.
+\end{proof}
+Finally, by the first isomorphism theorem,
+\begin{align*}
+  M/A_{1}M\oplus M/A_{2}M &\cong M/\ker\phi&&(\ker\phi\text{ is surjective, Claim 3})\\
+  &= M/(A_{1}M\cap A_{2}M)&&(\text{Q2})\\
+  &= M/(A_{1}A_{2})M &&(\text{Claim 2}).
+\end{align*}
+Together with the condition to repeat in Claim 1, we have the results desired.
+
+\section{}
+\begin{proof}
+\underline{$\implies$:}
+Let $M$ be an Artininan $R$-module, $N$ a submodule of $M$. Let $N_{1}\supset N_{2}\supset\ldots$
+be a descending chain of submodules of $N$. This is a descending chain of
+submodules of $M$ too so it stabilizes, therefore $N$ is Artinian. By the 4th
+Isomorphism Theorem, any descending chain of $M/N$ can be written as
+$M_{1}/N\supset M_{2}/N\supset\ldots$, where $M_{1}\supset M_{2}\supset\ldots$ is a descending chain in $M$. Since
+the descending chain $M_{i}$ stabilizes, so must $M_{i}/N$, and therefore $M/N$
+is also Artinian.
+
+\underline{$\impliedby$:}
+\\
+Take any submodule $N$ of $M$, and we know $N$ and $N/M$ are Artinian. Then given
+any descending chain in $M$,
+\begin{equation}
+M_{1}\supset M_{2}\supset\ldots
+\end{equation}
+consider the chains \begin{equation}
+M_{1}\cap N\supset M_{2}\cap N\supset\ldots
+\end{equation} and
+\begin{equation}
+M_{1}+ N\supset M_{2}+ N\supset\ldots
+\end{equation} in $N$ and $M/N$ respectively. We will show that (1) must
+stabilize. Since $N$ and $M/N$ are Artinian, let $n$ be large enough such that
+both (2) and (3) stabilize at the $n$-th term, ie. $M_{n}\cap N=M_{n+1}\cap N=\ldots$ and
+$M_{n}+ N=M_{n+1}+ N=\ldots$. We want to show that (1) must stabilize at $n$ too, in
+other words, $M_{n}=M_{n+1}=\ldots$. It suffices to just show $M_{n} \subset M_{n+1}$ since
+we already have the other inclusion. \medskip
+
+Let $m_{n}$ be from $M_{n}$. Then
+\begin{align*}
+  &m_{n}+N\in M_{n}+N = M_{n+1} + N\\
+  \implies& m_{n}=m_{n+1} + n&&\text{for some $m_{n+1}\in M_{n+1}$ and $n\in N$}.
+\end{align*}
+  Now, $M_{n}\supset M_{n+1}\implies n=m_{n}-m_{n+1}\in M_{n}$. Therefore,
+  \begin{align*}
+    &m_{n}-m_{n+1}\in M_{n}\cap N=M_{n+1}\cap N\\
+    \implies&m_{n}-m_{n+1}\in M_{n+1}\\
+    \implies&m_{n}\in M_{n+1}
+  \end{align*}
+  Therefore, $M_{n}\subset M_{n+1}$ as desired. Since any descending chain of
+  submodules in $M$ stablilizes, $M$ is Artinian.\end{proof}
+
+\section{}
+\begin{proof}
+We consider the ring $F[G]$ as a \textbf{left}-$F[G]$ module. Then $F[G]$ is naturally a
+$F$-module, hence a $F$-vector space, by considering the restricted action of
+$F\cdot1_{G}$, where $1_{G}$ is the identity element in the group $G$.\medskip
+
+Now since $G$ is finite, any element in $F[G]$ can be expressed by a n-tuple,
+where $n=|G|$, hence it is a $n$-dimensional vector space. Any proper inclusion
+of submodules (subspaces) of $F[G]$, say $M_{1}\subset M_{2}$ must have an increase of
+dimension, and thus any ascending/descending chain of submodules must stabilize
+due to finite dimensions. In particular, any ascending/descending chain of
+\textbf{left} ideals in $F[G]$ (thus $F[G]$-submodules) must stabilize.\medskip
+
+The proof is identical considering $F[G]$ as a \textbf{right }$F[G]$-module,
+therefore we will have that any ascending/descending chain of \textbf{right}
+ideals must stabilize as well. We can then conclude that any
+ascending/descending chain of (\textbf{two-sided}) ideals of $F[G]$ must also
+stabilize, thus $F[G]$ must be both Artinian and Noetherian as a ring.
+\end{proof}
+\end{document}

@@ -1,0 +1,264 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3201 Homework 4}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{crl}{Corollary}[thm]
+\newtheorem{lemma}{Lemma}[thm]
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{note}{Note}[thm]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{obs}{Observation}
+\newtheorem{claim}{Claim}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\Tor}{Tor}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+Let $R$ be a ring with $1\ne0$. Let $M$ be a $R$-module. We define
+\[\Tor(M)=\{m\in M|rm=0,\text{ for some }0\ne r\in R\}.\]
+\subsection*{Problem 1.1}
+Prove that $\Tor(M)$ is a submodule of $M$ if $R$ is an integral domain.
+\subsubsection*{Solution}
+\begin{proof}
+  We show by the submodule criterion.
+  $\Tor(M)\ni0=1\cdot0$ is not empty.
+
+  For any $r\in R, m_{1},m_{2}\in M$,
+  \begin{align*}
+    r_{1}r_{2}(m_{1}+rm_{2}) &= r_{2}(r_{1}m_{1})+rr_{1}(r_{2}m_{2})
+    &&\text{$R$ is commutative, $M$ is a $R$-module}\\
+                             &=r_{2}\cdot0+rr_{1}\cdot0\\ &=0+0=0\\
+                             &\implies (m_{1}+rm_{2})\in\Tor(M).
+  \end{align*}
+  $\therefore\Tor(M)$ satisties the submodule criteiron and is a submodule of $M$.
+\end{proof}
+\subsection*{Problem 1.2}
+Give a counterexample of the statement above for general $R$.
+\subsubsection*{Solution}
+\begin{proof}
+  Consider $R=\Z/10\Z$ as a $R$-module by left multiplication. Then
+  $2\cdot5=5\cdot2=0$ implies $\{2,5\}\subseteq\Tor(M)$, but $2+5=7\notin\Tor(M)$.
+\end{proof}
+
+\section*{Problem 2}
+Let $I$ be a right ideal of $R$. Let $M$ be a left $R$-module. We define
+\[N=\{m\in M|rm=0\ \forall r\in I\}.\] Prove that $N$ is a $R$-submodule of $M$.
+
+\subsubsection*{Solution}
+\begin{proof}
+  We show by the submodule criterion. Since $\forall r\in I\subset R, r\cdot0=0\implies 0\in N\ne\emptyset$.
+
+  Also for any $r\in R, i\in I, m,m'\in N$,
+  \begin{align*}
+    i(m+rm')&=im+i(rm')\\
+            &=0+i'm' &&I\text{ is an ideal}\implies ir=i'\text{ for some }i'\in R\\
+            &=0+0=0\\
+            &\implies (m+rm')\in N.
+  \end{align*}
+  Therefore $N$ satisfies the submodule criterion and hence is a submodule of $M$.
+\end{proof}
+
+\section*{Problem 3}
+Let $R$ be a ring with $1\ne0$. Let $M,N$ be (left) $R$-modules. Consider the
+abelian group $\Hom_{\Z}(M,N)$ of $\Z$-module homomorphisms from $M$ to $N$.
+\subsection*{Problem 3.1}
+For any $r\in R$, we define \[(rf)(x)=r(f(x))\text{, for }f\in\Hom_{\Z}(M,N),x\in M,\]
+where the right hand side is the action of $r$ on $N$. Prove that
+$\Hom_{\Z}(M, N)$ is a left $R$-module with the action defined above.
+\subsubsection*{Solution}
+\begin{proof}
+          For any $x\in M, r\in R, f,g\in\Hom_{\Z}(M,N)$,
+  \begin{enumerate}
+    \item Show $r(f+g)=rf+rg$. $\forall x\in M$,
+          \begin{align*}
+            (r(f+g))x&=r((f+g)x)&&\text{definition}\\
+                     &=r(fx+gx)&&\Hom_{\Z}(M,N)\text{ ring distribution }\\
+                     &=(rf+rg)(x) &&\text{definition}.
+        \end{align*}
+    \item Show $(rs)f=r(sf)$. $\forall x\in M$,
+          \begin{align*}
+            ((rs)f)(x)&=(rs)f(x)&&\text{definition}\\
+                      &=r(sf(x))&&N\text{ is a }R\text{-module}\\
+                      &=(r(sf))x&&\text{definition}.\\
+          \end{align*}
+    \item Show $(r+s)f=rf+sf$. $\forall x\in M$,
+          \begin{align*}
+            ((r+s)f)(x)&=(r+s)(f(x))&&\text{definition}\\
+                      &=rf(x)+sf(x)&&N\text{ is a }R\text{-module}\\
+                      &=(rf+sf)x&&\text{definition}.
+          \end{align*}
+    \item Show $1\cdot f=f$. $\forall x\in M$,
+          \begin{align*}
+            (1\cdot f)(x)&=1(f(x))&&\text{definition}\\
+                      &=f(x)&&\text{$N$ is a $R$-module}.
+          \end{align*}
+\end{enumerate}
+Result follows.
+\end{proof}
+\subsection*{Problem 3.2}
+For any $r\in R$, we define \[(fr)(x)=f(rx)\text{, for }f\in\Hom_{\Z}(M,N),x\in M,\]
+where the right hand side is the action of $r$ on $N$. Prove that
+$\Hom_{\Z}(M, N)$ is a right $R$-module with the action defined above.
+\subsubsection*{Solution}
+\begin{proof}
+          For any $x\in M, r\in R, f,g\in\Hom_{\Z}(M,N)$,
+  \begin{enumerate}
+    \item Show $(f+g)r=fr+gr$. $\forall x\in M$,
+          \begin{align*}
+            ((f+g)r)x&=(f+g)(rx)&&\text{definition}\\
+                     &=f(rx)+g(rx)&&\Hom_{\Z}(M,N)\text{ ring distribution }\\
+                     &=(fr+gr)(x) &&\text{definition}.
+        \end{align*}
+    \item Show $f(rs)=(fr)s$. $\forall x\in M$,
+          \begin{align*}
+            (f(rs))(x)&=f((rs)x)&&\text{definition}\\
+                      &=f(r(sx))&&M\text{ is a }R\text{-module}\\
+                      &=(fr)(sx)&&\text{definition}.\\
+          \end{align*}
+    \item Show $f(r+s)=fr+fs$. $\forall x\in M$,
+          \begin{align*}
+            (f(r+s))(x)&=f((r+s)x)&&\text{definition}\\
+                      &=f(rx+sx))&&M\text{ is a }R\text{-module}\\
+                      &=(fr+fs)x&&\text{definition}.\\
+          \end{align*}
+    \item Show $f\cdot1=f$. $\forall x\in M$,
+          \begin{align*}
+            (f\cdot1)(x)&=f(1\cdot x)&&\text{definition}\\
+                      &=f(x)&&M\text{ is a }R\text{-module}.\\
+          \end{align*}
+\end{enumerate}
+Result follows.
+\end{proof}
+\subsection*{Problem 3.3}
+Let $f\in\Hom_{\Z}(M,N)$. Prove that $f\in\Hom_{R}(M,N)$ if and only if $rf=fr$ for
+any $r\in R$ with the actions defined above.
+\subsubsection*{Solution}
+\underline{($\implies$):} Let $f\in\Hom_{R}(M,N)$ be given. Then we know, in
+general, for any $r\in R, m,m'\in M$, \[f(m+rm')=f(m)+rf(m')\] since $f$ is a
+R-module homomorphism. In particular, let $m=0$, then
+\begin{align*} f(rm')=rf(m')\ \forall m'\in M\end{align*} as desired.
+\\
+\underline{($\impliedby$):} We show that $\forall r\in R,f\in\Hom_{\Z}(M,N),\ m,m'\in M$ we
+have the property that $f(m+rm')=f(m)+rf(m')$ which implies $f$ is a $R$-module map.
+\begin{align*}
+  f(m+rm')&=f(m)+f(rm')&&f\in\Hom_{\Z}(M, N)\\
+  &=f(m)+rf(m')&&\text{assumption}.
+\end{align*}
+Result follows.
+
+\section*{Problem 4}
+Let $M$ be a $R$-module for a commutative ring $R$. Prove that the map
+\[M\to\Hom_{R}(R,M),\quad m\mapsto(f:R\to M, r\mapsto rm)\]
+is an isomorphism of $R$-modules, where the $R$-module structure of
+$\Hom_{R}(R,M)$ is given by Q3(1).
+\subsubsection*{Solution}
+\begin{proof}
+  We call the map above $\phi$, and show that $\phi$ is a $R$-module homomorphism that
+  is both injective and surjective.
+
+\underline{$R$-module Homomorphism:}
+
+\begin{align*}
+  \phi(m+rm')(s) &=s(m+rm')&&\text{definition}\\
+              &=sm+s(rm')&&s\in R,\text{$M$ is $R$-module}\\
+              &=sm+r(sm')&&\text{$M$ is $R$-module, $R$ commutative}\\
+              &=\phi(m)s+r(\phi(m')s)\\
+              &=\phi(m)s+(r\phi(m'))s&&\text{Q3(1)}.
+\end{align*}
+
+\underline{Injectivity:}
+\begin{align*}
+\ker(\phi)&=\{m\in M|(r\mapsto rm)\text{ is the zero map}\}\\
+  &=\{m\in M|rm=0_{M}\ \forall r\in R\}
+\end{align*}
+
+I claim that $\ker(\phi)={0}$. Otherwise, suppose any
+$0\ne x\ni M, x\in\ker(\phi)\implies r\cdot x=0$ for any $r\in R$. However,
+$1_{R}\cdot x=x\ne 0_{M}$, a contradiction. Therefore the kernel is trivial and $\phi$ is
+injective.\medskip
+
+\underline{Surjectivity:}
+For any $f\in\Hom_{R}(R,M)$, we have
+\begin{align*}
+f(r) = f(r\cdot1)=r\cdot f(1).
+\end{align*}
+Then let $f(1)=m\in M$, we have $f(r)=rm$, so $f = (r\mapsto rm)=\phi(m)$. Thus $\phi$ is surjective.
+\end{proof}
+
+\section*{Problem 5}
+Let $R$ be commutative. Prove that $R\cong \End_{R}(R)$ as rings, where $R$ is a
+$R$-module via left multiplication.
+\subsubsection*{Solution}
+From Q4, we already know that $R\cong\Hom_{R}(R,R)=\End_{R}(R)$ as modules, hence
+they are isomorphic as abelian groups. We just need to show that multiplication
+is preserved in this map.\medskip
+
+Consider the same map $\phi:R\to\End_{R}(R),r\mapsto(r_{1}\mapsto rr_{1})$. We show that
+$\phi(rs)x=[\phi(r)\phi(s)]x$ for any $r,s,x\in R$.
+\begin{align*}
+  \phi(rs)(x)&=rsx\\
+          &=r(sx)\\
+          &=\phi(r)(\phi(s)(x))\\
+          &=[\phi(r)\phi(s)](x)&&\text{multiplication is composition in $\End_{R}(R)$}.
+\end{align*}
+Since this R-module isomorphism preserves multiplication, it is also a ring isomorphism.
+
+Now we can conclude the stronger result that $R^{op}\cong\End_{R}(R)$, by noticing
+that if $R$ is commutative, then $R^{op}\cong R$ as rings via the canonical map
+$\varphi:r^{op}\mapsto r$. We already know this map is bijective (set-theoretically
+isomorphic), and addition is automatically preserved by definition, now the
+multiplication is preserved by commutativity of $R$:
+\begin{align*}
+a^{op}b^{op}=(ba)^{op}=(ab)^{op}\text{ (commutativity) }\implies \varphi(a^{op}b^{op})=ab
+\end{align*}
+for any $a, b\in R$. Therefore, we have $R^{op}\cong R\cong\End_{R}(R)$ by the isomorphism $\varphi\circ\phi$.
+\end{document}

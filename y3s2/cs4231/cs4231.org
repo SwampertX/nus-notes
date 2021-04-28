@@ -1,158 +1,151 @@
 #+TITLE: Cs4231
-#+SETUPFILE: /home/titanx/.doom.d/latex-setup.org
-#+LATEX_HEADER: \setcounter{secnumdepth}{0}
 
-* Week 1
-** CS4231 Problem Set 1
-*** Question 1
-Devise a mutual exclusion algorithm for =n= processes by using
-*Peterson's 2-mutual-exclusion algorithm* as a black-box.
-**** Solution
-Intuitively, we create a "tournament bracket" for the processes, and for each
-pair in the "bracket", the processes are promoted to the next level using
-*Peterson's Algorithm*.
-
-Formally, we have the processes as leaves in a binary tree, and for each
-non-leaf node in the tree, its value is determined by the "winning" process among its
-two children, chosen (recursively) by *Peterson's Algorithm*.
-**** Correctness Proof
-***** 1. Mutual Exclusion
-#+BEGIN_lemma
-Every node can have at most one process at any time.
-#+END_lemma
-#+BEGIN_proof
-We do by induction from the leaf layer to the root layer. We initialized the
-leaf layer with exactly one process per node, which is the base case. From one
-layer to the next, Peterson's Algorithm is run, which ensures the next layer has
-at most one process at any time. This completes the induction.
-#+END_proof
-Suppose that more than one process enters the critical section, this means at
-the root position, more than 2 processes could enter the critical section. Two
-cases can occur:
-1. There are more than 2 processes running Peterson's Algorithm for the root
-   node
-2. There are exactly 2 processes running Peterson's Algorithm for the root node.
-
-Case 2 guarantees mutual exclusion by Peterson's Algorithm. Case 1 is impossible
-by the lemma.
-***** 2. Progress
-By the nature of a binary tree, the root node is recursively the parent of all
-leaves, and by the setup of the algorithm, the processes will compete for the
-root node, which is the ability to enter the critical section.
-***** 3. Starvation-freedom
-This is guaranteed by Peterson's Algorithm.
-*** Textbook Problems
-**** Problem 2.1(a)
-Setting =turn= to itself causes starvation.
-|--------------------+---------------------|
-| process 0          | process 1           |
-|--------------------+---------------------|
-| =wantCS[0] = true= |                     |
-| =turn = 0=         |                     |
-|                    | =wantCS[1] = true=  |
-|                    | =turn = 1=          |
-|                    | Enter CS            |
-|                    | Exit CS             |
-|                    | =wantCS[1] = false= |
-|                    | =wantCS[1] = true=  |
-|                    | =turn = 1=          |
-|                    | Enter CS            |
-|                    | ...                 |
-|--------------------+---------------------|
-***** Correction
-Mutual exclusion is violated too.
-|---------------------------------+------------------------|
-| process 0                       | process 1              |
-|---------------------------------+------------------------|
-| =wantCS[0] = true=              |                        |
-| =turn = 0=                      |                        |
-| Enter CS (=wantCS[1] == false=) |                        |
-|                                 | =wantCS[1] = true=     |
-|                                 | =turn = 1=             |
-|                                 | Enter CS (=turn == 1=) |
-|---------------------------------+------------------------|
-**** Problem 2.1(b)
-https://stackoverflow.com/questions/31172076/petersons-algorithm-with-some-modifications
-It violates mutual exclusion as per below. The idea is that one process takes
-advantage of the gracefulness of the other process, but the other process have
-not declared that they want CS. That flag is hence false and in a while loop,
-the AND operator allows entry.
-|--------------------+---------------------+---------------------|
-| process 0          | process 1           | turn, wantCS        |
-|--------------------+---------------------+---------------------|
-| =turn = 1=         |                     | =1, {false, false}= |
-|                    | =turn = 0=          | =0, {false, false}= |
-|                    | =wantCS[1] = true=  | =0, {false, true}=  |
-|                    | Enter CS            |                     |
-| =wantCS[0] = true= |                     | =0, {true, true}=   |
-| Enter CS           |                     |                     |
-|--------------------+---------------------+---------------------|
-**** Problem 2.3
-Main idea: it conflicts with the check of "if other numbers are 0 means it is
-not active".
-https://cs.stackexchange.com/questions/32828/bakery-algorithm-what-is-the-choosing-boolean-array-for
-When a process is still choosing a number (ie. value in =choosing[i]= is
-=true=), its =number[i]= is constantly changing. Another process might read its
-intermediate number while still choosing, and wrongly decides to enter the CS.
-Usually this is not a problem, but consider only two numbers but without the
-=choosing= array:
-|-----------------------+--------------------------+--------|
-| Process 0             | Process 1                | number |
-|-----------------------+--------------------------+--------|
-| =number[0] = 0=       |                          | {0,0}  |
-|                       | =number[1] = 0=          |        |
-|                       | =number[1]++=            | {0,1}  |
-|                       | Enter CS (number[0] = 0) |        |
-| =number[0]++=         |                          | {1,1}  |
-| Enter CS (Smaller ID) |                          |        |
-|-----------------------+--------------------------+--------|
-**** Problem 2.4
-Dekker's Algorithm is correct. Proof is as follows.
-***** Mutual Exclusion
-We shall give a direct proof. Without loss of generality, let P0 be in the CS.
-We show that P1 cannot be in the CS at the same time.
-****** Case 1: When P0 first read =wantCS[1]=, value is false.
-Then P0 either
-1. haven't started requesting CS,
-2. is in the outer while loop (which allows it to set =wantCS[1]= to false), or
-3. has just released CS.
-
-The middle case is of interest, as the other cases do not violate mutual
-exclusion. We have two further cases:
-******* Case 1.1: =turn= is initialized to 1
-In which case, P1 will not get the chance to hit the line that sets =wantCS[1]=
-to false, since it cannot enter the if clause. That leaves us with the two
-scenarios in Case 1 that do not violate ME.
-******* Case 1.2 =turn= is initialized to 0
-After setting =wantCS[1]= to false, it busy waits in the inner while loop, until
-P0 exits CS and toggles =turn=. Hence it cannot enter CS before P0 has finished.
-****** Case 2: When P0 first read =wantCS[1]=, value is true.
-******* Case 2.1: =turn= is initialized to 1
-This is an impossible case because then P0 will be stuck in the inner while loop
-due to =turn == 1= and not enter CS, violating the assumption.
-******* Case 2.2 =turn= is initialized to 0
-P0 patiently waits for =wantCS[1]= to be set false after P1 exits the CS.
-***** Progress
-Note: need to show that when
-1. No process is in CS.
-2. Only one process or both processes want to enter the CS.
-3. and one process eventually enters the CS.
-If a process skips the while loop, then we are done. Suppose not, then both
-processes enter while loop. Suppose =turn == 0=, then P1 is forced to set its
-=wantCS[1]= to false and busy wait. This guarantees P0 will pick up this change
-and exit the while loop and enter the CS. The case for =turn == 1= is symmetric.
-***** No Starvation
-The only place able to switch =turn= is after exiting CS. This ensures each
-process have a chance to run. Suppose the process correponding to the =turn=
-does not want to run, the other process can run by skipping the entire while
-loop.
-* Chapter 4
+* Arrows
+- $a\prec b$ is process order.
+- $a\to b$ is happen-before order: the logical clock value is less than, iff
+  there is a directed path. Clearly $a\prec b\implies a\to b$.
+- $a\leadsto b$ There is also send-receive order.
+* Lecture 5 Global Snapshot
+Assumption: channels are FIFO. If not, it is discussed in Message Ordering
+lecture
 ** Definitions
-*** Concurrent system
-~ consists of a set of *sequential processes* the communicate through
-*concurrent objects*.
-*** Operation
-consists of two events, invocation and response
-*** Events
-represented by a point in time
-*** Concurrent history
+*** Global snapshot
+A set of events =E= such that for any event =e= in =E=, if $f\prec e$, then
+$f\in E$.
+*** Consistent global snapshot
+A global snapshot where if $e_1$ send, $e_2$ receive, $e_2$ in then $e_1$ must be in.
+** Chandy & Lamport's protocal for taking snapshots
+- Key idea:
+  1. after a process takes a snapshot, it orders others to stop via a message
+  2. If they already took a snapshot before the order arrives, then capture all
+     message till the order (these are the on-the-fly messages)
+  3. Otherwise once they receive the order, stop. (otherwise will receive stuff
+     which sender does not include)
+* Lecture 6 Message Ordering
+We still assume FIFO (except for fully async order) for inter-process channels.
+** Definitions
+*** Fully Asynchronous
+No restriction.
+*** FIFO
+Messages $s_1,s_2$ are sent from i to j. Then $\neg(s_2\prec s_1)$.
+*** Causally Ordered
+If $s_1$ happen before $s_2$, $r_1, r_2$ on the same process, then $r_1\prec
+r_2$.
+*** Synchronous Ordered
+Diagram can be redrawn into vertical, respecting happen-before, process and
+send-receive order.
+** Algorithm to ensure Causal Ordering
+*** Core Idea
+When a process sends a message, attach also every message you have seen or sent
+so far.
+*** Why does it work?
+- Recall causal ordering: if s1 happens before s2 (there is a directed path),
+  then r1 must before r2
+- If s1 and s2 are on the same process, then attaching all messages it has sent
+  will include s1 for the target process to see before s2
+- If not on the same process, then attaching all messages it has received will
+  include s1 for the target process to see before s2.
+*** Can we improve it?
+- Just include messages that are targeted at the receiving process.
+- Or number each message locally on the process. Instead of attaching all
+  messages, make the target wait until all processes' intended message to it has
+  been delivered.
+** Skeen's Algorithm for Broadcast Ordering
+- An example is a chat group, sending messages to everyone
+- Everyone needs the same message number for the same msg
+*** Core Idea
+1. First round - send message to everyone to save in the buffer. After saving,
+   each process replies the coordinator their current logical clock number.
+2. Wait for all them to come back, and assign the message the largest logical
+   clock number.
+3. Let everyone know the decided message number.
+*** Summary
+It orders messages, not logical clock numbers. Each logical clock value run as
+usual.
+* Leader Election
+** Chang-Roberts Algorithm for Leader Election
+*** Setting
+Given a ring of nodes that can only send messages clockwise, select a leader
+*** Algorithm
+1. Sending: Every node send its number clockwise
+2. Receiving: Every node relay the message (clockwise) if the value is bigger
+   than self.
+3. If receive own id, then it is the leader
+*** Complexity
+**** Message Complexity
+Number of messages sent
+**** Best Case
+Condition: sorted in clockwise ascending
+1+...+1+n = 2n-1
+**** Worst case
+Condition: sorted in clockwise descending
+1 + 2 + ... + n = n(n+1)/2
+**** Average case?
+* Lecture 8 Consensus
+** Timing Models
+*** Synchronous
+Bounded amount of time to do processing, and bounded amount of time to send
+messages
+** Version 0: No failure
+*** Algorithm
+For any process:
+1. Keep broadcasting own value
+2. Once confident have all messages (due to known ub), run a deterministic
+   algorithm on all values (eg. max/min)
+** TODO Version 1:
+** Version 2: Consensus with Link Failures (Synchronous)
+*** Setup
+- nodes do not fail
+- but the message channels (between any pair of processes) can fail arbitrarily
+  long (drop unbounded # of messages)
+*** Goal 1: Termination, Agreement, Validity
+- Termination: all nodes eventually decide
+- Agreement: all nodes settle on one same value
+- Validity: if all started as same value, must settle on that value.
+**** TODO There is no deterministic algorithm
+1. Suppose there is one. Two processes with a eternally failing channel
+*** Goal 2: T, A, Weakened Validity
+- If all start from 0, should settle on 0
+- If all start from 1, then must settle on 1 only if no message is lost
+**** TODO Still no deterministic algorithm.
+- Lemma: if two processes start with 1, and one process's last message is lost,
+  none detects it. Then the one who lost, B, didn't know it lost, hence is
+  *indistinguishable* from nothing is lost and must settle on 1. By agreement, A
+  should settle on 1 as well.
+- But we can still chain indistinguishability from 0, 0 to 1, 1 and force a
+  contradiction (settle on 0, 0 given 1, 1, when all messages are lost)
+*** Goal 3: T, Limited Agreement, Weakened Validity
+- Limited Agreement: all nodes decide on the same value with probability =
+  (1-\epsilon)
+**** Randomized Algorithm that works
+1. Setup: P1, P2, where P1 sets the # of rounds (called *bar*) randomly. Each
+   process has an *input*, 0 or 1. Each process has a value called *level*,
+   initialized to 0.
+2. Send messages and receive messages for r rounds. Each message contain bar (if
+   you know it), input, and its level. Upon receive, update own level: =my_level
+   = their_level + 1=.
+3. We can inductively show that every pair of levels must differ by at most one
+   at every round.
+4. Once r rounds are over, decide on 1 IFF you know that everyone has input 1
+   AND you know bar (trivial for P1) AND level >= bar.
+***** Analysis
+****** TODO Errors
+Error only happens if P1 decide on 1 while P2 decide on 0 (WLOG).
+******* Case 1: P1 does not receive from P2 at all, but P2 does
+- Then L1 = 0 (does not receive) and L2 = 1 (received at least 1)
+- P1 must not know P2's input and hence output 0, and error only occurs if P2
+  output 1 IFF L2 = 1 >= bar (is a postive value) = 1.
+
+******* Case 1: P1 does not receive from P2 at all, but P2 does
+- Then L1 = 0 (does not receive) and L2 = 1 (received at least 1)
+- P1 must not know P2's input and hence output 0, and error only occurs if P2
+  output 1 IFF L2 = 1 >= bar (is a postive value) = 1.
+** Version 3: Node crash failures (Asynchronous)
+*** Setup
+- Nodes can crash (indefinitely), but channels are reliable
+- Asynchronous: message delay is unbounded
+- Impact: can no longer define a round
+*** Fischer-Lynch-Paterson (FLP) Impossibility Theorem
+Statement: the distributed consensus problem under the asynchronous timing model
+is impossible to solve, even with a *single* node crash failure.
+- Fundamental reason: the protocol is unable to accurately detect node failure.
