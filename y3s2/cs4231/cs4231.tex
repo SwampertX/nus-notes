@@ -1,4 +1,4 @@
-% Created 2021-01-17 Sun 17:29
+% Created 2021-04-30 Fri 16:57
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -16,193 +16,634 @@
 \usepackage{hyperref}
 \usepackage{amsthm}
 \usepackage{minted}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
-\newtheorem{lemma}{Lemma}[section]
-\newtheorem{note}{Note}[theorem]
-\newtheorem{definition}{Definition}[section]
-\newtheorem{ex}{Example}[section]
-\newtheorem{observation}{Observation}[section]
-\linespread{1.1}
-\usepackage[a4paper, total={6in, 8in}]{geometry}
-\setcounter{secnumdepth}{0}
 \author{Tan Yee Jian}
 \date{\today}
-\title{CS4231 Problem Set 1}
+\title{Cs4231}
 \hypersetup{
- pdfauthor={Tan Yee Jian},
- pdftitle={CS4231 Problem Set 1},
- pdfkeywords={},
- pdfsubject={},
- pdfcreator={Emacs 27.0.91 (Org mode 9.5)}, 
- pdflang={English}}
+  pdfauthor={Tan Yee Jian},
+  pdftitle={Cs4231},
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 27.2 (Org mode 9.4.4)},
+  pdflang={English}}
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\section{Question 1}
-\label{sec:org6ac39ce}
-Devise a mutual exclusion algorithm for \texttt{n} processes by using
-\textbf{Peterson's 2-mutual-exclusion algorithm} as a black-box.
-\subsection{Solution}
-\label{sec:orgac2ced8}
-Intuitively, we create a ``tournament bracket'' for the processes, and for each
-pair in the ``bracket'', the processes are promoted to the next level using
-\textbf{Peterson's Algorithm}.
 
-Formally, we have the processes as leaves in a binary tree, and for each
-non-leaf node in the tree, its value is determined by the ``winning'' process among its
-two children, chosen (recursively) by \textbf{Peterson's Algorithm}.
-\subsection{Correctness Proof}
-\label{sec:orgb3464bb}
-\subsubsection{1. Mutual Exclusion}
-\label{sec:org2939db8}
-\begin{lemma}
-Every node can have at most one process at any time.
-\end{lemma}
-\begin{proof}
-We do by induction from the leaf layer to the root layer. We initialized the
-leaf layer with exactly one process per node, which is the base case. From one
-layer to the next, Peterson's Algorithm is run, which ensures the next layer has
-at most one process at any time. This completes the induction.
-\end{proof}
-Suppose that more than one process enters the critical section, this means at
-the root position, more than 2 processes could enter the critical section. Two
-cases can occur:
+\section{Arrows}
+\label{sec:org1881088}
+\begin{itemize}
+  \item \(a\prec b\) is process order.
+  \item \(a\to b\) is happen-before order: the logical clock value is less than, iff
+        there is a directed path. Clearly \(a\prec b\implies a\to b\).
+  \item \(a\leadsto b\) is the send-receive order.
+\end{itemize}
+\section{Lecture 5 Global Snapshot}
+\label{sec:orgeba08ca}
+Assumption: channels are FIFO. If not, it is discussed in Message Ordering
+lecture
+\subsection{Definitions}
+\label{sec:orgcdef94f}
+\subsubsection{Global snapshot}
+\label{sec:orgb685326}
+A set of events \texttt{E} such that for any event \texttt{e} in \texttt{E}, if \(f\prec e\), then
+\(f\in E\).
+\subsubsection{Consistent global snapshot}
+\label{sec:orgea00abd}
+A global snapshot where if \(e_1\) send, \(e_2\) receive, \(e_2\) in then \(e_1\) must be in.
+\subsection{Chandy \& Lamport's protocal for taking snapshots}
+\label{sec:orgf0defc2}
+\begin{itemize}
+  \item Key idea:
+        \begin{enumerate}
+          \item after a process takes a snapshot, it orders others to stop via a message
+          \item If they already took a snapshot before the order arrives, then capture all
+                message till the order (these are the on-the-fly messages)
+          \item Otherwise once they receive the order, stop. (otherwise will receive stuff
+                which sender does not include)
+        \end{enumerate}
+\end{itemize}
+\section{Lecture 6 Message Ordering}
+\label{sec:org8d1d9f7}
+We still assume FIFO (except for fully async order) for inter-process channels.
+\subsection{Definitions}
+\label{sec:org7ce1ebf}
+\subsubsection{Fully Asynchronous}
+\label{sec:org1ca21bd}
+No restriction.
+\subsubsection{FIFO}
+\label{sec:org0baa245}
+Messages \(s_1,s_2\) are sent from i to j. Then \(\neg(s_2\prec s_1)\).
+\subsubsection{Causally Ordered}
+\label{sec:org20a9c79}
+If \(s_1\) happen before \(s_2\), \(r_1, r_2\) on the same process, then \(r_1\prec
+r_2\).
+\subsubsection{Synchronous Ordered}
+\label{sec:org87de76a}
+Diagram can be redrawn into vertical, respecting happen-before, process and
+send-receive order.
+\subsection{Algorithm to ensure Causal Ordering}
+\label{sec:orgf896f74}
+\subsubsection{Core Idea}
+\label{sec:org8ed3d63}
+When a process sends a message, attach also every message you have seen or sent
+so far.
+\subsubsection{Why does it work?}
+\label{sec:org0453d7c}
+\begin{itemize}
+  \item Recall causal ordering: if s1 happens before s2 (there is a directed path),
+        then r1 must before r2
+  \item If s1 and s2 are on the same process, then attaching all messages it has sent
+        will include s1 for the target process to see before s2
+  \item If not on the same process, then attaching all messages it has received will
+        include s1 for the target process to see before s2.
+\end{itemize}
+\subsubsection{Can we improve it?}
+\label{sec:org7ccdaa7}
+\begin{itemize}
+  \item Just include messages that are targeted at the receiving process.
+  \item Or number each message locally on the process. Instead of attaching all
+        messages, make the target wait until all processes' intended message to it has
+        been delivered.
+\end{itemize}
+\subsection{Skeen's Algorithm for Broadcast Ordering}
+\label{sec:orge4e7905}
+\begin{itemize}
+  \item An example is a chat group, sending messages to everyone
+  \item Everyone needs the same message number for the same msg
+\end{itemize}
+\subsubsection{Core Idea}
+\label{sec:org11c5dae}
 \begin{enumerate}
-\item There are more than 2 processes running Peterson's Algorithm for the root
-node
-\item There are exactly 2 processes running Peterson's Algorithm for the root node.
+  \item First round - send message to everyone to save in the buffer. After saving,
+        each process replies the coordinator their current logical clock number.
+  \item Wait for all them to come back, and assign the message the largest logical
+        clock number.
+  \item Let everyone know the decided message number.
 \end{enumerate}
-
-Case 2 guarantees mutual exclusion by Peterson's Algorithm. Case 1 is impossible
-by the lemma.
-\subsubsection{2. Progress}
-\label{sec:orgda254c0}
-By the nature of a binary tree, the root node is recursively the parent of all
-leaves, and by the setup of the algorithm, the processes will compete for the
-root node, which is the ability to enter the critical section.
-\subsubsection{3. Starvation-freedom}
-\label{sec:orgeb41952}
-This is guaranteed by Peterson's Algorithm.
-\section{Textbook Problems}
-\label{sec:org15cb0f4}
-\subsection{Problem 2.1(a)}
-\label{sec:org09587cb}
-Setting \texttt{turn} to itself causes starvation.
-\begin{center}
-\begin{tabular}{ll}
-\hline
-process 0 & process 1\\
-\hline
-\texttt{wantCS[0] = true} & \\
-\texttt{turn = 0} & \\
- & \texttt{wantCS[1] = true}\\
- & \texttt{turn = 1}\\
- & Enter CS\\
- & Exit CS\\
- & \texttt{wantCS[1] = false}\\
- & \texttt{wantCS[1] = true}\\
- & \texttt{turn = 1}\\
- & Enter CS\\
- & \ldots{}\\
-\hline
-\end{tabular}
-\end{center}
-\subsection{Problem 2.1(b)}
-\label{sec:org631546d}
-It violates mutual exclusion as per below. The idea is that one process takes
-advantage of the gracefulness of the other process, but the other process have
-not declared that they want CS. That flag is hence false and in a while loop,
-the AND operator allows entry.
-\begin{center}
-\begin{tabular}{lll}
-\hline
-process 0 & process 1 & turn, wantCS\\
-\hline
-\texttt{turn = 1} &  & \texttt{1, \{false, false\}}\\
- & \texttt{turn = 0} & \texttt{0, \{false, false\}}\\
- & \texttt{wantCS[1] = true} & \texttt{0, \{false, true\}}\\
- & Enter CS & \\
-\texttt{wantCS[0] = true} &  & \texttt{0, \{true, true\}}\\
-Enter CS &  & \\
-\hline
-\end{tabular}
-\end{center}
-\subsection{Problem 2.3}
-\label{sec:org3edfde1}
-When a process is still choosing a number (ie. value in \texttt{choosing[i]} is
-\texttt{true}), its \texttt{number[i]} is constantly changing. Another process might read its
-intermediate number while still choosing, and wrongly decides to enter the CS.
-Usually this is not a problem, but consider only two numbers but without the
-\texttt{choosing} array:
-\begin{center}
-\begin{tabular}{lll}
-\hline
-Process 0 & Process 1 & number\\
-\hline
-\texttt{number[0] = 0} &  & \{0,0\}\\
- & \texttt{number[1] = 0} & \\
- & \texttt{number[1]++} & \{0,1\}\\
- & Enter CS (number[0] = 0) & \\
-\texttt{number[0]++} &  & \{1,1\}\\
-Enter CS (Smaller ID) &  & \\
-\hline
-\end{tabular}
-\end{center}
-\subsection{Problem 2.4}
-\label{sec:orgdbaf8d9}
-Dekker's Algorithm is correct. Proof is as follows.
-\subsubsection{Mutual Exclusion}
-\label{sec:orge1626ef}
-We shall give a direct proof. Without loss of generality, let P0 be in the CS.
-We show that P1 cannot be in the CS at the same time.
+\subsubsection{Summary}
+\label{sec:orgab337c5}
+It orders messages, not logical clock numbers. Each logical clock value run as
+usual.
+\section{Lecture 7 Leader Election}
+\label{sec:org808ec1e}
+\subsection{Chang-Roberts Algorithm for Leader Election}
+\label{sec:org0b3baae}
+\subsubsection{Setting}
+\label{sec:org7567e1b}
+Given a ring of nodes that can only send messages clockwise, select a leader
+\subsubsection{Algorithm}
+\label{sec:org80a8bb4}
 \begin{enumerate}
-\item Case 1: When P0 first read \texttt{wantCS[1]}, value is false.
-\label{sec:orge89c9e7}
-Then P0 either
+  \item Sending: Every node send its number clockwise
+  \item Receiving: Every node relay the message (clockwise) if the value is bigger
+        than self.
+  \item If receive own id, then it is the leader
+\end{enumerate}
+\subsubsection{Complexity}
+\label{sec:org86f55de}
 \begin{enumerate}
-\item haven't started requesting CS,
-\item is in the outer while loop (which allows it to set \texttt{wantCS[1]} to false), or
-\item has just released CS.
+  \item Message Complexity
+        \label{sec:org2e23e03}
+        Number of messages sent
+  \item Best Case
+        \label{sec:org4232628}
+        Condition: sorted in clockwise ascending
+        1+\ldots{}+1+n = 2n-1
+  \item Worst case
+        \label{sec:orgcfafe84}
+        Condition: sorted in clockwise descending
+        1 + 2 + \ldots{} + n = n(n+1)/2
+  \item Average case?
+        \label{sec:orgaeec55c}
 \end{enumerate}
-
-The middle case is of interest, as the other cases do not violate mutual
-exclusion. We have two further cases:
+\section{Lecture 8 Consensus}
+\label{sec:org9287394}
+\subsection{Timing Models}
+\label{sec:org9be41b7}
+\subsubsection{Synchronous}
+\label{sec:org7fd73e7}
+\begin{itemize}
+  \item Bounded amount of time to do processing (generate output msg, process input
+        msg)
+  \item and bounded amount of time to send messages
+\end{itemize}
+\subsection{Goals/Conditions for consensus}
+\label{sec:org14e5ae4}
+\subsubsection{Termination}
+\label{sec:org288ea4c}
+\subsubsection{Agreement}
+\label{sec:org1574847}
+\subsubsection{Validity}
+\label{sec:org0e32ccf}
+\subsection{Version 0: No failure (regardless of timing model)}
+\label{sec:org1e318af}
+\subsubsection{Algorithm}
+\label{sec:orgb907115}
+For any process:
 \begin{enumerate}
-\item Case 1.1: \texttt{turn} is initialized to 1
-\label{sec:orgbae90b7}
-In which case, P1 will not get the chance to hit the line that sets \texttt{wantCS[1]}
-to false, since it cannot enter the if clause. That leaves us with the two
-scenarios in Case 1 that do not violate ME.
-\item Case 1.2 \texttt{turn} is initialized to 0
-\label{sec:orge9d7291}
-After setting \texttt{wantCS[1]} to false, it busy waits in the inner while loop, until
-P0 exits CS and toggles \texttt{turn}. Hence it cannot enter CS before P0 has finished.
+  \item Keep broadcasting own value
+  \item Once confident have all messages (due to known ub), run a deterministic
+        algorithm on all values (eg. max/min)
 \end{enumerate}
-\item Case 2: When P0 first read \texttt{wantCS[1]}, value is true.
-\label{sec:orgdda7bb4}
+\subsubsection{When does it work?}
+\label{sec:org9d9ccb8}
 \begin{enumerate}
-\item Case 2.1: \texttt{turn} is initialized to 1
-\label{sec:org68a4748}
-This is an impossible case because then P0 will be stuck in the inner while loop
-due to \texttt{turn =} 1= and not enter CS, violating the assumption.
-\item Case 2.2 \texttt{turn} is initialized to 0
-\label{sec:orgcb05cb7}
-P0 patiently waits for \texttt{wantCS[1]} to be set false after P1 exits the CS.
+  \item {\bfseries\sffamily TODO} Synchronous
+        \label{sec:orgccd72eb}
+  \item {\bfseries\sffamily TODO} Async
+        \label{sec:orgbe157ed}
 \end{enumerate}
+\subsection{Version 1: (Synchronous) Node crash failures}
+\label{sec:org67b2133}
+\subsubsection{Setup}
+\label{sec:org0f51323}
+\begin{itemize}
+  \item Synchronous, all nodes have bounded processing time, all message has bounded
+        delay
+  \item Crash failure - crashes forever. On a ``round'' that it crashes, broadcast might
+        not happen/not be complete.
+\end{itemize}
+\subsubsection{Intuition}
+\label{sec:org3ff8c98}
+\begin{itemize}
+  \item We use rounds to gain information on crash: if no reply, then crashed.
+  \item How to delineate rounds: let t1 be delay to generate output, t2 for message
+        propagation, t3 to process input, then each round is simply \texttt{t1+t2+t3} long.
+\end{itemize}
+\begin{enumerate}
+  \item Suppose we don't have accurate clock
+        \label{sec:org9620598}
+        \begin{itemize}
+          \item Claim: every clock should be some constant multiple of other clocks.
+          \item Consider a case where clock = 2x accurate clock.
+                \begin{itemize}
+                  \item Attempt 1: everyone set round duration to \texttt{2(t1+t2+t3)}. The process with
+                        faster clock will advance rounds faster. Then every process that receives a
+                        new message starts a new round. But what if a round starts before a process
+                        has time to process its received message?
+                  \item Attempt 2: We provide the offset, making the round duration
+                        \texttt{2(t1+t2+t3+(t1+t2))}, the new offset tolerates the message delay(process
+                        output, send msg) to the ``latest'' node.
+                \end{itemize}
+        \end{itemize}
 \end{enumerate}
-\subsubsection{Progress}
-\label{sec:org37b2a44}
-If a process skips the while loop, then we are done. Suppose not, then both
-processes enter while loop. Suppose \texttt{turn =} 0=, then P1 is forced to set its
-\texttt{wantCS[1]} to false and busy wait. This guarantees P0 will pick up this change
-and exit the while loop and enter the CS. The case for \texttt{turn =} 1= is symmetric.
-\subsubsection{No Starvation}
-\label{sec:org1914085}
-The only place able to switch \texttt{turn} is after exiting CS. This ensures each
-process have a chance to run. Suppose the process correponding to the \texttt{turn}
-does not want to run, the other process can run by skipping the entire while
-loop.
+\subsubsection{Protocol}
+\label{sec:orgeebc586}
+\begin{enumerate}
+  \item Intuition
+        \label{sec:org8c4a5d5}
+        \begin{itemize}
+          \item suppose there is no failure, we can just broadcast our message to everyone and conclude.
+          \item Since there can be a failure, we can \textbf{``forward''} all messages received in our broadcast.
+          \item What is left is to decide how many rounds are needed.
+        \end{itemize}
+  \item Details
+        \label{sec:org84abdb8}
+        \begin{enumerate}
+          \item Intialize the set \texttt{S:=\{my\_input\}}.
+          \item Broadcast S to everyone for \texttt{f+1} rounds (where f is number of node crashes
+                to tolerate)
+          \item Union S with all the sets received in this round, and repeat 2.
+        \end{enumerate}
+  \item Correctness
+        \label{sec:org3f8a457}
+        \begin{enumerate}
+          \item Termination is obvious (f+1 rounds, bounded waiting)
+                \label{sec:orgc0c8b1c}
+          \item Validity is obvious (if everyone same input, S = \{s\} is singleton)
+                \label{sec:org2012c0f}
+          \item Agreement
+                \label{sec:orge6e4d16}
+                \begin{enumerate}
+                  \item Given f+1 rounds and f failure, there must be at least 1 round with no
+                        failure. Call that the good round.
+                  \item See that the good round must end with all nodes (that haven't crashed) with
+                        the same set \texttt{S}.
+                  \item After the good round, each nodes's \texttt{S} do not change anymore.
+                  \item Then the deterministic function will choose the same value for all surviving
+                        nodes.
+                \end{enumerate}
+        \end{enumerate}
+\end{enumerate}
+\subsubsection{Lower bound is (Omega(f))}
+\label{sec:org779cd2c}
+\begin{itemize}
+  \item Statement: any deterministic algorithm that works (fulfills termination,
+        agreement, validity) must take at least f+1 rounds.
+  \item Proof is too hard (not in scope).
+\end{itemize}
+\subsection{Version 2: (Synchronous) Link Failure}
+\label{sec:orgff2c823}
+\subsubsection{Setup}
+\label{sec:orgf83acf7}
+\begin{itemize}
+  \item nodes do not fail
+  \item but the message channels (between any pair of processes) can fail arbitrarily
+        long (drop unbounded \# of messages)
+\end{itemize}
+\subsubsection{Goal 1: Termination, Agreement, Validity}
+\label{sec:org74df533}
+\begin{itemize}
+  \item Termination: all nodes eventually decide
+  \item Agreement: all nodes settle on one same value
+  \item Validity: if all started as same value, must settle on that value.
+\end{itemize}
+\begin{enumerate}
+  \item There is no deterministic algorithm
+        \label{sec:org4ae2aad}
+        \begin{enumerate}
+          \item Suppose there is one. Two processes with a eternally failing channel. Assume
+                both have input 1, then has to conclude with 1.
+                \begin{center}
+                  \begin{tabular}{lrr}
+                    process & input & conclusion\\
+                    \hline
+                    A & 1 & 1\\
+                    B & 1 & 1\\
+                  \end{tabular}
+                \end{center}
+          \item Suppose process B has input 0. To A, this is indistinguishable from B having
+                input 1 since they cannot communicate. Thus B will still conclude 1.
+                \begin{center}
+                  \begin{tabular}{lrl}
+                    process & input & conclusion\\
+                    \hline
+                    A & 1 & 1 (indistinguishable)\\
+                    B & 0 & 1\\
+                  \end{tabular}
+                \end{center}
+          \item By Agreement, B will conclude as 1 too, force by A's ignorant conclusion.
+                \begin{center}
+                  \begin{tabular}{lrl}
+                    process & input & conclusion\\
+                    \hline
+                    A & 1 & 1\\
+                    B & 0 & 1 (Agreement)\\
+                  \end{tabular}
+                \end{center}
+          \item Now suppose A has input 0 as well. To B, this is indistinguishable from A
+                having 1 (remember by 2, 3, A having 1 forces B to conclude 1) so it will
+                still conclude with 1.
+                \begin{center}
+                  \begin{tabular}{lrl}
+                    process & input & conclusion\\
+                    \hline
+                    A & 0 & 1\\
+                    B & 0 & 1 (indistinguishable)\\
+                  \end{tabular}
+                \end{center}
+          \item Then A will be forced to conclude with 1, violating Validity. Contradiction.
+                \begin{center}
+                  \begin{tabular}{lrl}
+                    process & input & conclusion\\
+                    \hline
+                    A & 0 & 1 (validity)\\
+                    B & 0 & 1\\
+                  \end{tabular}
+                \end{center}
+        \end{enumerate}
+\end{enumerate}
+\subsubsection{Goal 2: T, A, Weakened Validity}
+\label{sec:orgf15b4ba}
+\begin{itemize}
+  \item Since validity was violated just now, we try to weaken it. Is consensus
+        possible now?
+  \item If all start from 0, should settle on 0
+  \item If all start from 1, then must settle on 1 only if no message is lost
+\end{itemize}
+\begin{enumerate}
+  \item Still no deterministic algorithm.
+        \label{sec:orgc435ea8}
+        \begin{itemize}
+          \item Lemma: if two processes start with 1, and one process's last message is lost,
+                none detects it. Then the one who lost, B, didn't know it lost, hence is
+                \textbf{indistinguishable} from nothing is lost and must settle on 1. By agreement, A
+                should settle on 1 as well.
+          \item Using the lemma above, we can still chain indistinguishability from 0, 0 to 1,
+                1 and force a contradiction (settle on 0, 0 given 1, 1, when all messages are
+                lost)
+        \end{itemize}
+        \begin{enumerate}
+          \item Proof of no deterministic algorithm
+                \label{sec:org4fc6e07}
+                Essentially the same as in the previous Goal, but start with 0,0. Achieve
+                contradiction not by validity (we weakened it thus would not be contradicted),
+                but consider an undetected loss of last message, which has to conclude with 1,1.
+        \end{enumerate}
+\end{enumerate}
+\subsubsection{Goal 3: T, Limited Agreement, Weakened Validity}
+\label{sec:org3463446}
+\begin{itemize}
+  \item Limited Agreement: all nodes decide on the same value with probability =
+        (1-\(\epsilon\))
+\end{itemize}
+\begin{enumerate}
+  \item The concept of adversary
+        \label{sec:orgcd0d58d}
+        We imagine the message losses are not just random, but as bad as possible, as if
+        designed by an adversary to destroy our plans for consensus. Then we do a worst
+        case analysis against this adversary.
+  \item Randomized Algorithm that works with error (1/r)
+        \label{sec:org9350328}
+        \begin{enumerate}
+          \item Setup: We have processes P1, P2, etc.
+                \begin{itemize}
+                  \item All random choices not known by adversary beforehand.
+                  \item Let the total number of rounds to be \texttt{r}.
+                  \item Each process has an \textbf{input}, 0 or 1. Each process has a value called
+                        \textbf{level}, initialized to 0.
+                  \item P1 sets the a \textbf{bar} randomly between 1 and r, inclusive. Every process
+                        tries to increment \textbf{level} so that they reach the \textbf{bar} over the \texttt{r}
+                        rounds.
+                \end{itemize}
+          \item Broadcast messages and receive messages for r rounds. Each message contain
+                \textbf{bar} (if you know it), \textbf{input}, and own \textbf{level}. Upon receive, update own
+                \textbf{level} to \texttt{l+1} if everyone is at least level \texttt{l}.
+          \item We can inductively show that every pair of levels must differ by at most one
+                at every round.
+          \item Once r rounds are over, decide on 1 IFF you know that everyone has input 1
+                AND you know bar (trivial for P1) AND level >= bar.
+        \end{enumerate}
+        \begin{enumerate}
+          \item Analysis
+                \label{sec:org4d2258e}
+                \begin{enumerate}
+                  \item Termination (obvious by \texttt{r} rounds)
+                        \label{sec:org9880bd7}
+                  \item Agreement with probability (1-1/r)
+                        \label{sec:orgab96424}
+                        \begin{itemize}
+                          \item Since not every process's \textbf{level} will reach \textbf{bar}, not everyone can decide
+                        \end{itemize}
+                        correctly (eg, should decide 1 but limited by insufficient level). We then
+                        analyze what is the probability for these events.
+                        \begin{itemize}
+                          \item Error only happens if P1 decide on 1 while P2 decide on 0 (WLOG).
+                          \item Denote P1's level as L1, P2's level as L2.
+                        \end{itemize}
+                        \begin{enumerate}
+                          \item Scenario: One process decides 1, the other process decides 0
+                                \label{sec:orgd225902}
+                                \begin{enumerate}
+                                  \item Case 1: P1 hears P2, but P2 never heard from P1 at all
+                                        \label{sec:org5ad3aea}
+                                        \begin{itemize}
+                                          \item Then P2 must have level 0 (L2 = 0). It never heard from P1 and does not know
+                                                bar, hence will conclude 0.
+                                                \begin{center}
+                                                  \begin{tabular}{lll}
+                                                    process & level & decision\\
+                                                    \hline
+                                                    P1 &  & \\
+                                                    P2 & 0 & 0\\
+                                                  \end{tabular}
+                                                \end{center}
+                                          \item P1 hears P2 so must have level 1 (L1 = 1). To be an error case, it must
+                                                decide 1.
+                                                \begin{center}
+                                                  \begin{tabular}{lrr}
+                                                    process & level & decision\\
+                                                    \hline
+                                                    P1 & 1 & 1\\
+                                                    P2 & 0 & 0\\
+                                                  \end{tabular}
+                                                \end{center}
+                                          \item What do we know, now P1 decides 1? All conditions below must be fulfilled:
+                                                \begin{enumerate}
+                                                  \item Knows bar (no new info, P1 set the bar)
+                                                  \item All inputs are 1
+                                                  \item 1 >= bar. Since bar is at least 1, bar = 1.
+                                                \end{enumerate}
+                                        \end{itemize}
+                                        \begin{enumerate}
+                                          \item Conclusion: only happens when bar = 1, probability = 1/r
+                                                \label{sec:orgd30a0df}
+                                        \end{enumerate}
+                                  \item Case 2: P2 hears P1, but P1 never heard from P2 at all
+                                        \label{sec:org2a37117}
+                                        \begin{itemize}
+                                          \item Then P1 must have level 0 (L1 = 0). It never heard from P2 and does not know
+                                                P2's input, hence will conclude 0.
+                                                \begin{center}
+                                                  \begin{tabular}{lrr}
+                                                    process & level & decision\\
+                                                    \hline
+                                                    P1 & 0 & 0\\
+                                                    P2 &  & \\
+                                                  \end{tabular}
+                                                \end{center}
+                                          \item P2 hears P1 so must have level 1 (L2 = 1). To be an error case, it must
+                                                decide 1.
+                                                \begin{center}
+                                                  \begin{tabular}{lrr}
+                                                    process & level & decision\\
+                                                    \hline
+                                                    P1 & 0 & 0\\
+                                                    P2 & 1 & 1\\
+                                                  \end{tabular}
+                                                \end{center}
+                                          \item What do we know, now P2 decides 1? All conditions below must be fulfilled:
+                                                \begin{enumerate}
+                                                  \item Knows bar (no new info, P2 heard from P1)
+                                                  \item All inputs are 1
+                                                  \item 1 = L2 >= bar. Since bar is at least 1, bar = 1.
+                                                \end{enumerate}
+                                        \end{itemize}
+                                        \begin{enumerate}
+                                          \item Conclusion: only happens when bar = 1, probability = 1/r
+                                                \label{sec:org6eb6f98}
+                                        \end{enumerate}
+                                  \item Case 3: P1 did not hear from P2 and vice versa
+                                        \label{sec:orgb0c8981}
+                                        This case would not cause error, since they will both conclude 0.
+                                  \item Case 4: P1 heard from P2 and vice versa
+                                        \label{sec:org50ae750}
+                                        \begin{itemize}
+                                          \item The only violatable condition before concluding 1, is that \texttt{level<bar}.
+                                          \item Their \textbf{level} difference is at most one (by lemma).
+                                          \item Probability is \texttt{1/r}, when the \textbf{bar} is set to the maximum of the two.
+                                        \end{itemize}
+                                \end{enumerate}
+                          \item Conclusion: error probability is 1/r.
+                                \label{sec:org631d363}
+                        \end{enumerate}
+                  \item Weakened Validity
+                        \label{sec:orgecacf0a}
+                        \begin{itemize}
+                          \item suppose everyone starts with 0, no one can conclude 1 therefore everyone will
+                                conclude 0.
+                          \item suppose everyone starts with 1.
+                                \begin{itemize}
+                                  \item suppose no message lost, everyone will reach \textbf{bar} in \texttt{r} (\(r\ge bar\))
+                                        rounds. In fact, everyone will have \textbf{level} = \texttt{r}. Everyone will conclude 1.
+                                  \item suppose message lost, then can decide on anything.
+                                \end{itemize}
+                        \end{itemize}
+                \end{enumerate}
+        \end{enumerate}
+  \item Error probability of 1/\#rounds is a lower bound.
+        \label{sec:orge6193b0}
+        \begin{itemize}
+          \item proof can be found in Lynch.
+        \end{itemize}
+\end{enumerate}
+\subsection{Version 3: (Asynchronous) Node crash failures}
+\label{sec:orgdf19b89}
+\subsubsection{Setup}
+\label{sec:org78afd07}
+\begin{itemize}
+  \item Nodes can crash (indefinitely), but channels are reliable
+  \item Asynchronous: message delay is unbounded
+  \item Impact: can no longer define a round
+\end{itemize}
+\subsubsection{Fischer-Lynch-Paterson (FLP) Impossibility Theorem}
+\label{sec:org3e9aec6}
+Statement: the distributed consensus problem under the asynchronous timing model
+is impossible to solve, even with a \textbf{single} node crash failure.
+\begin{itemize}
+  \item Fundamental reason: the protocol is unable to accurately detect node failure.
+\end{itemize}
+\subsection{Version 4: (Synchronous) Byzantine Failures}
+\label{sec:org7026a71}
+\subsubsection{Failure Model}
+\label{sec:orgb5ec6a5}
+Each node can ``lie'' about its input.
+\subsubsection{Modified goals - everything only applies to non-faulty nodes}
+\label{sec:org9b180d8}
+\subsubsection{A simple (unsuccessful) attempt}
+\label{sec:orgd0f876e}
+\begin{enumerate}
+  \item (Byzantine fault) A tells B 1, A tells C 0.
+        B tells everyone 1.
+        C tells everyone 0.
+        \begin{center}
+          \begin{tabular}{ll}
+            node & received\\
+            \hline
+            A & 1, 1, 0\\
+            B & 1, 1, 0\\
+            C & 0, 1, 0\\
+          \end{tabular}
+        \end{center}
+  \item Anyone could be lying. C decides B is lying -> it decides on 0. Similarly, B
+        will decide on 1, violating Agreement.
+  \item Furthermore, if you cross-check, you are not sure if the person you
+        cross-check with is reliable.
+\end{enumerate}
+\subsubsection{Theorem: Byzantine Consensus Threshold}
+\label{sec:orgdbbb288}
+\begin{itemize}
+  \item Theorem: if number of processes \texttt{n}, number of byzantine failures \texttt{f}, if
+        \texttt{n<=3f}, then any protocol cannot reach consensus.
+  \item Proof: omitted.
+\end{itemize}
+\subsubsection{A protocol for \# nodes n >= 4f+1}
+\label{sec:orgaa3c626}
+\begin{enumerate}
+  \item Definitions
+        \label{sec:orgd8bddc9}
+        \begin{itemize}
+          \item We have \emph{phases}.
+          \item Each phase has a \emph{coordinator} which sends a proposal to all processes.
+          \item If everyone decides, we have an agreement.
+          \item A phase is a \emph{deciding phase} if the coordinator is nonfaulty.
+          \item Each phase has a 3 rounds: broadcast, coordinator, decision.
+        \end{itemize}
+  \item Protocol
+        \label{sec:orgb486711}
+        \begin{enumerate}
+          \item Setup: maintain everyone's value initialized to 0, my value = my input.
+          \item Repeat the following steps (called a phase) for \texttt{f+1} times:
+                \begin{enumerate}
+                  \item Round 1: all-to-all broadcast. Send my input to everyone (including
+                        myself). Record all msg received (if msg is non-binary or null, set it to
+                        0). If there is a majority (occurrence > n/2) value, let \texttt{proposal} be that
+                        value, otherwise \texttt{proposal} is 0.
+                  \item Round 2: coordinator. if I am the coordinator (the ith phase has the ith node as
+                        coord), send proposal to all, otherwise receive a proposal.
+                  \item Round 3: if there is an overwhelming majority in V (already determined in
+                        R1), ie > n/2 + f, set my value to that majority value, otherwise set it
+                        to the proposal.
+                \end{enumerate}
+          \item After phases end, conclude with my value.
+        \end{enumerate}
+  \item Correctness - invariance for every round
+        \label{sec:orge902a7a}
+        \begin{enumerate}
+          \item Lemma 1: all non-faulty processes retain \texttt{y} if all their values are \texttt{y}
+                \label{sec:orgc4d10a8}
+                Since \(n \ge 4f+1\), we must have \(n-f \ge 3f+1 \ge (4f + 1)/2 + f = n/2 + f\).
+                This means the non-faulty nodes must be a overwhelming majority. Suppose they
+                all have the same value at the start of phase \texttt{k}, they must retain these values
+                at end of phase \texttt{k} forced by round 3.
+          \item Lemma 2: if coord is nonfaulty, then all nonfaulty processes have the same value after a round k.
+                \label{sec:orgec8b153}
+                The coordinator can propose two values:
+                \begin{enumerate}
+                  \item Proposes some \texttt{x}. \texttt{x} occurs MORE THAN \texttt{n/2} times on coordinator process.
+                        Worst case, \texttt{f} out of \texttt{n/2} are faulty. These MORE THAN \texttt{n/2-f} non-faulty
+                        nodes must broadcast exactly these values to others, thus on any other nodes,
+                        they cannot have another value \texttt{y} having the overwhelming majority (\texttt{y} can
+                        only have LESS THAN \texttt{n/2+f} votes) in R3 and can thus only accept the
+                        proposal.
+                  \item Proposes 0. This means out of all the values coord sees, none exceed \texttt{n/2}.
+                        It means none of these values will reach overwhelming majority MORE THAN
+                        \texttt{n/2+f} since the amount can differ by atmost f.
+                \end{enumerate}
+          \item Termination - we let there be f+1 phases. No wait => termination.
+                \label{sec:orgf61872d}
+          \item Validity - by lemma 1, the invariance make them decide its input.
+                \label{sec:org9adb32d}
+          \item Agreement
+                \label{sec:org3ac6d38}
+                \begin{itemize}
+                  \item \texttt{f+1} phases means at least one good phase.
+                  \item The one good phase triggers lemma 2.
+                  \item Lemma 2 triggers lemma 1, agreeing on the value as per lemma 1.
+                \end{itemize}
+        \end{enumerate}
+\end{enumerate}
 \end{document}

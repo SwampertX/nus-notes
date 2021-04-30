@@ -4,7 +4,7 @@
 - $a\prec b$ is process order.
 - $a\to b$ is happen-before order: the logical clock value is less than, iff
   there is a directed path. Clearly $a\prec b\implies a\to b$.
-- $a\leadsto b$ There is also send-receive order.
+- $a\leadsto b$ is the send-receive order.
 * Lecture 5 Global Snapshot
 Assumption: channels are FIFO. If not, it is discussed in Message Ordering
 lecture
@@ -62,7 +62,7 @@ so far.
 *** Summary
 It orders messages, not logical clock numbers. Each logical clock value run as
 usual.
-* Leader Election
+* Lecture 7 Leader Election
 ** Chang-Roberts Algorithm for Leader Election
 *** Setting
 Given a ring of nodes that can only send messages clockwise, select a leader
@@ -84,16 +84,68 @@ Condition: sorted in clockwise descending
 * Lecture 8 Consensus
 ** Timing Models
 *** Synchronous
-Bounded amount of time to do processing, and bounded amount of time to send
-messages
-** Version 0: No failure
+- Bounded amount of time to do processing (generate output msg, process input
+  msg)
+- and bounded amount of time to send messages
+** Goals/Conditions for consensus
+*** Termination
+*** Agreement
+*** Validity
+** Version 0: No failure (regardless of timing model)
 *** Algorithm
 For any process:
 1. Keep broadcasting own value
 2. Once confident have all messages (due to known ub), run a deterministic
    algorithm on all values (eg. max/min)
-** TODO Version 1:
-** Version 2: Consensus with Link Failures (Synchronous)
+*** When does it work?
+**** TODO Synchronous
+**** TODO Async
+** Version 1: (Synchronous) Node crash failures
+*** Setup
+- Synchronous, all nodes have bounded processing time, all message has bounded
+  delay
+- Crash failure - crashes forever. On a "round" that it crashes, broadcast might
+  not happen/not be complete.
+*** Intuition
+- We use rounds to gain information on crash: if no reply, then crashed.
+- How to delineate rounds: let t1 be delay to generate output, t2 for message
+  propagation, t3 to process input, then each round is simply =t1+t2+t3= long.
+**** Suppose we don't have accurate clock
+- Claim: every clock should be some constant multiple of other clocks.
+- Consider a case where clock = 2x accurate clock.
+  + Attempt 1: everyone set round duration to =2(t1+t2+t3)=. The process with
+    faster clock will advance rounds faster. Then every process that receives a
+    new message starts a new round. But what if a round starts before a process
+    has time to process its received message?
+  + Attempt 2: We provide the offset, making the round duration
+    =2(t1+t2+t3+(t1+t2))=, the new offset tolerates the message delay(process
+    output, send msg) to the "latest" node.
+*** Protocol
+**** Intuition
+- suppose there is no failure, we can just broadcast our message to everyone and conclude.
+- Since there can be a failure, we can *"forward"* all messages received in our broadcast.
+- What is left is to decide how many rounds are needed.
+**** Details
+1. Intialize the set =S:={my_input}=.
+2. Broadcast S to everyone for =f+1= rounds (where f is number of node crashes
+   to tolerate)
+3. Union S with all the sets received in this round, and repeat 2.
+**** Correctness
+***** Termination is obvious (f+1 rounds, bounded waiting)
+***** Validity is obvious (if everyone same input, S = {s} is singleton)
+***** Agreement
+1. Given f+1 rounds and f failure, there must be at least 1 round with no
+   failure. Call that the good round.
+2. See that the good round must end with all nodes (that haven't crashed) with
+   the same set =S=.
+3. After the good round, each nodes's =S= do not change anymore.
+4. Then the deterministic function will choose the same value for all surviving
+   nodes.
+*** Lower bound is (Omega(f))
+ - Statement: any deterministic algorithm that works (fulfills termination,
+   agreement, validity) must take at least f+1 rounds.
+ - Proof is too hard (not in scope).
+** Version 2: (Synchronous) Link Failure
 *** Setup
 - nodes do not fail
 - but the message channels (between any pair of processes) can fail arbitrarily
@@ -102,45 +154,138 @@ For any process:
 - Termination: all nodes eventually decide
 - Agreement: all nodes settle on one same value
 - Validity: if all started as same value, must settle on that value.
-**** TODO There is no deterministic algorithm
-1. Suppose there is one. Two processes with a eternally failing channel
+**** There is no deterministic algorithm
+1. Suppose there is one. Two processes with a eternally failing channel. Assume
+   both have input 1, then has to conclude with 1.
+   | process | input | conclusion |
+   |---------+-------+------------|
+   | A       |     1 |          1 |
+   | B       |     1 |          1 |
+2. Suppose process B has input 0. To A, this is indistinguishable from B having
+   input 1 since they cannot communicate. Thus B will still conclude 1.
+   | process | input | conclusion            |
+   |---------+-------+-----------------------|
+   | A       |     1 | 1 (indistinguishable) |
+   | B       |     0 | 1                     |
+3. By Agreement, B will conclude as 1 too, force by A's ignorant conclusion.
+   | process | input | conclusion    |
+   |---------+-------+---------------|
+   | A       |     1 | 1             |
+   | B       |     0 | 1 (Agreement) |
+4. Now suppose A has input 0 as well. To B, this is indistinguishable from A
+   having 1 (remember by 2, 3, A having 1 forces B to conclude 1) so it will
+   still conclude with 1.
+   | process | input | conclusion            |
+   |---------+-------+-----------------------|
+   | A       |     0 | 1                     |
+   | B       |     0 | 1 (indistinguishable) |
+5. Then A will be forced to conclude with 1, violating Validity. Contradiction.
+   | process | input | conclusion   |
+   |---------+-------+--------------|
+   | A       |     0 | 1 (validity) |
+   | B       |     0 | 1            |
 *** Goal 2: T, A, Weakened Validity
+- Since validity was violated just now, we try to weaken it. Is consensus
+  possible now?
 - If all start from 0, should settle on 0
 - If all start from 1, then must settle on 1 only if no message is lost
-**** TODO Still no deterministic algorithm.
+**** Still no deterministic algorithm.
 - Lemma: if two processes start with 1, and one process's last message is lost,
   none detects it. Then the one who lost, B, didn't know it lost, hence is
   *indistinguishable* from nothing is lost and must settle on 1. By agreement, A
   should settle on 1 as well.
-- But we can still chain indistinguishability from 0, 0 to 1, 1 and force a
-  contradiction (settle on 0, 0 given 1, 1, when all messages are lost)
+- Using the lemma above, we can still chain indistinguishability from 0, 0 to 1,
+  1 and force a contradiction (settle on 0, 0 given 1, 1, when all messages are
+  lost)
+***** Proof of no deterministic algorithm
+Essentially the same as in the previous Goal, but start with 0,0. Achieve
+contradiction not by validity (we weakened it thus would not be contradicted),
+but consider an undetected loss of last message, which has to conclude with 1,1.
 *** Goal 3: T, Limited Agreement, Weakened Validity
 - Limited Agreement: all nodes decide on the same value with probability =
-  (1-\epsilon)
-**** Randomized Algorithm that works
-1. Setup: P1, P2, where P1 sets the # of rounds (called *bar*) randomly. Each
-   process has an *input*, 0 or 1. Each process has a value called *level*,
-   initialized to 0.
-2. Send messages and receive messages for r rounds. Each message contain bar (if
-   you know it), input, and its level. Upon receive, update own level: =my_level
-   = their_level + 1=.
+  (1-$\epsilon$)
+**** The concept of adversary
+We imagine the message losses are not just random, but as bad as possible, as if
+designed by an adversary to destroy our plans for consensus. Then we do a worst
+case analysis against this adversary.
+**** Randomized Algorithm that works with error (1/r)
+1. Setup: We have processes P1, P2, etc.
+   - All random choices not known by adversary beforehand.
+   - Let the total number of rounds to be =r=.
+   - Each process has an *input*, 0 or 1. Each process has a value called
+     *level*, initialized to 0.
+   - P1 sets the a *bar* randomly between 1 and r, inclusive. Every process
+     tries to increment *level* so that they reach the *bar* over the =r=
+     rounds.
+2. Broadcast messages and receive messages for r rounds. Each message contain
+   *bar* (if you know it), *input*, and own *level*. Upon receive, update own
+   *level* to =l+1= if everyone is at least level =l=.
 3. We can inductively show that every pair of levels must differ by at most one
    at every round.
 4. Once r rounds are over, decide on 1 IFF you know that everyone has input 1
    AND you know bar (trivial for P1) AND level >= bar.
 ***** Analysis
-****** TODO Errors
-Error only happens if P1 decide on 1 while P2 decide on 0 (WLOG).
-******* Case 1: P1 does not receive from P2 at all, but P2 does
-- Then L1 = 0 (does not receive) and L2 = 1 (received at least 1)
-- P1 must not know P2's input and hence output 0, and error only occurs if P2
-  output 1 IFF L2 = 1 >= bar (is a postive value) = 1.
-
-******* Case 1: P1 does not receive from P2 at all, but P2 does
-- Then L1 = 0 (does not receive) and L2 = 1 (received at least 1)
-- P1 must not know P2's input and hence output 0, and error only occurs if P2
-  output 1 IFF L2 = 1 >= bar (is a postive value) = 1.
-** Version 3: Node crash failures (Asynchronous)
+****** Termination (obvious by =r= rounds)
+****** Agreement with probability (1-1/r)
+- Since not every process's *level* will reach *bar*, not everyone can decide
+correctly (eg, should decide 1 but limited by insufficient level). We then
+analyze what is the probability for these events.
+- Error only happens if P1 decide on 1 while P2 decide on 0 (WLOG).
+- Denote P1's level as L1, P2's level as L2.
+******* Scenario: One process decides 1, the other process decides 0
+******** Case 1: P1 hears P2, but P2 never heard from P1 at all
+- Then P2 must have level 0 (L2 = 0). It never heard from P1 and does not know
+  bar, hence will conclude 0.
+  | process | level | decision |
+  |---------+-------+----------|
+  | P1      |       |          |
+  | P2      |     0 |        0 |
+- P1 hears P2 so must have level 1 (L1 = 1). To be an error case, it must
+  decide 1.
+  | process | level | decision |
+  |---------+-------+----------|
+  | P1      |     1 |        1 |
+  | P2      |     0 |        0 |
+- What do we know, now P1 decides 1? All conditions below must be fulfilled:
+  1. Knows bar (no new info, P1 set the bar)
+  2. All inputs are 1
+  3. 1 >= bar. Since bar is at least 1, bar = 1.
+********* Conclusion: only happens when bar = 1, probability = 1/r
+******** Case 2: P2 hears P1, but P1 never heard from P2 at all
+- Then P1 must have level 0 (L1 = 0). It never heard from P2 and does not know
+  P2's input, hence will conclude 0.
+  | process | level | decision |
+  |---------+-------+----------|
+  | P1      |     0 |        0 |
+  | P2      |       |          |
+- P2 hears P1 so must have level 1 (L2 = 1). To be an error case, it must
+  decide 1.
+  | process | level | decision |
+  |---------+-------+----------|
+  | P1      |     0 |        0 |
+  | P2      |     1 |        1 |
+- What do we know, now P2 decides 1? All conditions below must be fulfilled:
+  1. Knows bar (no new info, P2 heard from P1)
+  2. All inputs are 1
+  3. 1 = L2 >= bar. Since bar is at least 1, bar = 1.
+********* Conclusion: only happens when bar = 1, probability = 1/r
+******** Case 3: P1 did not hear from P2 and vice versa
+This case would not cause error, since they will both conclude 0.
+******** Case 4: P1 heard from P2 and vice versa
+- The only violatable condition before concluding 1, is that =level<bar=.
+- Their *level* difference is at most one (by lemma).
+- Probability is =1/r=, when the *bar* is set to the maximum of the two.
+******* Conclusion: error probability is 1/r.
+****** Weakened Validity
+- suppose everyone starts with 0, no one can conclude 1 therefore everyone will
+  conclude 0.
+- suppose everyone starts with 1.
+  + suppose no message lost, everyone will reach *bar* in =r= ($r\ge bar$)
+    rounds. In fact, everyone will have *level* = =r=. Everyone will conclude 1.
+  + suppose message lost, then can decide on anything.
+**** Error probability of 1/#rounds is a lower bound.
+- proof can be found in Lynch.
+** Version 3: (Asynchronous) Node crash failures
 *** Setup
 - Nodes can crash (indefinitely), but channels are reliable
 - Asynchronous: message delay is unbounded
@@ -149,3 +294,67 @@ Error only happens if P1 decide on 1 while P2 decide on 0 (WLOG).
 Statement: the distributed consensus problem under the asynchronous timing model
 is impossible to solve, even with a *single* node crash failure.
 - Fundamental reason: the protocol is unable to accurately detect node failure.
+** Version 4: (Synchronous) Byzantine Failures
+*** Failure Model
+Each node can "lie" about its input.
+*** Modified goals - everything only applies to non-faulty nodes
+*** A simple (unsuccessful) attempt
+1. (Byzantine fault) A tells B 1, A tells C 0.
+   B tells everyone 1.
+   C tells everyone 0.
+   | node | received |
+   |------+----------|
+   | A    | 1, 1, 0  |
+   | B    | 1, 1, 0  |
+   | C    | 0, 1, 0  |
+2. Anyone could be lying. C decides B is lying -> it decides on 0. Similarly, B
+   will decide on 1, violating Agreement.
+3. Furthermore, if you cross-check, you are not sure if the person you
+   cross-check with is reliable.
+*** Theorem: Byzantine Consensus Threshold
+- Theorem: if number of processes =n=, number of byzantine failures =f=, if
+  =n<=3f=, then any protocol cannot reach consensus.
+- Proof: omitted.
+*** A protocol for # nodes n >= 4f+1
+**** Definitions
+- We have /phases/.
+- Each phase has a /coordinator/ which sends a proposal to all processes.
+- If everyone decides, we have an agreement.
+- A phase is a /deciding phase/ if the coordinator is nonfaulty.
+- Each phase has a 3 rounds: broadcast, coordinator, decision.
+**** Protocol
+1. Setup: maintain everyone's value initialized to 0, my value = my input.
+2. Repeat the following steps (called a phase) for =f+1= times:
+   a. Round 1: all-to-all broadcast. Send my input to everyone (including
+      myself). Record all msg received (if msg is non-binary or null, set it to
+      0). If there is a majority (occurrence > n/2) value, let =proposal= be that
+      value, otherwise =proposal= is 0.
+   b. Round 2: coordinator. if I am the coordinator (the ith phase has the ith node as
+      coord), send proposal to all, otherwise receive a proposal.
+   c. Round 3: if there is an overwhelming majority in V (already determined in
+      R1), ie > n/2 + f, set my value to that majority value, otherwise set it
+      to the proposal.
+3. After phases end, conclude with my value.
+**** Correctness - invariance for every round
+***** Lemma 1: all non-faulty processes retain =y= if all their values are =y=
+Since $n \ge 4f+1$, we must have $n-f \ge 3f+1 \ge (4f + 1)/2 + f = n/2 + f$.
+This means the non-faulty nodes must be a overwhelming majority. Suppose they
+all have the same value at the start of phase =k=, they must retain these values
+at end of phase =k= forced by round 3.
+***** Lemma 2: if coord is nonfaulty, then all nonfaulty processes have the same value after a round k.
+The coordinator can propose two values:
+1. Proposes some =x=. =x= occurs MORE THAN =n/2= times on coordinator process.
+   Worst case, =f= out of =n/2= are faulty. These MORE THAN =n/2-f= non-faulty
+   nodes must broadcast exactly these values to others, thus on any other nodes,
+   they cannot have another value =y= having the overwhelming majority (=y= can
+   only have LESS THAN =n/2+f= votes) in R3 and can thus only accept the
+   proposal.
+2. Proposes 0. This means out of all the values coord sees, none exceed =n/2=.
+   It means none of these values will reach overwhelming majority MORE THAN
+   =n/2+f= since the amount can differ by atmost f.
+***** Termination - we let there be f+1 phases. No wait => termination.
+***** Validity - by lemma 1, the invariance make them decide its input.
+***** Agreement
+- =f+1= phases means at least one good phase.
+- The one good phase triggers lemma 2.
+- Lemma 2 triggers lemma 1, agreeing on the value as per lemma 1.
