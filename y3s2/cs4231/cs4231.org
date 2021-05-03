@@ -1,5 +1,57 @@
 #+TITLE: Cs4231
 
+* Lecture 3 Consistency Models
+** Definitions
+*** History
+The set of all events (invocation and responses) ordered by wall clock.
+Histories are always totally ordered.
+*** Equivalent histories
+Two histories are equivalent if they contain the exact same events.
+*** Sequential history
+A history is sequential if every /response/ follows its /invocation/ immediately
+with no interleaving.
+*** Concurrent history
+A history that has some interleaving.
+*** Legal sequential history
+A sequential history is /legal/ if the /sequential semantics/ of the data types
+are satisfied.
+*** External order
+Is the relation that e1 < e2 if e1's response happens before e2's invocation.
+** Sequential consistency
+A history is /sequentially consistent/ if it is /equivalent/ to some
+/legal sequential history/ that preserves /process order/.
+- Intuitively, break history into processes, and feel free to slide the
+  (inv, resp) pairs in a process until there is an execution which all objects
+  behave as expected.
+** Linearizability
+A history is linearizable if
+- Definition 1: history is equivalent to some other history where each (inv,
+  resp) pair is treated as a point between them.
+- Definition 2: there exist an equivalent history that is legal and preserves
+  the external order (which implies process order).
+*** Linearizability is a local property
+A history H is linearizable $\iff$ H|x is linearizable for all objects x.
+*** Linearizability implies sequential consistency.
+Easily seen in definition 2: external order is a superset of process order.
+* Lecture 4 Models and Clocks
+** Logical Clock
+- form: a nonnegative integer, initialized to 0
+- increment on process: += 1
+- sending: just my clock
+- upon receive from other process: my_clock = max(my_clock, their_clock) + 1
+** Vector Clock
+- form: a vector of =n= nonnegative integer, initialized to all 0
+- increment on process: if my index is i, v[i] += 1
+- sending: just my clock
+- upon receive from other process: my_clock[k] = max(my_clock[k],
+  their_clock[k]) for all k
+** Matrix clock
+- form: a =n x n= matrix of nonnegative integer, initialized to all 0
+- intuition: the ith row is what i know.
+- increment on process: if my index is i, v[i][i] += 1
+- sending: just my clock
+- upon receive from other process: update their row. update my row as per vector
+  clock - pairwise max.
 * Arrows
 - $a\prec b$ is process order.
 - $a\to b$ is happen-before order: the logical clock value is less than, iff
@@ -14,13 +66,17 @@ A set of events =E= such that for any event =e= in =E=, if $f\prec e$, then
 $f\in E$.
 *** Consistent global snapshot
 A global snapshot where if $e_1$ send, $e_2$ receive, $e_2$ in then $e_1$ must be in.
-** Chandy & Lamport's protocal for taking snapshots
+** Chandy & Lamport's protocol for taking snapshots
 - Key idea:
   1. after a process takes a snapshot, it orders others to stop via a message
   2. If they already took a snapshot before the order arrives, then capture all
      message till the order (these are the on-the-fly messages)
   3. Otherwise once they receive the order, stop. (otherwise will receive stuff
      which sender does not include)
+** Theorems
+- On any process, given a positive integer M, there exist a global snapshot
+  containing all events up to and including M, and does not include anything
+  after.
 * Lecture 6 Message Ordering
 We still assume FIFO (except for fully async order) for inter-process channels.
 ** Definitions
@@ -29,11 +85,17 @@ No restriction.
 *** FIFO
 Messages $s_1,s_2$ are sent from i to j. Then $\neg(s_2\prec s_1)$.
 *** Causally Ordered
-If $s_1$ happen before $s_2$, $r_1, r_2$ on the same process, then $r_1\prec
+- Motivation: if $s_1$ caused $s_2$, then we must ensure $r_1$ is before $r_2$
+  if the receives are on the same process.
+- Causal relationship is not modelled. However, more broadly, if $s_1$ happened
+  before $s_2$, it could cause $s_2$.
+- If $s_1$ happen before $s_2$, $r_1, r_2$ on the same process, then $r_1\prec
 r_2$.
 *** Synchronous Ordered
 Diagram can be redrawn into vertical, respecting happen-before, process and
 send-receive order.
+*** Totally ordered broadcast
+If on p1, $x<y$, then on p2, $x<y$.
 ** Algorithm to ensure Causal Ordering
 *** Core Idea
 When a process sends a message, attach also every message you have seen or sent
@@ -56,31 +118,85 @@ so far.
 *** Core Idea
 1. First round - send message to everyone to save in the buffer. After saving,
    each process replies the coordinator their current logical clock number.
-2. Wait for all them to come back, and assign the message the largest logical
-   clock number.
+2. Wait (blocking) for all them to come back, and assign the message the largest
+   logical clock number.
 3. Let everyone know the decided message number.
+4. Continue as per usual.
 *** Summary
 It orders messages, not logical clock numbers. Each logical clock value run as
 usual.
 * Lecture 7 Leader Election
-** Chang-Roberts Algorithm for Leader Election
-*** Setting
+** Motivation
+Leader election can
+1. Coordinate messages. It trivially solves totally ordered broadcast by having
+   the leader numbering the messages.
+2. Control over shared memory, trivially solving mutual exclusion.
+** Node Topologies
+Different arrangement of nodes give rise to different algorithms.
+*** Rings
+**** Anonymous rings - impossible for deterministic algos
+***** Known ring size - randomized algorithm
+1. Every node choose a random number from 1 to n, then run Chang-Roberts
+   algorithm.
+2. Every node attach a read_count tag on each message. If a node receive its id
+   with read_count = ring size, it is (one of the) winners.
+3. Winners go to a second round. If the links are FIFO, it will know it is the
+   leader if no message was received before getting own message.
+****** Analysis - ensure termination
+Idea: call a round good if it kicks out a node. We denote the number of rounds
+between good round i and i+i as $x_i$, and deduce that $x_i$ drops below
+$r/(n-1)$ as $r$, the number of total rounds get huge. With a union bound, we
+can show that the total number of rounds is less than r goes with probability 1.
+***** Unknown ring size - impossible
+Consider two rings, one with one node, the other with two. Then a node cannot
+distinguish it is in the first kind or the second kind, so any algorithm that
+solves will declare both processes as leader in the second ring.
+**** Numbered rings - Chang-Roberts Algorithm
+***** Setting
 Given a ring of nodes that can only send messages clockwise, select a leader
-*** Algorithm
+***** Algorithm
 1. Sending: Every node send its number clockwise
 2. Receiving: Every node relay the message (clockwise) if the value is bigger
    than self.
 3. If receive own id, then it is the leader
-*** Complexity
-**** Message Complexity
+***** Complexity
+****** Message Complexity
 Number of messages sent
-**** Best Case
+****** Best Case = O(n)
 Condition: sorted in clockwise ascending
 1+...+1+n = 2n-1
-**** Worst case
+****** Worst case = O(n^2)
 Condition: sorted in clockwise descending
 1 + 2 + ... + n = n(n+1)/2
-**** Average case?
+****** Average case = O(nlogn)
+1. Consider the random variables $x_k$ denoting the number of messages caused by
+   node =k=. We want to find the expectation of the sum of all $x_k$, and by
+   linearity of expectation, it is the sum of the expectation of each $x_k$.
+2. Fix =k=.
+   a. For $x_k=1$, we must have the node clockwise of =k= be greater than =k=. The probability is $\frac{n-k}{n-1}$.
+   b. Repeat for other values of $x_k$. We will get
+      $P[x_k=i|x_k>i-1]=\frac{n-k}{n-i}$ by similar analysis.
+   c. Note that all these values are at least $p=\frac{n-k}{n-1}$.
+3. Consider a lottery where each ticket has a probability of $p$ to win. The
+   expectation of number of tickets to win is $1/p$. Since we have probabilities of at
+   least $p$ for each number of tickets (corresponsdingly number of messages),
+   the expectation $E[x_k]\ge E[y] = 1/p =\frac{n-1}{n-k}$.
+4. Summing up through $k=1,\ldots,n$, and using the fact that
+   $1+1/2+\ldots+1/n=O(\log n)$, we have $O(n\log n)$ as desired.
+*** Complete graphs
+1. Know how many nodes there are in the network (protocol below).
+2. Trivially broadcast own id to every neighbour (all n-1). When receiving an ID,
+reply with the samd ID if it is larger. Node that receives n-1 replies is the leader.
+*** Any connected graph
+1. Construct a spanning tree.
+   a. Initiating node (can be anyone) sends out "child requests".
+   b. Any node receiving "child request" respond to one of them. Recursively
+      send out "child requests".
+   c. You are the root of the node if you don't have a parent. And those
+      children that respond to you are your children.
+2. Now with the spanning tree we can aggregate information easily.
+   a. Eg. counting total # of nodes. Root node ask children to recursively count
+      size, and just sum them up. Leaves respond 1.
 * Lecture 8 Consensus
 ** Timing Models
 *** Synchronous
