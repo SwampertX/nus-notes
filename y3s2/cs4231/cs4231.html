@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-03 Mon 15:48 -->
+<!-- 2021-05-04 Tue 08:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cs4231</title>
@@ -239,158 +239,16 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="content">
-<h1 class="title">Cs4231</h1>
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#orgc6fecd3">1. Lecture 3 Consistency Models</a>
-<ul>
-<li><a href="#orgc3cb0e3">1.1. Definitions</a>
-<ul>
-<li><a href="#org0f8f4cf">1.1.1. History</a></li>
-<li><a href="#orga794058">1.1.2. Equivalent histories</a></li>
-<li><a href="#orgbb2f5d2">1.1.3. Sequential history</a></li>
-<li><a href="#orgeb6b2bf">1.1.4. Concurrent history</a></li>
-<li><a href="#org914a95c">1.1.5. Legal sequential history</a></li>
-<li><a href="#org75bd797">1.1.6. External order</a></li>
-</ul>
-</li>
-<li><a href="#orgb1eebb1">1.2. Sequential consistency</a></li>
-<li><a href="#org3d4b536">1.3. Linearizability</a>
-<ul>
-<li><a href="#org9e0eb7b">1.3.1. Linearizability is a local property</a></li>
-<li><a href="#org2897dca">1.3.2. Linearizability implies sequential consistency.</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#org438fda7">2. Lecture 4 Models and Clocks</a>
-<ul>
-<li><a href="#orgd572990">2.1. Logical Clock</a></li>
-<li><a href="#orgc9e4538">2.2. Vector Clock</a></li>
-<li><a href="#orgaa85892">2.3. Matrix clock</a></li>
-</ul>
-</li>
-<li><a href="#org2dd06b1">3. Arrows</a></li>
-<li><a href="#org0487bfe">4. Lecture 5 Global Snapshot</a>
-<ul>
-<li><a href="#org0f9faa3">4.1. Definitions</a>
-<ul>
-<li><a href="#org30d3673">4.1.1. Global snapshot</a></li>
-<li><a href="#org1f3e3a1">4.1.2. Consistent global snapshot</a></li>
-</ul>
-</li>
-<li><a href="#org7ecd5fc">4.2. Chandy &amp; Lamport&rsquo;s protocol for taking snapshots</a></li>
-<li><a href="#orge65a564">4.3. Theorems</a></li>
-</ul>
-</li>
-<li><a href="#orgea5ec7f">5. Lecture 6 Message Ordering</a>
-<ul>
-<li><a href="#orgf0ba885">5.1. Definitions</a>
-<ul>
-<li><a href="#orgacaa0f7">5.1.1. Fully Asynchronous</a></li>
-<li><a href="#orgfba04e4">5.1.2. FIFO</a></li>
-<li><a href="#org67e2a2b">5.1.3. Causally Ordered</a></li>
-<li><a href="#org4d5e806">5.1.4. Synchronous Ordered</a></li>
-<li><a href="#org3009bcc">5.1.5. Totally ordered broadcast</a></li>
-</ul>
-</li>
-<li><a href="#orgef02023">5.2. Algorithm to ensure Causal Ordering</a>
-<ul>
-<li><a href="#orgd0acf43">5.2.1. Core Idea</a></li>
-<li><a href="#org8e37811">5.2.2. Why does it work?</a></li>
-<li><a href="#org0a395a3">5.2.3. Can we improve it?</a></li>
-</ul>
-</li>
-<li><a href="#orgbcb527e">5.3. Skeen&rsquo;s Algorithm for Broadcast Ordering</a>
-<ul>
-<li><a href="#orgd5dd600">5.3.1. Core Idea</a></li>
-<li><a href="#org427197c">5.3.2. Summary</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#orgd26f2c1">6. Lecture 7 Leader Election</a>
-<ul>
-<li><a href="#orgfa4626a">6.1. Motivation</a></li>
-<li><a href="#org698fc97">6.2. Node Topologies</a>
-<ul>
-<li><a href="#orga065d17">6.2.1. Rings</a></li>
-<li><a href="#org22c72c4">6.2.2. Complete graphs</a></li>
-<li><a href="#orgfaf0fb0">6.2.3. Any connected graph</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#orgafe4b60">7. Lecture 8 Consensus</a>
-<ul>
-<li><a href="#org709803a">7.1. Timing Models</a>
-<ul>
-<li><a href="#org132b530">7.1.1. Synchronous</a></li>
-</ul>
-</li>
-<li><a href="#org9dd95e6">7.2. Goals/Conditions for consensus</a>
-<ul>
-<li><a href="#orgab7d8c2">7.2.1. Termination</a></li>
-<li><a href="#org856bb95">7.2.2. Agreement</a></li>
-<li><a href="#org80a91c9">7.2.3. Validity</a></li>
-</ul>
-</li>
-<li><a href="#orga7e30fb">7.3. Version 0: No failure (regardless of timing model)</a>
-<ul>
-<li><a href="#org50a38ff">7.3.1. Algorithm</a></li>
-<li><a href="#org0781037">7.3.2. When does it work?</a></li>
-</ul>
-</li>
-<li><a href="#org6cfe3ba">7.4. Version 1: (Synchronous) Node crash failures</a>
-<ul>
-<li><a href="#org04ab1a7">7.4.1. Setup</a></li>
-<li><a href="#org8ca12a3">7.4.2. Intuition</a></li>
-<li><a href="#org33b6d37">7.4.3. Protocol</a></li>
-<li><a href="#org0914321">7.4.4. Lower bound is (Omega(f))</a></li>
-</ul>
-</li>
-<li><a href="#org7b10ffe">7.5. Version 2: (Synchronous) Link Failure</a>
-<ul>
-<li><a href="#org55e6d4c">7.5.1. Setup</a></li>
-<li><a href="#org234a797">7.5.2. Goal 1: Termination, Agreement, Validity</a></li>
-<li><a href="#org81ac8a3">7.5.3. Goal 2: T, A, Weakened Validity</a></li>
-<li><a href="#orgeac3807">7.5.4. Goal 3: T, Limited Agreement, Weakened Validity</a></li>
-</ul>
-</li>
-<li><a href="#org5fdae82">7.6. Version 3: (Asynchronous) Node crash failures</a>
-<ul>
-<li><a href="#orge39a97a">7.6.1. Setup</a></li>
-<li><a href="#orgf596322">7.6.2. Fischer-Lynch-Paterson (FLP) Impossibility Theorem</a></li>
-</ul>
-</li>
-<li><a href="#orgcafb67e">7.7. Version 4: (Synchronous) Byzantine Failures</a>
-<ul>
-<li><a href="#org222dcd7">7.7.1. Failure Model</a></li>
-<li><a href="#orgc67fe8e">7.7.2. Modified goals - everything only applies to non-faulty nodes</a></li>
-<li><a href="#orgfc3c990">7.7.3. A simple (unsuccessful) attempt</a></li>
-<li><a href="#org8419b27">7.7.4. Theorem: Byzantine Consensus Threshold</a></li>
-<li><a href="#org0fb7ad6">7.7.5. A protocol for # nodes n &gt;= 4f+1</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-orgc6fecd3" class="outline-2">
-<h2 id="orgc6fecd3"><span class="section-number-2">1</span> Lecture 3 Consistency Models</h2>
+<div id="outline-container-org9633e11" class="outline-2">
+<h2 id="org9633e11"><span class="section-number-2">1</span> Lecture 3 Consistency Models</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgc3cb0e3" class="outline-3">
-<h3 id="orgc3cb0e3"><span class="section-number-3">1.1</span> Definitions</h3>
+<div id="outline-container-orgb20adec" class="outline-3">
+<h3 id="orgb20adec"><span class="section-number-3">1.1</span> Definitions</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org0f8f4cf" class="outline-4">
-<h4 id="org0f8f4cf"><span class="section-number-4">1.1.1</span> History</h4>
+<div id="outline-container-orgd6bdfb4" class="outline-4">
+<h4 id="orgd6bdfb4"><span class="section-number-4">1.1.1</span> History</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 The set of all events (invocation and responses) ordered by wall clock.
@@ -398,16 +256,16 @@ Histories are always totally ordered.
 </p>
 </div>
 </div>
-<div id="outline-container-orga794058" class="outline-4">
-<h4 id="orga794058"><span class="section-number-4">1.1.2</span> Equivalent histories</h4>
+<div id="outline-container-orgdde7362" class="outline-4">
+<h4 id="orgdde7362"><span class="section-number-4">1.1.2</span> Equivalent histories</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 Two histories are equivalent if they contain the exact same events.
 </p>
 </div>
 </div>
-<div id="outline-container-orgbb2f5d2" class="outline-4">
-<h4 id="orgbb2f5d2"><span class="section-number-4">1.1.3</span> Sequential history</h4>
+<div id="outline-container-orgb55df16" class="outline-4">
+<h4 id="orgb55df16"><span class="section-number-4">1.1.3</span> Sequential history</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 A history is sequential if every <i>response</i> follows its <i>invocation</i> immediately
@@ -415,16 +273,16 @@ with no interleaving.
 </p>
 </div>
 </div>
-<div id="outline-container-orgeb6b2bf" class="outline-4">
-<h4 id="orgeb6b2bf"><span class="section-number-4">1.1.4</span> Concurrent history</h4>
+<div id="outline-container-org3633aaf" class="outline-4">
+<h4 id="org3633aaf"><span class="section-number-4">1.1.4</span> Concurrent history</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 A history that has some interleaving.
 </p>
 </div>
 </div>
-<div id="outline-container-org914a95c" class="outline-4">
-<h4 id="org914a95c"><span class="section-number-4">1.1.5</span> Legal sequential history</h4>
+<div id="outline-container-orgddf4258" class="outline-4">
+<h4 id="orgddf4258"><span class="section-number-4">1.1.5</span> Legal sequential history</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
 A sequential history is <i>legal</i> if the <i>sequential semantics</i> of the data types
@@ -432,8 +290,8 @@ are satisfied.
 </p>
 </div>
 </div>
-<div id="outline-container-org75bd797" class="outline-4">
-<h4 id="org75bd797"><span class="section-number-4">1.1.6</span> External order</h4>
+<div id="outline-container-org87ccfdb" class="outline-4">
+<h4 id="org87ccfdb"><span class="section-number-4">1.1.6</span> External order</h4>
 <div class="outline-text-4" id="text-1-1-6">
 <p>
 Is the relation that e1 &lt; e2 if e1&rsquo;s response happens before e2&rsquo;s invocation.
@@ -441,8 +299,8 @@ Is the relation that e1 &lt; e2 if e1&rsquo;s response happens before e2&rsquo;s
 </div>
 </div>
 </div>
-<div id="outline-container-orgb1eebb1" class="outline-3">
-<h3 id="orgb1eebb1"><span class="section-number-3">1.2</span> Sequential consistency</h3>
+<div id="outline-container-org58b1de0" class="outline-3">
+<h3 id="org58b1de0"><span class="section-number-3">1.2</span> Sequential consistency</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 A history is <i>sequentially consistent</i> if it is <i>equivalent</i> to some
@@ -455,8 +313,8 @@ behave as expected.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org3d4b536" class="outline-3">
-<h3 id="org3d4b536"><span class="section-number-3">1.3</span> Linearizability</h3>
+<div id="outline-container-org29ad919" class="outline-3">
+<h3 id="org29ad919"><span class="section-number-3">1.3</span> Linearizability</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 A history is linearizable if
@@ -468,16 +326,16 @@ resp) pair is treated as a point between them.</li>
 the external order (which implies process order).</li>
 </ul>
 </div>
-<div id="outline-container-org9e0eb7b" class="outline-4">
-<h4 id="org9e0eb7b"><span class="section-number-4">1.3.1</span> Linearizability is a local property</h4>
+<div id="outline-container-org6eaa984" class="outline-4">
+<h4 id="org6eaa984"><span class="section-number-4">1.3.1</span> Linearizability is a local property</h4>
 <div class="outline-text-4" id="text-1-3-1">
 <p>
 A history H is linearizable \(\iff\) H|x is linearizable for all objects x.
 </p>
 </div>
 </div>
-<div id="outline-container-org2897dca" class="outline-4">
-<h4 id="org2897dca"><span class="section-number-4">1.3.2</span> Linearizability implies sequential consistency.</h4>
+<div id="outline-container-org5370d90" class="outline-4">
+<h4 id="org5370d90"><span class="section-number-4">1.3.2</span> Linearizability implies sequential consistency.</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <p>
 Easily seen in definition 2: external order is a superset of process order.
@@ -486,12 +344,12 @@ Easily seen in definition 2: external order is a superset of process order.
 </div>
 </div>
 </div>
-<div id="outline-container-org438fda7" class="outline-2">
-<h2 id="org438fda7"><span class="section-number-2">2</span> Lecture 4 Models and Clocks</h2>
+<div id="outline-container-org12d70ab" class="outline-2">
+<h2 id="org12d70ab"><span class="section-number-2">2</span> Lecture 4 Models and Clocks</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd572990" class="outline-3">
-<h3 id="orgd572990"><span class="section-number-3">2.1</span> Logical Clock</h3>
+<div id="outline-container-org8dcaf0b" class="outline-3">
+<h3 id="org8dcaf0b"><span class="section-number-3">2.1</span> Logical Clock</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>form: a nonnegative integer, initialized to 0</li>
@@ -501,8 +359,8 @@ Easily seen in definition 2: external order is a superset of process order.
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc9e4538" class="outline-3">
-<h3 id="orgc9e4538"><span class="section-number-3">2.2</span> Vector Clock</h3>
+<div id="outline-container-org33af82b" class="outline-3">
+<h3 id="org33af82b"><span class="section-number-3">2.2</span> Vector Clock</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>form: a vector of <code>n</code> nonnegative integer, initialized to all 0</li>
@@ -513,8 +371,8 @@ their<sub>clock</sub>[k]) for all k</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgaa85892" class="outline-3">
-<h3 id="orgaa85892"><span class="section-number-3">2.3</span> Matrix clock</h3>
+<div id="outline-container-org64e1d3e" class="outline-3">
+<h3 id="org64e1d3e"><span class="section-number-3">2.3</span> Matrix clock</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li>form: a <code>n x n</code> matrix of nonnegative integer, initialized to all 0</li>
@@ -527,8 +385,8 @@ clock - pairwise max.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org2dd06b1" class="outline-2">
-<h2 id="org2dd06b1"><span class="section-number-2">3</span> Arrows</h2>
+<div id="outline-container-org831b6a8" class="outline-2">
+<h2 id="org831b6a8"><span class="section-number-2">3</span> Arrows</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>\(a\prec b\) is process order.</li>
@@ -538,20 +396,20 @@ there is a directed path. Clearly \(a\prec b\implies a\to b\).</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0487bfe" class="outline-2">
-<h2 id="org0487bfe"><span class="section-number-2">4</span> Lecture 5 Global Snapshot</h2>
+<div id="outline-container-org3d25aff" class="outline-2">
+<h2 id="org3d25aff"><span class="section-number-2">4</span> Lecture 5 Global Snapshot</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Assumption: channels are FIFO. If not, it is discussed in Message Ordering
 lecture
 </p>
 </div>
-<div id="outline-container-org0f9faa3" class="outline-3">
-<h3 id="org0f9faa3"><span class="section-number-3">4.1</span> Definitions</h3>
+<div id="outline-container-org5cb1de4" class="outline-3">
+<h3 id="org5cb1de4"><span class="section-number-3">4.1</span> Definitions</h3>
 <div class="outline-text-3" id="text-4-1">
 </div>
-<div id="outline-container-org30d3673" class="outline-4">
-<h4 id="org30d3673"><span class="section-number-4">4.1.1</span> Global snapshot</h4>
+<div id="outline-container-org753ae3c" class="outline-4">
+<h4 id="org753ae3c"><span class="section-number-4">4.1.1</span> Global snapshot</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 A set of events <code>E</code> such that for any event <code>e</code> in <code>E</code>, if \(f\prec e\), then
@@ -559,8 +417,8 @@ A set of events <code>E</code> such that for any event <code>e</code> in <code>E
 </p>
 </div>
 </div>
-<div id="outline-container-org1f3e3a1" class="outline-4">
-<h4 id="org1f3e3a1"><span class="section-number-4">4.1.2</span> Consistent global snapshot</h4>
+<div id="outline-container-org1afb806" class="outline-4">
+<h4 id="org1afb806"><span class="section-number-4">4.1.2</span> Consistent global snapshot</h4>
 <div class="outline-text-4" id="text-4-1-2">
 <p>
 A global snapshot where if \(e_1\) send, \(e_2\) receive, \(e_2\) in then \(e_1\) must be in.
@@ -568,8 +426,8 @@ A global snapshot where if \(e_1\) send, \(e_2\) receive, \(e_2\) in then \(e_1\
 </div>
 </div>
 </div>
-<div id="outline-container-org7ecd5fc" class="outline-3">
-<h3 id="org7ecd5fc"><span class="section-number-3">4.2</span> Chandy &amp; Lamport&rsquo;s protocol for taking snapshots</h3>
+<div id="outline-container-org51c38af" class="outline-3">
+<h3 id="org51c38af"><span class="section-number-3">4.2</span> Chandy &amp; Lamport&rsquo;s protocol for taking snapshots</h3>
 <div class="outline-text-3" id="text-4-2">
 <ul class="org-ul">
 <li>Key idea:
@@ -583,8 +441,8 @@ which sender does not include)</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge65a564" class="outline-3">
-<h3 id="orge65a564"><span class="section-number-3">4.3</span> Theorems</h3>
+<div id="outline-container-orgb407bd7" class="outline-3">
+<h3 id="orgb407bd7"><span class="section-number-3">4.3</span> Theorems</h3>
 <div class="outline-text-3" id="text-4-3">
 <ul class="org-ul">
 <li>On any process, given a positive integer M, there exist a global snapshot
@@ -594,35 +452,35 @@ after.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgea5ec7f" class="outline-2">
-<h2 id="orgea5ec7f"><span class="section-number-2">5</span> Lecture 6 Message Ordering</h2>
+<div id="outline-container-org15cc8b5" class="outline-2">
+<h2 id="org15cc8b5"><span class="section-number-2">5</span> Lecture 6 Message Ordering</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 We still assume FIFO (except for fully async order) for inter-process channels.
 </p>
 </div>
-<div id="outline-container-orgf0ba885" class="outline-3">
-<h3 id="orgf0ba885"><span class="section-number-3">5.1</span> Definitions</h3>
+<div id="outline-container-orga50886a" class="outline-3">
+<h3 id="orga50886a"><span class="section-number-3">5.1</span> Definitions</h3>
 <div class="outline-text-3" id="text-5-1">
 </div>
-<div id="outline-container-orgacaa0f7" class="outline-4">
-<h4 id="orgacaa0f7"><span class="section-number-4">5.1.1</span> Fully Asynchronous</h4>
+<div id="outline-container-org832998f" class="outline-4">
+<h4 id="org832998f"><span class="section-number-4">5.1.1</span> Fully Asynchronous</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <p>
 No restriction.
 </p>
 </div>
 </div>
-<div id="outline-container-orgfba04e4" class="outline-4">
-<h4 id="orgfba04e4"><span class="section-number-4">5.1.2</span> FIFO</h4>
+<div id="outline-container-org187f7a5" class="outline-4">
+<h4 id="org187f7a5"><span class="section-number-4">5.1.2</span> FIFO</h4>
 <div class="outline-text-4" id="text-5-1-2">
 <p>
 Messages \(s_1,s_2\) are sent from i to j. Then \(\neg(s_2\prec s_1)\).
 </p>
 </div>
 </div>
-<div id="outline-container-org67e2a2b" class="outline-4">
-<h4 id="org67e2a2b"><span class="section-number-4">5.1.3</span> Causally Ordered</h4>
+<div id="outline-container-org4c740d6" class="outline-4">
+<h4 id="org4c740d6"><span class="section-number-4">5.1.3</span> Causally Ordered</h4>
 <div class="outline-text-4" id="text-5-1-3">
 <ul class="org-ul">
 <li>Motivation: if \(s_1\) caused \(s_2\), then we must ensure \(r_1\) is before \(r_2\)
@@ -636,8 +494,8 @@ r<sub>2</sub>$.
 </p>
 </div>
 </div>
-<div id="outline-container-org4d5e806" class="outline-4">
-<h4 id="org4d5e806"><span class="section-number-4">5.1.4</span> Synchronous Ordered</h4>
+<div id="outline-container-org1c03b47" class="outline-4">
+<h4 id="org1c03b47"><span class="section-number-4">5.1.4</span> Synchronous Ordered</h4>
 <div class="outline-text-4" id="text-5-1-4">
 <p>
 Diagram can be redrawn into vertical, respecting happen-before, process and
@@ -645,8 +503,8 @@ send-receive order.
 </p>
 </div>
 </div>
-<div id="outline-container-org3009bcc" class="outline-4">
-<h4 id="org3009bcc"><span class="section-number-4">5.1.5</span> Totally ordered broadcast</h4>
+<div id="outline-container-org398fcee" class="outline-4">
+<h4 id="org398fcee"><span class="section-number-4">5.1.5</span> Totally ordered broadcast</h4>
 <div class="outline-text-4" id="text-5-1-5">
 <p>
 If on p1, \(x<y\), then on p2, \(x<y\).
@@ -654,12 +512,12 @@ If on p1, \(x<y\), then on p2, \(x<y\).
 </div>
 </div>
 </div>
-<div id="outline-container-orgef02023" class="outline-3">
-<h3 id="orgef02023"><span class="section-number-3">5.2</span> Algorithm to ensure Causal Ordering</h3>
+<div id="outline-container-orge002fe3" class="outline-3">
+<h3 id="orge002fe3"><span class="section-number-3">5.2</span> Algorithm to ensure Causal Ordering</h3>
 <div class="outline-text-3" id="text-5-2">
 </div>
-<div id="outline-container-orgd0acf43" class="outline-4">
-<h4 id="orgd0acf43"><span class="section-number-4">5.2.1</span> Core Idea</h4>
+<div id="outline-container-orgdb93b11" class="outline-4">
+<h4 id="orgdb93b11"><span class="section-number-4">5.2.1</span> Core Idea</h4>
 <div class="outline-text-4" id="text-5-2-1">
 <p>
 When a process sends a message, attach also every message you have seen or sent
@@ -667,8 +525,8 @@ so far.
 </p>
 </div>
 </div>
-<div id="outline-container-org8e37811" class="outline-4">
-<h4 id="org8e37811"><span class="section-number-4">5.2.2</span> Why does it work?</h4>
+<div id="outline-container-org5bef016" class="outline-4">
+<h4 id="org5bef016"><span class="section-number-4">5.2.2</span> Why does it work?</h4>
 <div class="outline-text-4" id="text-5-2-2">
 <ul class="org-ul">
 <li>Recall causal ordering: if s1 happens before s2 (there is a directed path),
@@ -680,8 +538,8 @@ include s1 for the target process to see before s2.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0a395a3" class="outline-4">
-<h4 id="org0a395a3"><span class="section-number-4">5.2.3</span> Can we improve it?</h4>
+<div id="outline-container-orgeadcda0" class="outline-4">
+<h4 id="orgeadcda0"><span class="section-number-4">5.2.3</span> Can we improve it?</h4>
 <div class="outline-text-4" id="text-5-2-3">
 <ul class="org-ul">
 <li>Just include messages that are targeted at the receiving process.</li>
@@ -692,16 +550,16 @@ been delivered.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbcb527e" class="outline-3">
-<h3 id="orgbcb527e"><span class="section-number-3">5.3</span> Skeen&rsquo;s Algorithm for Broadcast Ordering</h3>
+<div id="outline-container-orge3ebd2a" class="outline-3">
+<h3 id="orge3ebd2a"><span class="section-number-3">5.3</span> Skeen&rsquo;s Algorithm for Broadcast Ordering</h3>
 <div class="outline-text-3" id="text-5-3">
 <ul class="org-ul">
 <li>An example is a chat group, sending messages to everyone</li>
 <li>Everyone needs the same message number for the same msg</li>
 </ul>
 </div>
-<div id="outline-container-orgd5dd600" class="outline-4">
-<h4 id="orgd5dd600"><span class="section-number-4">5.3.1</span> Core Idea</h4>
+<div id="outline-container-org303a274" class="outline-4">
+<h4 id="org303a274"><span class="section-number-4">5.3.1</span> Core Idea</h4>
 <div class="outline-text-4" id="text-5-3-1">
 <ol class="org-ol">
 <li>First round - send message to everyone to save in the buffer. After saving,
@@ -713,8 +571,8 @@ logical clock number.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org427197c" class="outline-4">
-<h4 id="org427197c"><span class="section-number-4">5.3.2</span> Summary</h4>
+<div id="outline-container-org369912b" class="outline-4">
+<h4 id="org369912b"><span class="section-number-4">5.3.2</span> Summary</h4>
 <div class="outline-text-4" id="text-5-3-2">
 <p>
 It orders messages, not logical clock numbers. Each logical clock value run as
@@ -724,12 +582,12 @@ usual.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd26f2c1" class="outline-2">
-<h2 id="orgd26f2c1"><span class="section-number-2">6</span> Lecture 7 Leader Election</h2>
+<div id="outline-container-orgfdf50e8" class="outline-2">
+<h2 id="orgfdf50e8"><span class="section-number-2">6</span> Lecture 7 Leader Election</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgfa4626a" class="outline-3">
-<h3 id="orgfa4626a"><span class="section-number-3">6.1</span> Motivation</h3>
+<div id="outline-container-org4728d9d" class="outline-3">
+<h3 id="org4728d9d"><span class="section-number-3">6.1</span> Motivation</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Leader election can
@@ -741,21 +599,21 @@ the leader numbering the messages.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org698fc97" class="outline-3">
-<h3 id="org698fc97"><span class="section-number-3">6.2</span> Node Topologies</h3>
+<div id="outline-container-org1da7819" class="outline-3">
+<h3 id="org1da7819"><span class="section-number-3">6.2</span> Node Topologies</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 Different arrangement of nodes give rise to different algorithms.
 </p>
 </div>
-<div id="outline-container-orga065d17" class="outline-4">
-<h4 id="orga065d17"><span class="section-number-4">6.2.1</span> Rings</h4>
+<div id="outline-container-orgca4916b" class="outline-4">
+<h4 id="orgca4916b"><span class="section-number-4">6.2.1</span> Rings</h4>
 <div class="outline-text-4" id="text-6-2-1">
 </div>
 <ol class="org-ol">
-<li><a id="org4f24ab4"></a>Anonymous rings - impossible for deterministic algos<br />
+<li><a id="org39831c1"></a>Anonymous rings - impossible for deterministic algos<br />
 <ol class="org-ol">
-<li><a id="org3d5fff0"></a>Known ring size - randomized algorithm<br />
+<li><a id="orgfe182d0"></a>Known ring size - randomized algorithm<br />
 <div class="outline-text-6" id="text-6-2-1-1-1">
 <ol class="org-ol">
 <li>Every node choose a random number from 1 to n, then run Chang-Roberts
@@ -767,7 +625,7 @@ leader if no message was received before getting own message.</li>
 </ol>
 </div>
 <ol class="org-ol">
-<li><a id="org31f74e6"></a>Analysis - ensure termination<br />
+<li><a id="org277d790"></a>Analysis - ensure termination<br />
 <div class="outline-text-7" id="text-6-2-1-1-1-1">
 <p>
 Idea: call a round good if it kicks out a node. We denote the number of rounds
@@ -779,7 +637,7 @@ can show that the total number of rounds is less than r goes with probability 1.
 </li>
 </ol>
 </li>
-<li><a id="org8e25947"></a>Unknown ring size - impossible<br />
+<li><a id="orgac09e10"></a>Unknown ring size - impossible<br />
 <div class="outline-text-6" id="text-6-2-1-1-2">
 <p>
 Consider two rings, one with one node, the other with two. Then a node cannot
@@ -790,16 +648,16 @@ solves will declare both processes as leader in the second ring.
 </li>
 </ol>
 </li>
-<li><a id="org65cc221"></a>Numbered rings - Chang-Roberts Algorithm<br />
+<li><a id="org6efbbb0"></a>Numbered rings - Chang-Roberts Algorithm<br />
 <ol class="org-ol">
-<li><a id="org23a5c77"></a>Setting<br />
+<li><a id="org48614b4"></a>Setting<br />
 <div class="outline-text-6" id="text-6-2-1-2-1">
 <p>
 Given a ring of nodes that can only send messages clockwise, select a leader
 </p>
 </div>
 </li>
-<li><a id="orgc0d0e33"></a>Algorithm<br />
+<li><a id="org2845594"></a>Algorithm<br />
 <div class="outline-text-6" id="text-6-2-1-2-2">
 <ol class="org-ol">
 <li>Sending: Every node send its number clockwise</li>
@@ -809,16 +667,16 @@ than self.</li>
 </ol>
 </div>
 </li>
-<li><a id="orgdb295e9"></a>Complexity<br />
+<li><a id="orgece3a49"></a>Complexity<br />
 <ol class="org-ol">
-<li><a id="orgacbfd2b"></a>Message Complexity<br />
+<li><a id="orged18366"></a>Message Complexity<br />
 <div class="outline-text-7" id="text-6-2-1-2-3-1">
 <p>
 Number of messages sent
 </p>
 </div>
 </li>
-<li><a id="org7f89d96"></a>Best Case = O(n)<br />
+<li><a id="orgab9192c"></a>Best Case = O(n)<br />
 <div class="outline-text-7" id="text-6-2-1-2-3-2">
 <p>
 Condition: sorted in clockwise ascending
@@ -826,7 +684,7 @@ Condition: sorted in clockwise ascending
 </p>
 </div>
 </li>
-<li><a id="org236edca"></a>Worst case = O(n<sup>2</sup>)<br />
+<li><a id="org8bf1933"></a>Worst case = O(n<sup>2</sup>)<br />
 <div class="outline-text-7" id="text-6-2-1-2-3-3">
 <p>
 Condition: sorted in clockwise descending
@@ -834,7 +692,7 @@ Condition: sorted in clockwise descending
 </p>
 </div>
 </li>
-<li><a id="org5c4a8dd"></a>Average case = O(nlogn)<br />
+<li><a id="org4a579a9"></a>Average case = O(nlogn)<br />
 <div class="outline-text-7" id="text-6-2-1-2-3-4">
 <ol class="org-ol">
 <li>Consider the random variables \(x_k\) denoting the number of messages caused by
@@ -862,8 +720,8 @@ the expectation \(E[x_k]\ge E[y] = 1/p =\frac{n-1}{n-k}\).</li>
 </li>
 </ol>
 </div>
-<div id="outline-container-org22c72c4" class="outline-4">
-<h4 id="org22c72c4"><span class="section-number-4">6.2.2</span> Complete graphs</h4>
+<div id="outline-container-org3a7b150" class="outline-4">
+<h4 id="org3a7b150"><span class="section-number-4">6.2.2</span> Complete graphs</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <ol class="org-ol">
 <li>Know how many nodes there are in the network (protocol below).</li>
@@ -874,8 +732,8 @@ reply with the samd ID if it is larger. Node that receives n-1 replies is the le
 </p>
 </div>
 </div>
-<div id="outline-container-orgfaf0fb0" class="outline-4">
-<h4 id="orgfaf0fb0"><span class="section-number-4">6.2.3</span> Any connected graph</h4>
+<div id="outline-container-org4d7c830" class="outline-4">
+<h4 id="org4d7c830"><span class="section-number-4">6.2.3</span> Any connected graph</h4>
 <div class="outline-text-4" id="text-6-2-3">
 <ol class="org-ol">
 <li>Construct a spanning tree.
@@ -896,16 +754,16 @@ size, and just sum them up. Leaves respond 1.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgafe4b60" class="outline-2">
-<h2 id="orgafe4b60"><span class="section-number-2">7</span> Lecture 8 Consensus</h2>
+<div id="outline-container-orgde431bc" class="outline-2">
+<h2 id="orgde431bc"><span class="section-number-2">7</span> Lecture 8 Consensus</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-org709803a" class="outline-3">
-<h3 id="org709803a"><span class="section-number-3">7.1</span> Timing Models</h3>
+<div id="outline-container-org4cc94c2" class="outline-3">
+<h3 id="org4cc94c2"><span class="section-number-3">7.1</span> Timing Models</h3>
 <div class="outline-text-3" id="text-7-1">
 </div>
-<div id="outline-container-org132b530" class="outline-4">
-<h4 id="org132b530"><span class="section-number-4">7.1.1</span> Synchronous</h4>
+<div id="outline-container-org160159c" class="outline-4">
+<h4 id="org160159c"><span class="section-number-4">7.1.1</span> Synchronous</h4>
 <div class="outline-text-4" id="text-7-1-1">
 <ul class="org-ul">
 <li>Bounded amount of time to do processing (generate output msg, process input
@@ -915,26 +773,26 @@ msg)</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org9dd95e6" class="outline-3">
-<h3 id="org9dd95e6"><span class="section-number-3">7.2</span> Goals/Conditions for consensus</h3>
+<div id="outline-container-orga39ba4c" class="outline-3">
+<h3 id="orga39ba4c"><span class="section-number-3">7.2</span> Goals/Conditions for consensus</h3>
 <div class="outline-text-3" id="text-7-2">
 </div>
-<div id="outline-container-orgab7d8c2" class="outline-4">
-<h4 id="orgab7d8c2"><span class="section-number-4">7.2.1</span> Termination</h4>
+<div id="outline-container-org7882a5e" class="outline-4">
+<h4 id="org7882a5e"><span class="section-number-4">7.2.1</span> Termination</h4>
 </div>
-<div id="outline-container-org856bb95" class="outline-4">
-<h4 id="org856bb95"><span class="section-number-4">7.2.2</span> Agreement</h4>
+<div id="outline-container-orga397794" class="outline-4">
+<h4 id="orga397794"><span class="section-number-4">7.2.2</span> Agreement</h4>
 </div>
-<div id="outline-container-org80a91c9" class="outline-4">
-<h4 id="org80a91c9"><span class="section-number-4">7.2.3</span> Validity</h4>
+<div id="outline-container-orgcb975c3" class="outline-4">
+<h4 id="orgcb975c3"><span class="section-number-4">7.2.3</span> Validity</h4>
 </div>
 </div>
-<div id="outline-container-orga7e30fb" class="outline-3">
-<h3 id="orga7e30fb"><span class="section-number-3">7.3</span> Version 0: No failure (regardless of timing model)</h3>
+<div id="outline-container-orge2dba42" class="outline-3">
+<h3 id="orge2dba42"><span class="section-number-3">7.3</span> Version 0: No failure (regardless of timing model)</h3>
 <div class="outline-text-3" id="text-7-3">
 </div>
-<div id="outline-container-org50a38ff" class="outline-4">
-<h4 id="org50a38ff"><span class="section-number-4">7.3.1</span> Algorithm</h4>
+<div id="outline-container-org82eccd9" class="outline-4">
+<h4 id="org82eccd9"><span class="section-number-4">7.3.1</span> Algorithm</h4>
 <div class="outline-text-4" id="text-7-3-1">
 <p>
 For any process:
@@ -946,22 +804,22 @@ algorithm on all values (eg. max/min)</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org0781037" class="outline-4">
-<h4 id="org0781037"><span class="section-number-4">7.3.2</span> When does it work?</h4>
+<div id="outline-container-orge7f9f01" class="outline-4">
+<h4 id="orge7f9f01"><span class="section-number-4">7.3.2</span> When does it work?</h4>
 <div class="outline-text-4" id="text-7-3-2">
 </div>
 <ol class="org-ol">
-<li><a id="orgca83f9a"></a><span class="todo TODO">TODO</span> Synchronous<br /></li>
-<li><a id="orgf3ba485"></a><span class="todo TODO">TODO</span> Async<br /></li>
+<li><a id="orgef00afd"></a><span class="todo TODO">TODO</span> Synchronous<br /></li>
+<li><a id="orgb31a7c9"></a><span class="todo TODO">TODO</span> Async<br /></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org6cfe3ba" class="outline-3">
-<h3 id="org6cfe3ba"><span class="section-number-3">7.4</span> Version 1: (Synchronous) Node crash failures</h3>
+<div id="outline-container-orgfd0b005" class="outline-3">
+<h3 id="orgfd0b005"><span class="section-number-3">7.4</span> Version 1: (Synchronous) Node crash failures</h3>
 <div class="outline-text-3" id="text-7-4">
 </div>
-<div id="outline-container-org04ab1a7" class="outline-4">
-<h4 id="org04ab1a7"><span class="section-number-4">7.4.1</span> Setup</h4>
+<div id="outline-container-org2da1d02" class="outline-4">
+<h4 id="org2da1d02"><span class="section-number-4">7.4.1</span> Setup</h4>
 <div class="outline-text-4" id="text-7-4-1">
 <ul class="org-ul">
 <li>Synchronous, all nodes have bounded processing time, all message has bounded
@@ -971,8 +829,8 @@ not happen/not be complete.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org8ca12a3" class="outline-4">
-<h4 id="org8ca12a3"><span class="section-number-4">7.4.2</span> Intuition</h4>
+<div id="outline-container-orgb90c927" class="outline-4">
+<h4 id="orgb90c927"><span class="section-number-4">7.4.2</span> Intuition</h4>
 <div class="outline-text-4" id="text-7-4-2">
 <ul class="org-ul">
 <li>We use rounds to gain information on crash: if no reply, then crashed.</li>
@@ -981,7 +839,7 @@ propagation, t3 to process input, then each round is simply <code>t1+t2+t3</code
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="org9d14677"></a>Suppose we don&rsquo;t have accurate clock<br />
+<li><a id="orgc698be4"></a>Suppose we don&rsquo;t have accurate clock<br />
 <div class="outline-text-5" id="text-7-4-2-1">
 <ul class="org-ul">
 <li>Claim: every clock should be some constant multiple of other clocks.</li>
@@ -1000,12 +858,12 @@ output, send msg) to the &ldquo;latest&rdquo; node.</li>
 </li>
 </ol>
 </div>
-<div id="outline-container-org33b6d37" class="outline-4">
-<h4 id="org33b6d37"><span class="section-number-4">7.4.3</span> Protocol</h4>
+<div id="outline-container-orgb9b077d" class="outline-4">
+<h4 id="orgb9b077d"><span class="section-number-4">7.4.3</span> Protocol</h4>
 <div class="outline-text-4" id="text-7-4-3">
 </div>
 <ol class="org-ol">
-<li><a id="org272d8a7"></a>Intuition<br />
+<li><a id="orgee25ad2"></a>Intuition<br />
 <div class="outline-text-5" id="text-7-4-3-1">
 <ul class="org-ul">
 <li>suppose there is no failure, we can just broadcast our message to everyone and conclude.</li>
@@ -1014,7 +872,7 @@ output, send msg) to the &ldquo;latest&rdquo; node.</li>
 </ul>
 </div>
 </li>
-<li><a id="org612a01c"></a>Details<br />
+<li><a id="orga3c96ca"></a>Details<br />
 <div class="outline-text-5" id="text-7-4-3-2">
 <ol class="org-ol">
 <li>Intialize the set <code>S:={my_input}</code>.</li>
@@ -1024,11 +882,11 @@ to tolerate)</li>
 </ol>
 </div>
 </li>
-<li><a id="orgf13f9b3"></a>Correctness<br />
+<li><a id="org1fa2db8"></a>Correctness<br />
 <ol class="org-ol">
-<li><a id="orgdf169e0"></a>Termination is obvious (f+1 rounds, bounded waiting)<br /></li>
-<li><a id="org829fb1e"></a>Validity is obvious (if everyone same input, S = {s} is singleton)<br /></li>
-<li><a id="org62dfc6d"></a>Agreement<br />
+<li><a id="org9462c6a"></a>Termination is obvious (f+1 rounds, bounded waiting)<br /></li>
+<li><a id="orgff62326"></a>Validity is obvious (if everyone same input, S = {s} is singleton)<br /></li>
+<li><a id="org410afb1"></a>Agreement<br />
 <div class="outline-text-6" id="text-7-4-3-3-3">
 <ol class="org-ol">
 <li>Given f+1 rounds and f failure, there must be at least 1 round with no
@@ -1045,8 +903,8 @@ nodes.</li>
 </li>
 </ol>
 </div>
-<div id="outline-container-org0914321" class="outline-4">
-<h4 id="org0914321"><span class="section-number-4">7.4.4</span> Lower bound is (Omega(f))</h4>
+<div id="outline-container-orga9eb85a" class="outline-4">
+<h4 id="orga9eb85a"><span class="section-number-4">7.4.4</span> Lower bound is (Omega(f))</h4>
 <div class="outline-text-4" id="text-7-4-4">
 <ul class="org-ul">
 <li>Statement: any deterministic algorithm that works (fulfills termination,
@@ -1056,12 +914,12 @@ agreement, validity) must take at least f+1 rounds.</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org7b10ffe" class="outline-3">
-<h3 id="org7b10ffe"><span class="section-number-3">7.5</span> Version 2: (Synchronous) Link Failure</h3>
+<div id="outline-container-org867b354" class="outline-3">
+<h3 id="org867b354"><span class="section-number-3">7.5</span> Version 2: (Synchronous) Link Failure</h3>
 <div class="outline-text-3" id="text-7-5">
 </div>
-<div id="outline-container-org55e6d4c" class="outline-4">
-<h4 id="org55e6d4c"><span class="section-number-4">7.5.1</span> Setup</h4>
+<div id="outline-container-org4634fe7" class="outline-4">
+<h4 id="org4634fe7"><span class="section-number-4">7.5.1</span> Setup</h4>
 <div class="outline-text-4" id="text-7-5-1">
 <ul class="org-ul">
 <li>nodes do not fail</li>
@@ -1070,8 +928,8 @@ long (drop unbounded # of messages)</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org234a797" class="outline-4">
-<h4 id="org234a797"><span class="section-number-4">7.5.2</span> Goal 1: Termination, Agreement, Validity</h4>
+<div id="outline-container-orgf0d2c62" class="outline-4">
+<h4 id="orgf0d2c62"><span class="section-number-4">7.5.2</span> Goal 1: Termination, Agreement, Validity</h4>
 <div class="outline-text-4" id="text-7-5-2">
 <ul class="org-ul">
 <li>Termination: all nodes eventually decide</li>
@@ -1080,7 +938,7 @@ long (drop unbounded # of messages)</li>
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="org4717956"></a>There is no deterministic algorithm<br />
+<li><a id="org850c79b"></a>There is no deterministic algorithm<br />
 <div class="outline-text-5" id="text-7-5-2-1">
 <ol class="org-ol">
 <li><p>
@@ -1262,8 +1120,8 @@ Then A will be forced to conclude with 1, violating Validity. Contradiction.
 </li>
 </ol>
 </div>
-<div id="outline-container-org81ac8a3" class="outline-4">
-<h4 id="org81ac8a3"><span class="section-number-4">7.5.3</span> Goal 2: T, A, Weakened Validity</h4>
+<div id="outline-container-org30dbe4d" class="outline-4">
+<h4 id="org30dbe4d"><span class="section-number-4">7.5.3</span> Goal 2: T, A, Weakened Validity</h4>
 <div class="outline-text-4" id="text-7-5-3">
 <ul class="org-ul">
 <li>Since validity was violated just now, we try to weaken it. Is consensus
@@ -1273,7 +1131,7 @@ possible now?</li>
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="orge3b7988"></a>Still no deterministic algorithm.<br />
+<li><a id="orgf60a35d"></a>Still no deterministic algorithm.<br />
 <div class="outline-text-5" id="text-7-5-3-1">
 <ul class="org-ul">
 <li>Lemma: if two processes start with 1, and one process&rsquo;s last message is lost,
@@ -1286,7 +1144,7 @@ lost)</li>
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="orga44b1cc"></a>Proof of no deterministic algorithm<br />
+<li><a id="orgedf19c8"></a>Proof of no deterministic algorithm<br />
 <div class="outline-text-6" id="text-7-5-3-1-1">
 <p>
 Essentially the same as in the previous Goal, but start with 0,0. Achieve
@@ -1299,8 +1157,8 @@ but consider an undetected loss of last message, which has to conclude with 1,1.
 </li>
 </ol>
 </div>
-<div id="outline-container-orgeac3807" class="outline-4">
-<h4 id="orgeac3807"><span class="section-number-4">7.5.4</span> Goal 3: T, Limited Agreement, Weakened Validity</h4>
+<div id="outline-container-org2ec2cb0" class="outline-4">
+<h4 id="org2ec2cb0"><span class="section-number-4">7.5.4</span> Goal 3: T, Limited Agreement, Weakened Validity</h4>
 <div class="outline-text-4" id="text-7-5-4">
 <ul class="org-ul">
 <li>Limited Agreement: all nodes decide on the same value with probability =
@@ -1308,7 +1166,7 @@ but consider an undetected loss of last message, which has to conclude with 1,1.
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="org7ded158"></a>The concept of adversary<br />
+<li><a id="org44cfe1a"></a>The concept of adversary<br />
 <div class="outline-text-5" id="text-7-5-4-1">
 <p>
 We imagine the message losses are not just random, but as bad as possible, as if
@@ -1317,7 +1175,7 @@ case analysis against this adversary.
 </p>
 </div>
 </li>
-<li><a id="org9f4c5dc"></a>Randomized Algorithm that works with error (1/r)<br />
+<li><a id="org46e1d7b"></a>Randomized Algorithm that works with error (1/r)<br />
 <div class="outline-text-5" id="text-7-5-4-2">
 <ol class="org-ol">
 <li>Setup: We have processes P1, P2, etc.
@@ -1340,10 +1198,10 @@ AND you know bar (trivial for P1) AND level &gt;= bar.</li>
 </ol>
 </div>
 <ol class="org-ol">
-<li><a id="org20426df"></a>Analysis<br />
+<li><a id="org5e59020"></a>Analysis<br />
 <ol class="org-ol">
-<li><a id="orgdfdb602"></a>Termination (obvious by <code>r</code> rounds)<br /></li>
-<li><a id="orgfc15436"></a>Agreement with probability (1-1/r)<br />
+<li><a id="org94ac018"></a>Termination (obvious by <code>r</code> rounds)<br /></li>
+<li><a id="org70e5e32"></a>Agreement with probability (1-1/r)<br />
 <div class="outline-text-7" id="text-7-5-4-2-1-2">
 <ul class="org-ul">
 <li>Since not every process&rsquo;s <b>level</b> will reach <b>bar</b>, not everyone can decide</li>
@@ -1358,9 +1216,9 @@ analyze what is the probability for these events.
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="org02f239a"></a>Scenario: One process decides 1, the other process decides 0<br />
+<li><a id="org22c3b19"></a>Scenario: One process decides 1, the other process decides 0<br />
 <ol class="org-ol">
-<li><a id="org1f5915f"></a>Case 1: P1 hears P2, but P2 never heard from P1 at all<br />
+<li><a id="org4ca357b"></a>Case 1: P1 hears P2, but P2 never heard from P1 at all<br />
 <div class="outline-text-9" id="text-7-5-4-2-1-2-1-1">
 <ul class="org-ul">
 <li><p>
@@ -1442,10 +1300,10 @@ decide 1.
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="org502acd1"></a>Conclusion: only happens when bar = 1, probability = 1/r<br /></li>
+<li><a id="org1771cf5"></a>Conclusion: only happens when bar = 1, probability = 1/r<br /></li>
 </ol>
 </li>
-<li><a id="orgb028400"></a>Case 2: P2 hears P1, but P1 never heard from P2 at all<br />
+<li><a id="orgbbc393a"></a>Case 2: P2 hears P1, but P1 never heard from P2 at all<br />
 <div class="outline-text-9" id="text-7-5-4-2-1-2-1-2">
 <ul class="org-ul">
 <li><p>
@@ -1527,17 +1385,17 @@ decide 1.
 </ul>
 </div>
 <ol class="org-ol">
-<li><a id="org756b08e"></a>Conclusion: only happens when bar = 1, probability = 1/r<br /></li>
+<li><a id="orgc568e90"></a>Conclusion: only happens when bar = 1, probability = 1/r<br /></li>
 </ol>
 </li>
-<li><a id="orgb0f8947"></a>Case 3: P1 did not hear from P2 and vice versa<br />
+<li><a id="org0a21fb1"></a>Case 3: P1 did not hear from P2 and vice versa<br />
 <div class="outline-text-9" id="text-7-5-4-2-1-2-1-3">
 <p>
 This case would not cause error, since they will both conclude 0.
 </p>
 </div>
 </li>
-<li><a id="org232b58d"></a>Case 4: P1 heard from P2 and vice versa<br />
+<li><a id="org3a86f07"></a>Case 4: P1 heard from P2 and vice versa<br />
 <div class="outline-text-9" id="text-7-5-4-2-1-2-1-4">
 <ul class="org-ul">
 <li>The only violatable condition before concluding 1, is that <code>level&lt;bar</code>.</li>
@@ -1548,10 +1406,10 @@ This case would not cause error, since they will both conclude 0.
 </li>
 </ol>
 </li>
-<li><a id="org040192f"></a>Conclusion: error probability is 1/r.<br /></li>
+<li><a id="orgb6999fe"></a>Conclusion: error probability is 1/r.<br /></li>
 </ol>
 </li>
-<li><a id="org98a9c04"></a>Weakened Validity<br />
+<li><a id="org5773260"></a>Weakened Validity<br />
 <div class="outline-text-7" id="text-7-5-4-2-1-3">
 <ul class="org-ul">
 <li>suppose everyone starts with 0, no one can conclude 1 therefore everyone will
@@ -1569,7 +1427,7 @@ rounds. In fact, everyone will have <b>level</b> = <code>r</code>. Everyone will
 </li>
 </ol>
 </li>
-<li><a id="org142aed6"></a>Error probability of 1/#rounds is a lower bound.<br />
+<li><a id="org5ae884d"></a>Error probability of 1/#rounds is a lower bound.<br />
 <div class="outline-text-5" id="text-7-5-4-3">
 <ul class="org-ul">
 <li>proof can be found in Lynch.</li>
@@ -1579,12 +1437,12 @@ rounds. In fact, everyone will have <b>level</b> = <code>r</code>. Everyone will
 </ol>
 </div>
 </div>
-<div id="outline-container-org5fdae82" class="outline-3">
-<h3 id="org5fdae82"><span class="section-number-3">7.6</span> Version 3: (Asynchronous) Node crash failures</h3>
+<div id="outline-container-org06fa969" class="outline-3">
+<h3 id="org06fa969"><span class="section-number-3">7.6</span> Version 3: (Asynchronous) Node crash failures</h3>
 <div class="outline-text-3" id="text-7-6">
 </div>
-<div id="outline-container-orge39a97a" class="outline-4">
-<h4 id="orge39a97a"><span class="section-number-4">7.6.1</span> Setup</h4>
+<div id="outline-container-org70ba9d0" class="outline-4">
+<h4 id="org70ba9d0"><span class="section-number-4">7.6.1</span> Setup</h4>
 <div class="outline-text-4" id="text-7-6-1">
 <ul class="org-ul">
 <li>Nodes can crash (indefinitely), but channels are reliable</li>
@@ -1593,8 +1451,8 @@ rounds. In fact, everyone will have <b>level</b> = <code>r</code>. Everyone will
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf596322" class="outline-4">
-<h4 id="orgf596322"><span class="section-number-4">7.6.2</span> Fischer-Lynch-Paterson (FLP) Impossibility Theorem</h4>
+<div id="outline-container-org6e19849" class="outline-4">
+<h4 id="org6e19849"><span class="section-number-4">7.6.2</span> Fischer-Lynch-Paterson (FLP) Impossibility Theorem</h4>
 <div class="outline-text-4" id="text-7-6-2">
 <p>
 Statement: the distributed consensus problem under the asynchronous timing model
@@ -1606,23 +1464,23 @@ is impossible to solve, even with a <b>single</b> node crash failure.
 </div>
 </div>
 </div>
-<div id="outline-container-orgcafb67e" class="outline-3">
-<h3 id="orgcafb67e"><span class="section-number-3">7.7</span> Version 4: (Synchronous) Byzantine Failures</h3>
+<div id="outline-container-orgbe10a65" class="outline-3">
+<h3 id="orgbe10a65"><span class="section-number-3">7.7</span> Version 4: (Synchronous) Byzantine Failures</h3>
 <div class="outline-text-3" id="text-7-7">
 </div>
-<div id="outline-container-org222dcd7" class="outline-4">
-<h4 id="org222dcd7"><span class="section-number-4">7.7.1</span> Failure Model</h4>
+<div id="outline-container-orga96ecee" class="outline-4">
+<h4 id="orga96ecee"><span class="section-number-4">7.7.1</span> Failure Model</h4>
 <div class="outline-text-4" id="text-7-7-1">
 <p>
 Each node can &ldquo;lie&rdquo; about its input.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc67fe8e" class="outline-4">
-<h4 id="orgc67fe8e"><span class="section-number-4">7.7.2</span> Modified goals - everything only applies to non-faulty nodes</h4>
+<div id="outline-container-org302b5b3" class="outline-4">
+<h4 id="org302b5b3"><span class="section-number-4">7.7.2</span> Modified goals - everything only applies to non-faulty nodes</h4>
 </div>
-<div id="outline-container-orgfc3c990" class="outline-4">
-<h4 id="orgfc3c990"><span class="section-number-4">7.7.3</span> A simple (unsuccessful) attempt</h4>
+<div id="outline-container-orga541b5c" class="outline-4">
+<h4 id="orga541b5c"><span class="section-number-4">7.7.3</span> A simple (unsuccessful) attempt</h4>
 <div class="outline-text-4" id="text-7-7-3">
 <ol class="org-ol">
 <li><p>
@@ -1668,8 +1526,8 @@ cross-check with is reliable.</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org8419b27" class="outline-4">
-<h4 id="org8419b27"><span class="section-number-4">7.7.4</span> Theorem: Byzantine Consensus Threshold</h4>
+<div id="outline-container-org15beda5" class="outline-4">
+<h4 id="org15beda5"><span class="section-number-4">7.7.4</span> Theorem: Byzantine Consensus Threshold</h4>
 <div class="outline-text-4" id="text-7-7-4">
 <ul class="org-ul">
 <li>Theorem: if number of processes <code>n</code>, number of byzantine failures <code>f</code>, if
@@ -1678,12 +1536,12 @@ cross-check with is reliable.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0fb7ad6" class="outline-4">
-<h4 id="org0fb7ad6"><span class="section-number-4">7.7.5</span> A protocol for # nodes n &gt;= 4f+1</h4>
+<div id="outline-container-org6904fb1" class="outline-4">
+<h4 id="org6904fb1"><span class="section-number-4">7.7.5</span> A protocol for # nodes n &gt;= 4f+1</h4>
 <div class="outline-text-4" id="text-7-7-5">
 </div>
 <ol class="org-ol">
-<li><a id="orga01ac3b"></a>Definitions<br />
+<li><a id="org52ed161"></a>Definitions<br />
 <div class="outline-text-5" id="text-7-7-5-1">
 <ul class="org-ul">
 <li>We have <i>phases</i>.</li>
@@ -1694,7 +1552,7 @@ cross-check with is reliable.</li>
 </ul>
 </div>
 </li>
-<li><a id="org572a268"></a>Protocol<br />
+<li><a id="orgbe9282f"></a>Protocol<br />
 <div class="outline-text-5" id="text-7-7-5-2">
 <ol class="org-ol">
 <li>Setup: maintain everyone&rsquo;s value initialized to 0, my value = my input.</li>
@@ -1714,9 +1572,9 @@ to the proposal.</li>
 </ol>
 </div>
 </li>
-<li><a id="orgf746a0a"></a>Correctness - invariance for every round<br />
+<li><a id="orgc34d75a"></a>Correctness - invariance for every round<br />
 <ol class="org-ol">
-<li><a id="orgfb19f8d"></a>Lemma 1: all non-faulty processes retain <code>y</code> if all their values are <code>y</code><br />
+<li><a id="orgd2a4d80"></a>Lemma 1: all non-faulty processes retain <code>y</code> if all their values are <code>y</code><br />
 <div class="outline-text-6" id="text-7-7-5-3-1">
 <p>
 Since \(n \ge 4f+1\), we must have \(n-f \ge 3f+1 \ge (4f + 1)/2 + f = n/2 + f\).
@@ -1726,7 +1584,7 @@ at end of phase <code>k</code> forced by round 3.
 </p>
 </div>
 </li>
-<li><a id="org69fa8bd"></a>Lemma 2: if coord is nonfaulty, then all nonfaulty processes have the same value after a round k.<br />
+<li><a id="org432916d"></a>Lemma 2: if coord is nonfaulty, then all nonfaulty processes have the same value after a round k.<br />
 <div class="outline-text-6" id="text-7-7-5-3-2">
 <p>
 The coordinator can propose two values:
@@ -1744,9 +1602,9 @@ It means none of these values will reach overwhelming majority MORE THAN
 </ol>
 </div>
 </li>
-<li><a id="org48e5a35"></a>Termination - we let there be f+1 phases. No wait =&gt; termination.<br /></li>
-<li><a id="org996d078"></a>Validity - by lemma 1, the invariance make them decide its input.<br /></li>
-<li><a id="org80e6831"></a>Agreement<br />
+<li><a id="org786f522"></a>Termination - we let there be f+1 phases. No wait =&gt; termination.<br /></li>
+<li><a id="orga01c20a"></a>Validity - by lemma 1, the invariance make them decide its input.<br /></li>
+<li><a id="org8b5ecb8"></a>Agreement<br />
 <div class="outline-text-6" id="text-7-7-5-3-5">
 <ul class="org-ul">
 <li><code>f+1</code> phases means at least one good phase.</li>
@@ -1764,7 +1622,7 @@ It means none of these values will reach overwhelming majority MORE THAN
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Tan Yee Jian</p>
-<p class="date">Created: 2021-05-03 Mon 15:48</p>
+<p class="date">Created: 2021-05-04 Tue 08:13</p>
 </div>
 </body>
 </html>
