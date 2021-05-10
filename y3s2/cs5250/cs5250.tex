@@ -1,4 +1,4 @@
-% Created 2021-03-18 Thu 11:33
+% Created 2021-05-05 Wed 15:25
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -18,21 +18,300 @@
 \usepackage{minted}
 \author{Tan Yee Jian}
 \date{\today}
-\title{Week 8: Memory}
+\title{Cs5250}
 \hypersetup{
  pdfauthor={Tan Yee Jian},
- pdftitle={Week 8: Memory},
+ pdftitle={Cs5250},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.4.4)}, 
+ pdfcreator={Emacs 27.2 (Org mode 9.4.4)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\section{The memory hierachy}
-\label{sec:org869e480}
+
+\section{Week 6:}
+\label{sec:org45f5a91}
+\subsection{System calls}
+\label{sec:org875a619}
+Two ways to enter kernel: \texttt{SYSCALL/SYSENTER} or an interrupt
+\subsubsection{How to do system calls?}
+\label{sec:org533d333}
+\begin{itemize}
+\item Model Specific Registers (MSR) in x86 allows configuration of OS-specific
+things like \texttt{sysenter/exit}
+\begin{itemize}
+\item \texttt{rdmsr, wrmsr} instructions used to move data from(to) \texttt{MSR[ECX]} to(from) \texttt{EDX:EAX}
+\item Existence can be confirmed through the \texttt{cpuid} instruction
+\end{itemize}
+\end{itemize}
+\begin{enumerate}
+\item SYSCALL/SYSENTER instruction and security
+\label{sec:orge44bf73}
+\begin{itemize}
+\item was implemented as an interrupt \texttt{int 0x80}, now using
+\texttt{SYSENTER/SYSEXIT/SYSCALL} instruction
+\item having an instruction prevents attacker from calling it before their code (can
+only be called by kernel)
+\end{itemize}
+\item Difference between SYSENTER and interrupt
+\label{sec:org743bd28}
+Interrupts can happen even at ring 0, however SYSENTER is used to transit from
+other rings to 0
+\end{enumerate}
+\subsubsection{Stacks}
+\label{sec:org84ecd9d}
+\begin{enumerate}
+\item Kernel stack
+\label{sec:org59b3f2f}
+\begin{itemize}
+\item Every thread has one
+\item Stored in \texttt{task\_struct}
+\item Grows toward the \texttt{thread\_info} structure
+\end{itemize}
+\item Intel's hardware support for stacks: Task State Segment
+\label{sec:org966b933}
+\url{https://wiki.osdev.org/Task\_State\_Segment}
+\end{enumerate}
+\subsubsection{Page Table Isolation}
+\label{sec:orgad46452}
+\begin{itemize}
+\item Full set of kernel page tables used to coexist with user page tables, presents
+a security loophole
+\item Now each process's virtual memory space only save partial kernel PT
+\end{itemize}
+\subsubsection{What happens when we do a syscall?}
+\label{sec:orgbad6e10}
+More info: \texttt{arch/x86/entry/entry\_64.s:entry\_SYSCALL\_64}
+\begin{enumerate}
+\item save the current stack location and load the full kernel stack (pointed to by
+\texttt{CR3})
+\item Uses assembly to construct the \texttt{pt\_regs} struct, which stores registers
+needed by \texttt{syscall}
+\item Calls the service dispatcher (call the correct syscall given the sycall
+number), in \texttt{arch/x86/entry/common.c:do\_syscall\_64()}
+\end{enumerate}
+\subsubsection{How to speed up syscalls?}
+\label{sec:orgf1642fc}
+\begin{enumerate}
+\item Old idea: call them in userspace
+\label{sec:orgb836ded}
+\begin{itemize}
+\item some system calls (eg. read, write) are called very often. How do we speed up?
+\item Answer: execute \textbf{read-only} syscalls in userspace, eg. \texttt{gettimeofday()},
+\texttt{time()}, \texttt{getcpu()} etc
+\end{itemize}
+\item New idea: virtual dynamic shared object (vDSO) + Address Space Randomization (ASR)
+\label{sec:orged6323b}
+\begin{itemize}
+\item Still allows system calls (whose object file is mapped in userspace) in user space
+\item However there is Address Space Randomization (ASR) to change the address of
+this vDSO, so attacker will not know where it is.
+\end{itemize}
+\end{enumerate}
+\subsection{Interrupts}
+\label{sec:org5d50020}
+Motivating question: how to get input from devices?
+\begin{enumerate}
+\item Poll from each device regularly
+Waste resources
+\item Use interrupts - devices take the lead
+\end{enumerate}
+\subsubsection{When are interrupts checked?}
+\label{sec:org45089c0}
+\begin{itemize}
+\item At EVERY pipeline round, Fetch - Decode - Execute - Check for Interrupts,
+Fetch etc
+\item If there is an interrupt:
+\begin{enumerate}
+\item Save context
+\item Get interrupt number
+\item Execute and clean up Instruction Service Routine (ISR)
+\end{enumerate}
+\end{itemize}
+\subsubsection{Two types of interrupts}
+\label{sec:org54b37e4}
+\begin{enumerate}
+\item Classification 1
+\label{sec:orga731c2b}
+\begin{enumerate}
+\item Async
+\label{sec:orgeeba96f}
+Not related to current instruction - from external sources such as mouse click.
+\item Synchronous (aka exceptions)
+\label{sec:org7b1fbbc}
+\begin{enumerate}
+\item Faults (eg page faults)
+It is retried. Intel since Pentium 4 has a \texttt{replay queue} to retry
+instructions in case of fault.
+\item Traps, Not retried.
+\begin{itemize}
+\item Eg. debuggers like gdb stop at a certain breakpoint.
+This is done by injecting the \texttt{INT 3 (0xCC)} one-byte instruction at the
+instruction location where you want to stop. CPU will hit this one-byte
+instruction and the parent debugger process will gain control.
+\end{itemize}
+\item Abort
+Hardware failure
+\item Programmed, eg syscalls
+\end{enumerate}
+\end{enumerate}
+\item Classification 2
+\label{sec:org5c7e976}
+\begin{enumerate}
+\item I/O interrupts
+\label{sec:org42cd3cb}
+\begin{enumerate}
+\item Critical
+\label{sec:orgf7c3268}
+\item Non-Critical
+\label{sec:orgc2864c1}
+\item Non-Critical Deferrable
+\label{sec:org337a3e1}
+\end{enumerate}
+\item Timer
+\label{sec:orgcdaa577}
+\item Interprocessor
+\label{sec:org1b3449e}
+\end{enumerate}
+\end{enumerate}
+\subsubsection{Hardware to cause interrupts}
+\label{sec:orga377372}
+\begin{enumerate}
+\item History: Intel 8259 Programmable Interrupt Controller (PIC)
+\label{sec:orgd08e02b}
+\begin{itemize}
+\item A hardware chip that has multiple physical pins.
+\item When the pins receive signals (by ethernet, whatever), it sends interrupts to
+the CPU
+\item Every interrupt has a mask (an interrupt is masked if CPU does not want to
+service this interrupt) and a priority.
+\end{itemize}
+\item Extension: Advanced PIC (APIC)
+\label{sec:orgc401bae}
+\begin{itemize}
+\item PIC can only service interrupts per-CPU. For multithreaded systems, APIC can
+service inter-CPU interrupts.
+\end{itemize}
+\item Interrupt vectors (Intel)
+\label{sec:org373647f}
+\begin{itemize}
+\item Each interrupt is mapped to a number (called vectors) in software.
+\item Interrupt vector \texttt{32} and above are masked. Vector \texttt{2} is non-maskable
+interrupt (NMI), which is the \textbf{hardware reset button}.
+\item Which pin maps to which vectore is entirely programmable (by the hardware designer)
+\end{itemize}
+\item Assigning IRQs to Devices
+\label{sec:org20b0803}
+\begin{itemize}
+\item PCI assigns at boot
+\item Usually vector = IRQ + 32
+\item The mapping is saved at the Interrupt Descriptor Table. Location is indicated
+by the IDTR (IDT Register).
+\end{itemize}
+\end{enumerate}
+\subsubsection{How are interrupts handled by x86?}
+\label{sec:orgd265134}
+\begin{enumerate}
+\item Interrupt Descriptor Table Registor (IDTR)
+\label{sec:orgb4f840b}
+\begin{itemize}
+\item Points to a table (IDT) consisting of either
+\begin{enumerate}
+\item Task-gate descriptor
+\item Interrupt-gate descriptor
+No more execute
+\item Trap-gate descriptor
+Can still execute
+\end{enumerate}
+\end{itemize}
+\item Interrupts and stacks
+\label{sec:org7f5709a}
+\begin{itemize}
+\item Interrupts are handled in the kernel, thus there is a switch of stack from
+higher to lower ring.
+\item If a ring change happens, the stack switches to that pointed to the current
+task's Task State Segment (TSS), storing info for all registers.
+\end{itemize}
+\item Things that can happen during interrupt
+\label{sec:org9b6c5ed}
+\begin{enumerate}
+\item Double Fault
+\label{sec:org3f43c6f}
+The exception-handling code induces another exception. Panics and dies.
+\item Nested interrupt
+\label{sec:org5a810c8}
+Not to be confused with above - While handling eg. mouse interrupt, a mic
+interrupt comes, and while handling mic interrupt, another interrupt comes etc\ldots{}
+\begin{itemize}
+\item This happens on a CPU. We can mask all other interrupts while handling one,
+but it is not preferrable.
+\item We can utilize other cores.
+\item To handle an interrupt, we check if it is nested by checking whether the
+privilege level is changed. If it is nested, ring 0 -> ring 0 then no change.
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+\subsubsection{How does OS handle interrupts?}
+\label{sec:orgcfaa57a}
+\begin{enumerate}
+\item Overall strategy
+\label{sec:orgb026f7a}
+Splits the handling into \textbf{top} and \textbf{bottom} half.
+\begin{enumerate}
+\item Top half
+\label{sec:org4a317d4}
+bare minimum needed, save register, unmask etc. Very fast to return
+\end{enumerate}
+\item Bottom half
+\label{sec:orgeef5d03}
+\begin{enumerate}
+\item Software IRQ (ksoftirq)
+\label{sec:orga5fb464}
+\begin{itemize}
+\item Interrupt Queue as a software
+\item Each processor runs a daemon, \texttt{ksoftirqd} which infinitely polls for softIRQs
+to service.
+\item softIRQ is re-entrant, means can be re-executed as needed
+\end{itemize}
+\item Tasklet
+\label{sec:orgaa36fa9}
+\begin{itemize}
+\item Can be statically/dynamically allocated, whereas softIRQ is fixed
+\item Is non-re-entrant.
+\end{itemize}
+\item Work queue
+\label{sec:org40f3a7a}
+\item Kernel Thread
+\label{sec:org7094734}
+\end{enumerate}
+\end{enumerate}
+\subsection{Signals}
+\label{sec:org7105543}
+\subsubsection{POSIX Signals}
+\label{sec:org78686e9}
+\begin{itemize}
+\item 1990 and 2001, like \texttt{SIGINT, SIGKILL, SIGTERM} etc
+\item Sent using syscall (to others) \texttt{kill}, or to self using \texttt{raise}
+\end{itemize}
+\subsubsection{Data structures for signal handling}
+\label{sec:orge49b6e2}
+\begin{itemize}
+\item \texttt{task\_struct} is the process descriptor, saves signal handlers
+\end{itemize}
+\subsubsection{Handling flow}
+\label{sec:org2870c71}
+\begin{itemize}
+\item Check slides 78 of Chapter 6
+\item Kernel points the instruction pointer (RIP) to the signal handler, as well as
+back up the stack
+\end{itemize}
+\section{Lecture 8: Memory}
+\label{sec:org36ff607}
+\subsection{The memory hierachy}
+\label{sec:org9c4482e}
 \begin{center}
 \begin{tabular}{lllll}
  & L1 Cache & L2 Cache & Main Memory & Secondary Memory\\
@@ -41,14 +320,14 @@ clock cycle & a few & tens & hundreds & millions\\
 size & word (4-8B) & block(8-32B) & 1-4blocks & very huge\\
 \end{tabular}
 \end{center}
-\section{Principle of Caching: Locality}
-\label{sec:org215dd61}
+\subsection{Principle of Caching: Locality}
+\label{sec:orgc3af8e3}
 \begin{itemize}
 \item Temporal locality: repeatedly use the same data
 \item Spatial locality: use nearby data
 \end{itemize}
-\section{Virtual vs Physical addressing}
-\label{sec:orgd91745f}
+\subsection{Virtual vs Physical addressing}
+\label{sec:org7d7912f}
 \begin{itemize}
 \item Every process has illusion that it owns all \(2^{64}\) bits of memory in its
 virtual memory
@@ -62,8 +341,8 @@ virtual memory
 \item Sharing: Map multiple virtual pages to a sams physical page
 \end{itemize}
 \end{itemize}
-\section{Address Translation}
-\label{sec:org0b479d6}
+\subsection{Address Translation}
+\label{sec:orgead3566}
 \begin{itemize}
 \item Given page size = 4k, we have offset = 12 bits (2\textsuperscript{12}=4k)
 \item Address = virtual page \# + offset
@@ -76,8 +355,8 @@ virtual memory
 \end{itemize}
 \item Page fault: page is not in main memory
 \end{itemize}
-\subsection{Caching address traslation}
-\label{sec:org8aebf55}
+\subsubsection{Caching address traslation}
+\label{sec:org565e307}
 \begin{itemize}
 \item Problem with caching:
 \begin{itemize}
@@ -89,15 +368,15 @@ address is \textbf{translated} which is expensive
 \end{itemize}
 \end{itemize}
 \end{itemize}
-\section{Paging in Linux x86}
-\label{sec:orgac2ba53}
+\subsection{Paging in Linux x86}
+\label{sec:orgd043e1b}
 \begin{itemize}
 \item 4KB a page
 \item \texttt{PG} bit in register \texttt{CR0} toggles paging
 \item Root page table given by (40bits) ``page directory base register'' in \texttt{CR3}
 \end{itemize}
-\subsection{x86-64 paging}
-\label{sec:org543a478}
+\subsubsection{x86-64 paging}
+\label{sec:org1f3caee}
 \begin{itemize}
 \item only \textbf{48} bits are used. 48 = 9 + 9 + 9 + 9 + 12
 \item \begin{center}
@@ -118,8 +397,9 @@ Page Level & Name\\
 \item Addr from 2 + next 9 bits = addr of Level 3 Page table.
 \end{enumerate}
 \end{itemize}
-\subsubsection{The CR3 Register}
-\label{sec:orga3b70f7}
+\begin{enumerate}
+\item The CR3 Register
+\label{sec:org3936b1d}
 \begin{center}
 \begin{tabular}{llr}
 63:M & M-12 & 11:0\\
@@ -127,38 +407,525 @@ Page Level & Name\\
 reserved & RPT addr & PCID\\
 \end{tabular}
 \end{center}
-\subsubsection{Reserve bits must be sign-extended}
-\label{sec:org872a8f6}
+\item Reserve bits must be sign-extended
+\label{sec:org2a13412}
 IE if the most significant (non-reserved) bit is 1, then the reserved is 1 and vv.
-\subsubsection{Process Context ID = Address Space ID}
-\label{sec:orgf6190e4}
+\item Process Context ID = Address Space ID
+\label{sec:org74f5b2d}
 \begin{itemize}
 \item ASID is different across processes (even though RPT might b the same)
 \end{itemize}
-\subsection{Linux memory map}
-\label{sec:orgc6e86fe}
+\end{enumerate}
+\subsubsection{Linux memory map}
+\label{sec:org72fe617}
 \begin{itemize}
 \item If the 48th bit is 0 -> user space
 \item Otherwise -> kernel space (half the Virtual Address Space)
 \item Note that all are sign-extended
 \end{itemize}
-\subsection{Master Kernel Page Table}
-\label{sec:orgc7d6a6c}
+\subsubsection{Master Kernel Page Table}
+\label{sec:org35d546a}
 \begin{itemize}
 \item Every process has own page table
 \item Of which contains the same MKPT
 \item MKPT maps the whole physical memory, unlike user process
 \end{itemize}
-\subsection{TLB}
-\label{sec:org14412de}
+\subsubsection{TLB}
+\label{sec:org1b043ec}
 \begin{itemize}
 \item Q: When is it flushed?
 A: Always by kernel. For eg when CR3 is changed
 \end{itemize}
-\subsection{Page Table Isolation (previously KAISER)}
-\label{sec:orgdfa3377}
+\subsubsection{Page Table Isolation (previously KAISER)}
+\label{sec:orgf48b64c}
 Only kernel process has the full kernel page table.
 User process has only enough kernel page table to enter kernel mode (to prevent attacks).
-\subsection{Virtual memory area (\texttt{vm\_area\_struct})}
-\label{sec:org679efed}
+\subsubsection{Virtual Memory Area (\texttt{vm\_area\_struct})}
+\label{sec:orga664f87}
+Stores the stack, heap, data, bss segments
+\begin{enumerate}
+\item Lazy expansion
+\label{sec:org00885c2}
+\begin{enumerate}
+\item \texttt{brk()} requests for more pages when you run out of memory (eg. via
+repeatedly calling \texttt{malloc} until oom)
+\item New \textbf{virtual} pages are allocated. But not linked to physical pages.
+\item UNTIL new virtual pages are used by eg. malloc.
+\end{enumerate}
+\end{enumerate}
+\subsubsection{Physical Memory Zone}
+\label{sec:orgd543790}
+\begin{enumerate}
+\item Direct Memory Access
+\label{sec:org4d3d9cc}
+Write directly into memory of drivers, disk etc
+\begin{enumerate}
+\item Modes
+\label{sec:orgcb70114}
+\end{enumerate}
+\end{enumerate}
+\subsection{Memory Allocator}
+\label{sec:org3915196}
+\subsubsection{Physical memory allocator (buddy allocator)}
+\label{sec:orgee7ef84}
+Eg. buddy system.
+\begin{enumerate}
+\item Buddy System
+\label{sec:org62bcaf6}
+Ask for k page frames. Upgrade to the nearest 2\textsuperscript{n} power. If there is such a
+frame, give it. Otherwise, go up one level to 2\textsuperscript{(n+1)}, give it half, and put
+half below.
+\item API
+\label{sec:orgde3c005}
+\begin{itemize}
+\item \texttt{kmalloc()} for physical
+\begin{itemize}
+\item Either \texttt{GFP\_ATOMIC} (not allowed to sleep, crucial)
+\item or \texttt{GFP\_KERNEL}
+\end{itemize}
+\item \texttt{vmalloc} for virtual. kernel's \texttt{malloc()}
+\end{itemize}
+\end{enumerate}
+\subsubsection{Virtual memory allocator (object allocator)}
+\label{sec:org0bc6cf8}
+\begin{enumerate}
+\item Simple List of Blocks (SLOB)
+\label{sec:org600c3ff}
+\begin{itemize}
+\item A kernel object is like the project we did in 2106, contains some bookeeping
+data (pointing to the next free frame), some payload etc
+\item SLOB uses first-fit, optimized (?) by best-fit
+\end{itemize}
+\item SLAB
+\label{sec:org70f733c}
+\begin{itemize}
+\item A slab is a few contiguous pages.
+\item Objects are aligned in to the size of cache lines.
+\end{itemize}
+\end{enumerate}
+\subsection{Page Fault}
+\label{sec:org00b58bc}
+\subsubsection{Page Fault or SIGSEGV?}
+\label{sec:orgf64b912}
+\begin{itemize}
+\item If the address trying to access is in the process address space:
+\begin{center}
+\begin{tabular}{ll}
+Have rights to access? & Result\\
+\hline
+Yes & Access, or Page fault\\
+No & SIGSEGV\\
+\end{tabular}
+\end{center}
+\item Otherwise (wrong address space)
+\begin{center}
+\begin{tabular}{ll}
+Mode? & Result\\
+\hline
+User & SIGSEGV\\
+Kernel & Kernel bug, kill the process\\
+\end{tabular}
+\end{center}
+\end{itemize}
+\subsubsection{The Linux Kernel is not pageable}
+\label{sec:org44deeb9}
+This is to prevent page fault in page fault handling etc.
+\subsubsection{Process}
+\label{sec:org5edb051}
+\begin{enumerate}
+\item Entry point: \texttt{arch/x86/mm/fault.c:do\_page\_fault()}
+\item Captures the linear address causing the fault in \texttt{CR2} contro register.
+\item Block the process while setting if the fault is big.
+\item Run the flowchart on slide page 99
+\end{enumerate}
+\subsection{Reclamation of Page Frame (deallocation of frame)}
+\label{sec:orgdec4eab}
+\subsubsection{Page Frame Reclamation Algorithm (PFRA)}
+\label{sec:org0171cca}
+\begin{itemize}
+\item essentially removes/evict page frames to the swap to keep RAM free
+\item must run before all frames are used up (otherwise no more process can run and
+will crash)
+\item 4 kinds of frame:
+\begin{center}
+\begin{tabular}{ll}
+Type & Reclaim action\\
+\hline
+Unreclaimable & -\\
+Swappable (anonymous) & evict to swap\\
+Syncable (mapped to file) & sync with hard disk\\
+Discardable & just discard\\
+\end{tabular}
+\end{center}
+\end{itemize}
+\subsubsection{Reverse mapping}
+\label{sec:orgd52d353}
+Motivation: given a frame, which page table entries (PTE) point to it?
+\begin{enumerate}
+\item Object-based Reverse Mapping
+\label{sec:org7272aa9}
+\begin{itemize}
+\item Done by two fields:
+\item \texttt{\_mapcount} counts the number of PTEs pointing to it. 0-indexed (ie. -1 when
+no one points to it)
+\item \texttt{mapping}:
+\begin{center}
+\begin{tabular}{ll}
+state & meaning\\
+\hline
+null & belongs to the swap cache\\
+non-null, lsb=1 & anonymous, points to \texttt{anon\_vma}\\
+non-null, lsb=0 & mapped, points to the \texttt{address\_space} obj in page cache\\
+\end{tabular}
+\end{center}
+\end{itemize}
+\begin{enumerate}
+\item \texttt{anon\_vma}
+\label{sec:org8e5a7b1}
+\begin{itemize}
+\item A doubly linked list collecting all the pointers to the same frame
+\end{itemize}
+\item \texttt{address\_space}
+\label{sec:org487ae23}
+\begin{itemize}
+\item Similar as \texttt{anon\_vma}
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+\subsubsection{Page Reclamation Process}
+\label{sec:org898d280}
+\begin{enumerate}
+\item For mapped page frames:
+\label{sec:org87859ee}
+\begin{itemize}
+\item Two clock lists (Least Recently Used), fixed size, one is the \texttt{active} list,
+the other is \texttt{inactive} list
+\item Original algorithm:
+\begin{enumerate}
+\item If freshly faulted (allocated) you start at the inactive list
+\item If used for the second time, promoted to active list
+\item In active list, membership cannot be refreshed. Once sufficient active
+pages enter the active list, it is demoted to inactive
+\item In inactive long enough then reclaimed, else step (2)
+\end{enumerate}
+\item Some observations
+\begin{itemize}
+\item eviction: only happens when a new fault is introduced. kicks the head of
+\texttt{inactive} list away.
+\item activation: second time it is read, promoted from \texttt{inactive} to \texttt{active}.
+\item min \# of inactive page access  = eviction + activation.
+\item refault distance: R - E where E is the reading of the sum above when it is
+evicted, R is the reading above when it is refaulted back into memory.
+\begin{itemize}
+\item Intuition: If the list was made R-E longer, it wont be evicted.
+\end{itemize}
+\item Minimum access distance: length of inactive + (R-E)
+\end{itemize}
+\end{itemize}
+\end{enumerate}
+\subsubsection{Page Cache (for opened files)}
+\label{sec:org5098570}
+\begin{itemize}
+\item Write-back caching: changes are not written immediately but only marked dirty
+on cache. Periodically, it is written into the disk (when evicted by algorithm)
+\end{itemize}
+\begin{enumerate}
+\item Important fields in \texttt{address\_space}
+\label{sec:org6bcdd45}
+\begin{enumerate}
+\item \texttt{page\_tree} a radix tree of all pages
+\label{sec:org17d4ec8}
+\begin{itemize}
+\item Radix trees represent a map from keys (strings) to values.
+\item All pages have their memory addresses as keys, pointed to the frames. Every 6
+bits as a unit for branching.
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+\subsection{Swap}
+\label{sec:org8eae2a0}
+\begin{itemize}
+\item A disk partition (or a file), maximally \texttt{MAX\_SWAPFILES=32}
+\item Swap area consists of swap slots, each slot is 4KB.
+\item Pages can be \textbf{swapped in} to swap or \textbf{swapped out} into RAM
+\item Race conditions are resolved using the swap cache
+\end{itemize}
+\subsubsection{Swap Cache}
+\label{sec:org2d243eb}
+\begin{enumerate}
+\item Suppose A, B are processes using a same page P.
+\item Page P needs to be swapped.
+\item Swap cache caches P. It provides a reference in case when swapping in P,
+either process needs to read P.
+\item Once done, both A and B point to the swap slot.
+\end{enumerate}
+\section{Lecture 9: Synchronization}
+\label{sec:org1b6265b}
+\subsection{Concurrency in the Kernel}
+\label{sec:orge45f899}
+\begin{itemize}
+\item Motivation: SMP OS Kernels are pre-emptible
+\item True concurrency: due to multiple processors
+\item Pseudo concurrency: due to interleaving of instructions
+\begin{itemize}
+\item Software based: voluntary/involuntary preemption (avoidable by disabling
+preemption)
+\item Hardware based: interrupt/trap/fault/exception handlers (can be disabled)
+\end{itemize}
+\end{itemize}
+\subsection{Synchronization techniques in Linux}
+\label{sec:org273aad3}
+\subsubsection{Per-CPU Variables}
+\label{sec:org59e40b7}
+\begin{itemize}
+\item Removes the need to synchronize between cores
+\end{itemize}
+\begin{enumerate}
+\item How is this implemented?
+\label{sec:orgf7fc9c5}
+\begin{itemize}
+\item Code, Data, Extra, Stack Segments (CS,DS,ES,SS) have segment base = 0,
+creating a flat address space.
+\item FS, GS are exceptions.
+\item \texttt{SWAPGS} instruction swaps in correct value of the GS register (kept to 0 in
+user mode) from the MSR
+\item Which points to an array of pointers, maintaining per-cpu variables
+\end{itemize}
+\end{enumerate}
+\subsubsection{Atomic Operations}
+\label{sec:orgfb95a59}
+\begin{itemize}
+\item Atomic instructions, implemented by the CPU
+\end{itemize}
+\subsubsection{Memory Barriers}
+\label{sec:org8f4b66d}
+\begin{itemize}
+\item Optimization barrier (user library): \texttt{barrier()} to prevent reordering of
+instructions by the compiler
+\item Memory barrier (instructions): to prevent read-write reordering
+\end{itemize}
+\subsubsection{Spin Locks (Active waiting)}
+\label{sec:org9f5a8e9}
+\begin{enumerate}
+\item API
+\label{sec:org7a9ee21}
+\texttt{spin\_lock()} and \texttt{spin\_unlock()}
+\item Ticket Locks
+\label{sec:org5bd43f0}
+Assumption: there is an atomic \texttt{fetch\_and\_inc(var)} function.
+\begin{itemize}
+\item entering cs: take a ticket number with fetch and inc. Active waiting when is
+not my number
+\item exiting cs: increment the now\textsubscript{serving} with \texttt{fetch\_and\_inc(var)}.
+\end{itemize}
+
+\item Problem with interrupts
+\label{sec:orge51bfdb}
+\begin{itemize}
+\item What if an interrupt happens when a process holds the spin lock?
+\item What if the interrupt handler needs to acess data held by the spin lock holder?
+\end{itemize}
+\item Solution: disable interrupts while holding spin lock
+\label{sec:orgc4e89b0}
+\end{enumerate}
+\subsubsection{Semaphore}
+\label{sec:orgfc70ad1}
+\begin{enumerate}
+\item Etymology
+\label{sec:org3a50cae}
+Flags used on ships to communicate
+\item Difference compared to spin locks
+\label{sec:org98d0113}
+\begin{itemize}
+\item Contention for the lock causes \textbf{blocking} not \textbf{spinning}.
+\item Can allow concurrency of more than 1 process if necessary
+\end{itemize}
+\item API
+\label{sec:org01b51c1}
+\begin{itemize}
+\item \texttt{down()} or \texttt{P()}: can be blocked, although can either down or try\textsubscript{down}
+\item \texttt{up()} or \texttt{V()}
+\end{itemize}
+\end{enumerate}
+\subsubsection{Reader/writer locks}
+\label{sec:org7e642f2}
+Allows multiple reader or a single writer. Increase efficiency of semaphore
+\begin{enumerate}
+\item Big reader locks (\texttt{br\_lock})
+\label{sec:orgab5daa9}
+Specialized form, very fast to acquire for reading but slow for writing. Think
+possible starvation for writer?
+\end{enumerate}
+\subsubsection{Seqlock}
+\label{sec:orga26343c}
+A reader-writer lock with high priority on writers
+\begin{enumerate}
+\item How it works
+\label{sec:orge825d17}
+\begin{enumerate}
+\item On top of a spin lock, there is a sequence field
+\item The sequence value is incremented when writer uses
+\item Readers might need to re-read
+\end{enumerate}
+\end{enumerate}
+\subsubsection{Read-copy Update (RCU)}
+\label{sec:org3d9ae39}
+\begin{itemize}
+\item Lock-free data structure
+\item Another R-W lock. Writes are written to a new copy, and writer changes the
+pointer to the new copy atomically.
+\item Before reading, some time is given (swap to user space, idle loop) to ensure
+the new copy is pointed to, hence read.
+\end{itemize}
+\subsubsection{Completion}
+\label{sec:orgd3f1484}
+\subsection{Lock-free data structures}
+\label{sec:org49dda6e}
+\subsubsection{Problem with locks}
+\label{sec:orgf101066}
+\begin{enumerate}
+\item Deadlock
+\item Priority inversion
+\item Convoying - long thread get the lock, stalling short ones
+\item Signal safety
+\item Kill-tolerance - what if the holder is killed?
+\item Pre-emption tolerance - what if the holder is preempted?
+\item Performance - forced sequential operations
+\end{enumerate}
+\subsubsection{The heart of lock-free data structures - CAS}
+\label{sec:org046119f}
+\ldots{} is the \texttt{compare\_and\_swap(*ptr, old\_val,  new\_val)} atomic operation.
+\subsubsection{An example: lock-free stack}
+\label{sec:org988ef53}
+\begin{enumerate}
+\item Structure
+\label{sec:org1f45070}
+A (singly) linked list, where head is the top of the stack
+\item API
+\label{sec:org7052cd2}
+\begin{enumerate}
+\item push
+\label{sec:org01e2afb}
+\begin{enumerate}
+\item create a linked list node with the new value
+\item while \texttt{compare\_and\_swap(head, curr\_node->next, curr\_node)} is false, make the
+new node point to the (new) linked list head
+\end{enumerate}
+\item pop
+\label{sec:orgd67da1b}
+\end{enumerate}
+\item The ABA Problem
+\label{sec:orgdefad77}
+\begin{enumerate}
+\item Say the stack is A -> B -> X
+\item P1 reads A from the stack
+\item P2 pops A
+\item P2 pops B
+\item P2 pushes A
+\item P1 comes back and compares with the head, which is still A, but the value is
+changed (they use the same pointer?)
+\end{enumerate}
+\begin{enumerate}
+\item Solution
+\label{sec:org3240b06}
+\begin{itemize}
+\item Keep an update count for each element. That way the new generation will not be
+confused as the previous.
+\item Uses the doubleword compare and swap (CAS)
+\end{itemize}
+\end{enumerate}
+\end{enumerate}
+\subsubsection{CAS is Insufficient}
+\label{sec:org89ac0a8}
+Imagine a linked list, P1 tries to delete the 2nd element, P2 tries to insert
+between the 2nd and 3rd element. The new list does not the 1st element point to
+P2 in one execution (verify this).
+\section{Lecture 10: Filesystem}
+\label{sec:orgfb22055}
+A bookeeping attempt for the array of bits on hard drive.
+\subsection{Virtual Filesystem (VFS)}
+\label{sec:org21e301c}
+\begin{itemize}
+\item Known though its APIs: \texttt{open, close, read, write} syscalls
+\item Abstracts through different fs: \texttt{ext2, ms-dos} etc
+\end{itemize}
+\subsubsection{Common File Model}
+\label{sec:orgfd35be5}
+\begin{itemize}
+\item The data structure to represent files
+\end{itemize}
+\begin{enumerate}
+\item Superblock object
+\label{sec:org30d6e51}
+\begin{itemize}
+\item Stores info about a mounted system
+\item All superblocks are stored in a doubly linked list
+\item corr. to (filesystem control block)
+\end{itemize}
+\item Inode object
+\label{sec:orge293454}
+\begin{itemize}
+\item metadata for a file, directory etc
+\item \texttt{ls -i}
+\item corr. to (file control block)
+\end{itemize}
+\item File object
+\label{sec:orgced6044}
+\begin{itemize}
+\item Only exists in kernel memory, when it is opened.
+\item Transactonal data between a process (reading/writing it) and the file
+\item hierachy \texttt{task\_struct->files\_struct->struct file}
+\end{itemize}
+\item Dentry object
+\label{sec:org4765319}
+\begin{itemize}
+\item Directory entry: links dirs to files
+\item Is cached since takes long to construct
+\item Exists because a directory may not exist in the disk, need a common API
+\end{itemize}
+\end{enumerate}
+\subsubsection{Everything is a file}
+\label{sec:org3d6d4c9}
+filesystems include \texttt{usbfs} etc
+\subsubsection{API}
+\label{sec:orgbbbf9a0}
+\begin{itemize}
+\item 0th layer: system calls
+\item 1st layer: \texttt{read, write} etc in libc
+\item 2nd layer: \texttt{fread, fwrite} etc work with file objects and have buffering
+\end{itemize}
+\subsection{Disk filesystems}
+\label{sec:org31c577b}
+\subsubsection{Purpose}
+\label{sec:org4e217d1}
+\begin{itemize}
+\item provides structure to data
+\item provides a logical namespace
+\item abstract user interface
+\item security
+\end{itemize}
+\subsubsection{Journaling}
+\label{sec:org8f6bdec}
+\begin{itemize}
+\item Keeps a ``journal'' for not-yet-committed changes to files, especially for
+complex filesystems like deleting a file (remove dir entry, release inode,
+move blocks into free pool, bookeeping\ldots{})
+\item Provides points for recovery in case the chain above breaks due to a crash
+\end{itemize}
+\subsubsection{Examples}
+\label{sec:orgf7afe80}
+\begin{enumerate}
+\item File Allocation Table (FAT)
+\label{sec:org8a9610e}
+\begin{enumerate}
+\item Core Idea
+\label{sec:orgc0f5e10}
+the FAT (the table) points to sectors, which are then linked lists of sectors
+forming the file.
+\end{enumerate}
+\item New Technology File System (NTFS)
+\label{sec:org9cc3da6}
+\end{enumerate}
+\subsection{Sysfs - in-memory filesystem}
+\label{sec:org67bbd35}
 \end{document}
