@@ -1,0 +1,53 @@
+#+TITLE: Types and Programming Languages
+* Part I
+** Chapter 3
+*** 3.3 Induction on Terms
+- The set of terms $\mathcal{T}$ is the smallest set fulfilling the conditions.
+- Three ways to define a language (all terms)
+  1. Using A BNF
+  2. Inductively on the set $\mathcal{T}$
+  3. Like above but use the "fraction" notation
+  4. Concrete: Create a set that contains the base terms, and build a new set
+     that is one step ahead, and take the union of all such sets
+- We can define =Consts(t), size(t), depth(t)= functions, counting the number of
+  constants, size of the AST (num of nodes) and depth of AST respectively.
+- Induction of terms, on either of the values above. There is a natural
+  preorder, and this is a result of structural induction
+*** 3.4 Semantic styles
+- 3 basic approaches
+  1. Operational Semantics. Small step/structural operational semantics is a
+     state machine - terms are states, evaluation steps are given by the
+     transition function. Big step has one step to result.
+  2. Denotational semantics. Find a semantic domain, and a interpretation
+     function mapping terms in language to objects in the domain.
+  3. Axiomatic semantics - define the laws before the behaviours.
+*** 3.5
+**** 3.5.13
+1. Add new rule.
+   + 3.5.4 determinacy definitely not preserved, since E-Funny1 "contradicts" with
+     E-IfTrue.
+   + 3.5.7 is true, every value will still be in normal form.
+   + 3.5.8 also true, normal form implies value.
+   + 3.5.11 no, since it depends on 3.5.4
+   + 3.5.12 yes, the proof applies exactly.
+2. Add new rule to evaluate if branch first.
+   - 3.5.4 determinacy not preserved since we have multiple rules for a term again.
+   - 3.5.7 Every value will be a normal form since there are no rules to reduce
+     values.
+   - 3.5.8 yes.
+   - 3.5.11 no in general, but if they are normal forms, they must be able to be
+     the same. Diamond property - if $r\to s,r\to t$, then exists $u$ such that
+     $s\to u,t\to u$.
+   - 3.5.12 yes, the proof applies?
+**** 3.5.17
+My idea: add a new term $w$ that contains all the possible terms that will be
+evaluated in one step into =wrong=. I show that a term in $t$ is stuck $\iff$ it
+is a term in $w$. Solution's idea: consider the original and new language of
+terms - show that any evaluation of a term $t$ in the two languages, $t\to t_1$
+and $t\to t_2$ respectively, then $t_1$ is stuck $\iff$ $t_2$ is =wrong=.
+**** 3.5.18
+Induction on the derivation (recall the "multi-step evaluation relation" is a reflexive and
+transitive closure, and is surely antisymmetric, therefore a partial order.) of
+the term, with a case analysis on the last rule used. The base case is the
+derivation $t\to t$ or $t\Downarrow t$, which is omitted in the book. Induction
+on size of term or the one-step evalution is also fine.
