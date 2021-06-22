@@ -1,4 +1,26 @@
 #+TITLE: Types and Programming Languages
+* Glossary
+** Operational Semantics
+Specifies the behaviour of a PL by defining a simple /abstract machine/ for it
+(state machines with terms as states and transition functions). Reduction rules.
+** Denotational Semantics
+Specifies the behaviour of a PL by 1. finding a semantic domain and 2. map
+terms in the language into objects in the domain.
+** Axiomatic Semantics
+The language itself is the rule.
+** Full Beta Reduction
+Any term can be evaluated at any time.
+** Normal Order Strategy (Greedy with redex)
+Leftmost, outermost redex always evaluated first, regardless inside/outside
+abstraction.
+** Call-By-Name Strategy (Lazy, does not evaluate arg)
+Evaluate leftmost, outermost first but no evaluation inside abstractions
+(function bodies).
+** Call-By-Need Strategy (Haskell)
+Call by name but overwrite all occurences in program with result after the first
+evaluation.
+** Call-By-Value
+Call-By-Name but eagerly evaluates arguments.
 * Part I
 ** Chapter 3
 *** 3.3 Induction on Terms
