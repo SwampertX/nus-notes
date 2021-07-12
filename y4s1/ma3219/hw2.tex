@@ -1,0 +1,146 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3219 HW2}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+% \usepackage{lmodern}
+\usepackage{tgpagella}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{enumitem}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+\usepackage{tocloft}
+\usepackage[thinc]{esdiff}
+\renewcommand{\thesection}{Question \arabic{section}}
+\renewcommand{\thesubsection}{Part \arabic{section}(\roman{subsection})}
+\renewcommand{\thesubsubsection}{Solution}
+\cftsetindents{subsection}{1.5em}{4.5em}
+\cftsetindents{subsubsection}{3.8em}{5.5em}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+\begin{document}
+\maketitle
+% \tableofcontents
+\section{}
+\begin{proof}[Solution]
+We use the diagonalization argument. Suppose there is a universal $\alpha:\N^{2}\to\N$,
+such that for any total recursive function $f$, we must have some $n\in\N$ such
+that \[\forall x\in\N, f(x) = \alpha(n, x).\]
+
+Then let $g:\N\to\N$ be defined by \[g(x) = \alpha(x, x) + 1.\] It is easy to see that
+$g$ is total recursive since $\alpha$ is total recursive. Suppose $\alpha$ is universal,
+then $g(x) = \alpha(n, x)$ for some $n\in\N$ by the definition of universal function.
+Then feeding $n$ as the input to $g$,
+\begin{align*}
+  g(n) = \alpha(n,n) \ne \alpha(n,n) + 1,
+\end{align*}
+a contradiction to the definition of $g$.
+\end{proof}
+
+\section{}
+\subsubsection{}
+Our solution has the following idea:
+\begin{enumerate}
+  \item The input has form $01^{x}01^{y}$.
+  \item We replace the 1 at the beginning of both sections pair-by-pair.
+  \item If any of them run out but the other have not, then output $01$, which
+        represents \verb|false|.
+  \item Otherwise, output $011$, which represents \verb|true|.
+\end{enumerate}
+
+
+
+\section{}
+\subsubsection{}
+We can encode the (ordered) alphabet using the binary digits, representing
+$a_{n}$ as $n$ in binary. For the tape, treat every $\lceil\log_{2}(n)\rceil$ cells as a
+unit, and operate on it.
+
+\medskip It is possible to use $\{\square,1\}$ as alphabet. We use $1^{x}$ to
+represent $a_{x}$, and use spaces to delimit. Two or more consecutive blank
+cells indicate the either end of the tape.
+
+\medskip But I read online that Claude Shannon proved that one-symbol Turing
+machines are not universal.
+
+\section{}
+\subsection{}
+We assume knowledge on calling another Turing Machine as a subprogram - simply
+changing the initial and final states of the subprogram so it fits into the
+current program.
+\begin{enumerate}[label={\Roman*.}]
+  \item {
+    Primitive recursion: let the Turing Machines representing
+    $g:\N^{m}\to\N, h:\N^{m+2}\to\N$ be $M_{g}, M_{h}$ respectively. To implement
+    $f(\overrightarrow{x},y)$, we mark the number of times to the left of the
+    input and build the result systematically:
+    \begin{enumerate}
+      \item First mark $1^{y}$ at the left of the input.
+      \item Calculate $f(\overrightarrow{x}, 0)$ by calling $M_{g}$ on
+            $\overrightarrow{x}$.
+      \item If to the left of the input is already cleared, return the result.
+            Otherwise, remove a mark from the left of the input, and calculate
+            the next iteration using $M_{h}$.
+      \item If the left to the input is cleared, return the result. Otherwise
+            go to (c).
+    \end{enumerate}
+  }
+  \item { Minimization: suppose the partial recursive function $f:\N^{m}\to\N$ is
+        defined as a minimization of some Turing Computable $g:\N^{m+1}\to\N$. To
+        code a Turing Machine for $f$, we just need to literally search from
+        ${0,1,2,\ldots}$, and at the end of each step increment a ``counter''. If the
+        result is found, just return the ``counter'' as an output.
+    \begin{enumerate}
+      \item First let the input $01^{x_{1}}01^{x_{2}}\ldots$ be given.
+      \item Mark the counter (eg. to the left of the input) as $0$.
+      \item Run $M_{g}$, the Turing machine representing $g$ on
+            $\overrightarrow{x}$ and counter.
+      \item If the result returned by $M_{g}$ is $0$, return this value of
+            counter. Otherwise, go to (c).
+    \end{enumerate}
+  }
+\end{enumerate}
+
+% \bigskip
+% \begin{center}
+% End of Assignment Solutions
+% \end{center}
+\end{document}
