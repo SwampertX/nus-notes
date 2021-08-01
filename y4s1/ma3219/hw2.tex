@@ -85,7 +85,40 @@ Our solution has the following idea:
         represents \verb|false|.
   \item Otherwise, output $011$, which represents \verb|true|.
 \end{enumerate}
+\begin{verbatim}
+; find the first 1 to the right
+0 * * R first-one
 
+first-one 1 0 R next-one-search
+first-one 0 * R first-one
+first-one _ * L end-right
+
+next-one-search 0 * R next-one-write
+next-one-search 1 * R next-one-search ; hit a 0 first
+next-one-search _ * L end-wrong
+
+next-one-write 0 * R next-one-write
+next-one-write 1 0 * back
+next-one-write _ * L end-wrong
+
+back _ * R first-one
+back * * L back
+
+end-right _ * R end-right-1
+end-right * * L end-right
+
+end-right-1 * 0 R end-right-2
+end-right-2 * 1 R end-right-3
+end-right-3 * 1 R end-right-4
+end-right-4 * _ * halt-right
+
+end-wrong _ * R end-wrong-1
+end-wrong * * L end-wrong
+
+end-wrong-1 * 0 R end-wrong-2
+end-wrong-2 * 1 R end-wrong-3
+end-wrong-3 * _ * halt-wrong
+\end{verbatim}
 
 
 \section{}

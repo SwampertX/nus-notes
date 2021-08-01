@@ -1,0 +1,212 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{MA3219 Homework 3}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+% \usepackage{lmodern}
+\usepackage{tgpagella}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+\usepackage{tocloft}
+\usepackage[thinc]{esdiff}
+\renewcommand{\thesection}{Question \arabic{section}}
+\renewcommand{\thesubsection}{Part \arabic{section}(\roman{subsection})}
+\renewcommand{\thesubsubsection}{Solution}
+\cftsetindents{subsection}{1.5em}{4.5em}
+\cftsetindents{subsubsection}{3.8em}{5.5em}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+\begin{document}
+\maketitle
+% \tableofcontents
+\section{}
+\section{}
+Show that a set $A\subseteq\N$ is accepted by some Turing machine $\iff$ it is a domain of
+some partial recursive function $f$.
+\subsubsection{}
+\begin{proof}
+\underline{($\implies$):} Suppose the Turing machine that accepts $A$ has a code
+$e$. Then the universal function gives us that $\Phi(e, x)$ is the partial
+recursive function that is identical to the Turing machine. By s-m-n theorem, we
+have $\varphi_{e}$ as the function whose domain is $A$.
+
+\medskip
+\underline{($\impliedby$):} Let the partial recursive function $f$ that has
+domain $A$ be given. We want to construct a Turing machine $M_{f}$ such that it
+mimics $f$. We already know how to encode as a Turing machine:
+\begin{enumerate}
+\item Succ, Zero and Projection
+\item Composition and Recursion
+\item Minimization (via setting up registers)
+\end{enumerate}
+So we need only decompose down $f$ to these building blocks of functions and we
+can have a Turing machine $M_{f}$ that exactly mimics $f$. In particular,
+$M_{f}$ accepts $A$.
+\end{proof}
+\section{}
+Let $A$ and $B$ be r.e. subsets of $\N$. Then prove that
+\begin{enumerate}
+  \item {
+    both $A\cup B$ and $A\cap B$ are r.e..
+    \begin{proof}(Machine version)
+      Suppose $M_{A}, M_{B}$ are Turing machines that accept $A, B$
+      respectively.
+
+      For $A\cap B$, $M_{A}M_{B}$ (run one after another, changing
+      halting states of $M_{A}$ to the initial states of $M_{B}$) works.
+
+      For $A\cup B$, we run $M_{A}$, $M_{B}$ in parallel:
+\begin{verbatim}
+loop
+    Carry out one step of M_A.
+    If M_A halts, halt and return the result of M_A.
+    Carry out one step of M_B.
+    If M_B halts, halt and return the result of M_B.
+end loop
+\end{verbatim}
+    \end{proof}
+    \begin{proof}(Function version)
+      Let $\varphi_{x}, \varphi_{y}$ have domains $A, B$ respectively.
+
+      For a domain of $A\cap B$, $\varphi_{x}\circ\varphi_{y}$ works.
+      For a domain of $A\cup B$, consider
+      \begin{align*}
+        f(2k) &= \varphi_{x}(k)\\
+        f(2k+1) &= \varphi_{y}(k)
+      \end{align*}
+      for any $k\in\N$.
+    \end{proof}
+  }
+
+  \item {If $\alpha:\N\to\N$ is parial recursive, then both $\alpha^{-1}[A]$ and $\alpha[A]$ are
+    r.e.. Moreover if $A$ and $\alpha$ are recursive then $\alpha^{-1}[A]$ is recursive.
+
+    \medskip
+    (I don't know how to do the machine version, because I don't
+    know how to define the ``inverse'' of a Turing machine. Could you give
+    some hint please?)
+    \begin{proof}Suppose $A$ is r.e., $\alpha$ is partial recursive.
+      We want to show
+      \begin{enumerate}
+        \item {
+          \underline{$\alpha[A]$ is r.e.:}
+
+          Find $\varphi_{e}$ such that $\varphi_{e}[\N] = A$. Then
+          \[\alpha[A] = \alpha\circ\varphi_{e}[\N]\]
+          gives us $\alpha[A]$ as a range of a partial recursive function $\alpha\circ\varphi_{e}$,
+          therefore $\alpha[A]$ is r.e..}
+
+        \item { \underline{$\alpha^{-1}[A]$ is r.e.:} Consider the partial
+          characteristic function of $\alpha^{-1}[A]$ as $f$.
+
+          The set is r.e. $\iff \text{partial characteristic function is
+            partial recursive}$. Then observe $f$:
+          \begin{align*}
+            &f(x)&&=\begin{cases}
+              1 &\text{if }x\in\alpha^{-1}[A] \iff \alpha(x)\in A\\
+              \uparrow &\text{otherwise}
+            \end{cases}\\
+            \iff &f &&= \chi_{A_{P}}\circ\alpha
+          \end{align*} which is a composition of two partial recursive
+          functions. Hence the partial characteristic function of $\alpha^{-1}[A]$ is
+          partial recursive and hence the set is r.e..
+        }
+      \end{enumerate}
+      The case where $A, \alpha$ are recursive is analogous to the proof in (b).
+    \end{proof}
+  }
+\end{enumerate}
+
+\section{}
+\subsubsection{}
+I am not sure how to solve using recursive functions. Below is a proof using
+Turing machines:
+\begin{proof}The idea is to run both machines in parallel:
+ \begin{verbatim}
+loop
+    Carry out one step of M_A.
+    If M_A halts, halt and return the result of M_A.
+    Carry out one step of M_B.
+    If M_B halts, halt and return the result of M_B.
+end loop
+\end{verbatim}
+\end{proof}
+
+\section{}
+Show that the class of recursive predicates is closed under bounded quantification.
+\subsubsection{}
+\begin{proof}
+  Define \emph{recursive predicates} as predicates whose characteristic function
+  is recursive. Then we note that bounded $\forall$ is equivalent to multiplication of
+  the results of individual characteristic functions; whereas bounded $\exists$ is
+  equivalent to bounded addition. Since the quantifications are bounded, the
+  formula are finite. Then recursive predicates can thus be combined in a
+  primitive recursive manner, via addition and multiplication.
+\end{proof}
+
+\section{}
+Show that $A\subsetneq\N$ is recursive and infinite $\iff\exists f:\N\to\N$ recursive and strictly
+increasing, and $A=f[\N]$.
+\subsubsection{}
+\begin{proof}
+  \underline{($\impliedby$):} Let $f$ be given. Then $f$ is clearly infinite,
+  suppose otherwise the maximum is $f(i) = k$, then $f(i+1)$ is defined (total)
+  and $f(i+1) > k = f(i)$ (strictly increasing). To show that $A$ is recursive,
+  we define the characteristic function using $f$:
+\begin{align*}
+\chi_{A}(x) = \begin{cases}
+  1 &\text{if }\exists n\leq x(f(n) = x)\\
+  0 &\text{otherwise.}
+\end{cases}
+\end{align*}
+The search is bounded and $f$ is recursive, thus $\chi_{A}$ is recursive as well.
+
+\medskip \underline{($\implies$):} Let $A$ and its characteristic function
+$\chi_{A}$ be given. We need only enumerate the set $A$ by searching its recursive
+characteristic function:
+\begin{align*}
+  f(0) &= \min_{k}\{ \chi_{A}(k) = 1 \}\\
+  f(n+1) &= \min_{k}\{ \chi_{A}(k) = 1 \wedge k>f(n)\}.
+\end{align*}
+Then $f$ is by definition strictly increasing, since $A$ is infinite.
+\end{proof}
+\end{document}
