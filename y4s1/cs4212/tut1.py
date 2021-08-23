@@ -11,9 +11,10 @@ trans = {
     'E':('F', 'X'),
     'F':('X', 'C')
 }
-starting_states = "A"
+starting_state = "A"
 ending_states = "A, D, F"
 
 def main():
+    state = starting_state
     for line in sys.stdin:
         for char in line:
