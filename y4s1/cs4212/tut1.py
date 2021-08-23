@@ -4,7 +4,7 @@ import sys
 
 # We just hard code the following transition table
 trans = {
-    'A':('B', 'C'),
+    'A':('B', 'C'), # shorthand for {0:'B', 1:'C'}
     'B':('X', 'D'),
     'C':('E', 'X'),
     'D':('B', 'X'),
@@ -12,6 +12,7 @@ trans = {
     'F':('X', 'C')
 }
 starting_states = "A"
+ending_states = "A, D, F"
 
 def main():
     for line in sys.stdin:
