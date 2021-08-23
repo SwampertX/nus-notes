@@ -23,3 +23,4 @@ def main():
             if char not in alphabet:
                 print(f"Invalid character: {char}")
                 exit(1)
+            state = trans[state][int(char)]
