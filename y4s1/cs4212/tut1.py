@@ -18,9 +18,13 @@ alphabet = "01"
 
 def main():
     state = starting_state
+    seq = ""
     for line in sys.stdin:
         for char in line:
             if char not in alphabet:
                 print(f"Invalid character: {char}")
                 exit(1)
+            seq += char
             state = trans[state][int(char)]
+            if state == "X":
+                print(f"Invalid string: {seq}")
