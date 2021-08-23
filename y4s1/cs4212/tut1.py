@@ -23,8 +23,19 @@ def main():
         for char in line:
             if char not in alphabet:
                 print(f"Invalid character: {char}")
-                exit(1)
+                exit()
             seq += char
             state = trans[state][int(char)]
             if state == "X":
                 print(f"Invalid string: {seq}")
+                exit()
+    if state not in ending_states:
+        print(f"Invalid string: {seq}")
+    else:
+        print(f"Accepted string: {seq}")
+
+
+main()
+
+# test:
+# echo -n "0101" | python3 tut1.py
