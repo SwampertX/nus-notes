@@ -24,6 +24,9 @@
 \lhead{\myname}
 \chead{\mytitle}
 
+\usepackage[backend=biber, style=alphabetic]{biblatex}
+\addbibresource{references.bib}
+
 % \usepackage{tocloft}
 % \usepackage[thinc]{esdiff}
 % \renewcommand{\thesection}{Question \arabic{section}}
@@ -59,7 +62,7 @@
 \maketitle
 \section{Problem Statement}
 
-Log-structured Merge Trees (LSM Trees) have a good write throughput, but high
+\cite{10.1145/2213836.2213862} Log-structured Merge Trees (LSM Trees) have a good write throughput, but high
 read amplification. This is the opposite of the commonly used update-in-place
 storage systems which have great read performance, but low write throughput. As
 observed at Yahoo!, the low latency workloads that emphasize on writes are
@@ -90,4 +93,13 @@ times, improving write latencies.
 
 
 \subsection{Cons}
+\begin{enumerate}
+  \item Merging in \emph{bLSM} Trees is difficult to implement, solving the issues
+        using mutex introduces additional concurrency overheads.
+    \item Even though existing LSM Trees implement write-ahead logs for
+    consistency upon crash, the bloom filters are too huge to write to disk and
+    therefore complicate crash recovery.
+\end{enumerate}
+
+\printbibliography
 \end{document}
