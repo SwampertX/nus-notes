@@ -1,0 +1,93 @@
+\documentclass{article}
+
+\newcommand{\myname}{Tan Yee Jian (A0190190L)}
+\newcommand{\mytitle}{CS2309 Assignment 2}
+\title{\mytitle}
+\author{\myname}
+\date{\today}
+
+\usepackage[a4paper, total={6in, 9.7in}]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\theoremstyle{plain}
+% \usepackage[outputdir=tmp]{minted}
+% \usepackage{lmodern}
+\usepackage{tgpagella}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+% \rhead{Page \thepage/\pageref{LastPage}}
+\rhead{Page \thepage}
+\lhead{\myname}
+\chead{\mytitle}
+
+% \usepackage{tocloft}
+% \usepackage[thinc]{esdiff}
+% \renewcommand{\thesection}{Question \arabic{section}}
+% \renewcommand{\thesubsection}{Part \arabic{section}(\roman{subsection})}
+% \renewcommand{\thesubsubsection}{Solution}
+% \cftsetindents{subsection}{1.5em}{4.5em}
+% \cftsetindents{subsubsection}{3.8em}{5.5em}
+
+\newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
+\newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
+\newcommand{\seqk}[1]{(#1)^\infty_{k=1}}
+% (series term): returns a series with counter n=1 to \infty.
+\newcommand{\infsrsn}[1]{\sum\limits^\infty_{n=1}#1}
+\newcommand{\infsrsk}[1]{\sum\limits^\infty_{k=1}#1}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\cmm}{C(M_1,M_2)}
+\newcommand{\met}[1]{\langle M_{#1},\rho_{#1}\rangle}
+\newcommand{\ntoinf}{\limits_{n\to\infty}}
+\newcommand{\ktoinf}{\limits_{k\to\infty}}
+% \newcommand{\onetoinf}[]{^\infty_{n=1}}
+\newcommand{\limn}[1]{\lim\ntoinf #1}
+\newcommand{\limk}[1]{\lim\ktoinf #1}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\diam}{diam}
+
+\begin{document}
+\maketitle
+\section{Problem Statement}
+
+Log-structured Merge Trees (LSM Trees) have a good write throughput, but high
+read amplification. This is the opposite of the commonly used update-in-place
+storage systems which have great read performance, but low write throughput. As
+observed at Yahoo!, the low latency workloads that emphasize on writes are
+increasing from 10-20\% to about 50\%, which is getting unsuitable for
+update-in-place systems. LSM Trees are a good candidate for write-intensive
+tasks, but modifications need to be made so it has a better real-world
+performance.
+
+\subsection{Solution}
+Therefore, the researchers have come up with bLSM, a LSM Tree with the
+advantages of B-Trees. This is done by adding Bloom filters in LSM Trees (hence
+the \emph{b} in \emph{bLSM}) to increase index performance and replacing the
+merge scheduler in LSM Trees with the new ``spring and gear'' merge scheduler.
+When measured under a new performance metric, \emph{read fanout} that is claimed
+to better characterize real-world index operations, \emph{bLSM} outperform
+B-Trees in most cases.
+
+\section{Pros and Cons}
+\subsection{Pros of \emph{bLSM}}
+\begin{enumerate}
+\item Using Bloom filter reduces read amplification by trimming the search tree,
+from $N$ to $1 + \frac{N}{100}$. This allows \emph{bLSM} to have near-optimal
+read performance.
+\item The new ``spring and gear'' scheduler solves the problem of
+\emph{snowshoveling}, so application writes are not blocked for long period of
+times, improving write latencies.
+\end{enumerate}
+
+
+\subsection{Cons}
+\end{document}
