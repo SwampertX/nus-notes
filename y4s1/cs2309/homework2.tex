@@ -82,24 +82,82 @@ B-Trees in most cases.
 
 \section{Pros and Cons}
 \subsection{Pros of \emph{bLSM}}
-\begin{enumerate}
-\item Using Bloom filter reduces read amplification by trimming the search tree,
+\subsubsection{Using Bloom Filters}
+Using Bloom filter reduces read amplification by trimming the search tree,
 from $N$ to $1 + \frac{N}{100}$. This allows \emph{bLSM} to have near-optimal
 read performance.
-\item The new ``spring and gear'' scheduler solves the problem of
+
+\medskip
+Since LSM Trees only have a small tree in memory that holds temporary data, reading
+a value might require searching through the different levels of trees. Bloom
+filters make this faster by giving an instant way of checking if a key-value
+pair is in a given tree.
+
+\medskip
+This drastically decreases read amplification from $N$ to $1+\frac{N}{100}$,
+although by using $10$ bits to encode a key leads to about $1\%$ false positive
+rate and increases memory utilization by $5\%$, but it solves the fundamental
+disadvantage of LSM Trees of having slow random reads.
+
+\subsubsection{``Spring and Gear'' scheduler}
+The new ``spring and gear'' scheduler solves the problem brought about by
 \emph{snowshoveling}, so application writes are not blocked for long period of
 times, improving write latencies.
-\end{enumerate}
+
+\medskip
+\emph{Snowshovelling} is also known as \emph{tournament sort} or
+\emph{replacement-selection} sort, which improves throughput for sequential
+workloads at the cost of blocking application writes for an arbitrarily long
+period of time. It also increases the data each merge from $C_{0}$ to $C_{1}$
+consumes.
+
+\medskip
+The autors modified the gear scheduler which interacts badly with
+\emph{snowshovelling}, into the ``spring and gear'' scheduler. This new
+scheduler restricts the utilization of $C_{0}$, the top-level tree between a
+upper and lower limit, allowing space for the new scheduler to absorb merge
+spikes due to overfull trees.
 
 
 \subsection{Cons}
-\begin{enumerate}
-  \item Merging in \emph{bLSM} Trees is difficult to implement, solving the issues
-        using mutex introduces additional concurrency overheads.
-    \item Even though existing LSM Trees implement write-ahead logs for
-    consistency upon crash, the bloom filters are too huge to write to disk and
-    therefore complicate crash recovery.
-\end{enumerate}
+\subsubsection{Merge Threads}
+Merging in \emph{bLSM} Trees is difficult to implement, solving the issues using
+mutex introduces additional concurrency overheads.
+
+\medskip
+First, batch tree iterator operations are needed to amortize page pins and mutex
+acquisitions in the merge threads. Secondly, merge scheduling suffer from the
+cost of acquiring a coarse-grained mutex for each merged tuple of page. Even
+though these problems can be solved, there are unseen concurrency bottlenecks
+due to the complexity of these systems. The authors ran an experimental setup of
+the bLSM trees on \emph{Yahoo! Cloud Serving Benchmark Tool}, and at $100\%$
+blind writes, \emph{bLSM} got a lower expected throughput on SSDs than on
+HDDs, which was at around $33,000$ operations per second. Since each SSD
+provides $285$MB/sec sequential reads and writes, compared to $110-130$MB/sec of
+HDD, the expected $2-3$x higher throughput on SSDs have not been achieved due
+to the concurrency bottlenecks.
+
+
+\subsubsection{Bloom filters and Recovery}
+Even though existing LSM Trees implement write-ahead logs for consistency upon
+crash, the bloom filters are too huge to write to disk and therefore complicate
+crash recovery.
+
+\medskip
+Bloom filters are known to be compact and efficient, but the challenge lies on
+recovery of database systems that utilize bloom filters. The bloom filters are
+small, but not small enough to be synchronously written to disk by block
+writers. Since they are not persisted to disks, it poses a problem in data
+recovery during crashes.
+
+\section{Conclusion}
+\emph{bLSM Trees} have drastically improved the performance of LSM Trees by
+solving its fundamental shortcoming: high read amplification by adding Bloom
+Filters and using a ``Spring and Gear'' merge scheduler. However, there are
+multiple implementation disadvantages, first being complicated to implement and
+lower-than-theoretical efficiency due to concurrency bottlenecks, as well as
+recovery with bloom filters still needs further work and testing the
+implementation, which the authors omitted in their experiments.
 
 \printbibliography
 \end{document}
