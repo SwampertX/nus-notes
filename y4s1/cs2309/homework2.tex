@@ -62,17 +62,17 @@
 \maketitle
 \section{Problem Statement}
 
-\cite{10.1145/2213836.2213862} Log-structured Merge Trees (LSM Trees) have a good write throughput, but high
-read amplification. This is the opposite of the commonly used update-in-place
-storage systems which have great read performance, but low write throughput. As
-observed at Yahoo!, the low latency workloads that emphasize on writes are
-increasing from 10-20\% to about 50\%, which is getting unsuitable for
-update-in-place systems. LSM Trees are a good candidate for write-intensive
-tasks, but modifications need to be made so it has a better real-world
-performance.
+\cite{10.1145/2213836.2213862} Log-structured Merge Trees (LSM Trees) have a
+good write throughput, but high read amplification. This is the opposite of the
+commonly used update-in-place storage systems (such as B-Trees) which have great
+read performance, but low write throughput. This is costly because as observed
+at Yahoo!, the low latency workloads that emphasize on writes are increasing
+from 10-20\% to about 50\%, which is getting unsuitable for update-in-place
+systems. LSM Trees are a good candidate for write-intensive tasks, but
+modifications need to be made so it has a better real-world performance.
 
 \subsection{Solution}
-Therefore, the researchers have come up with bLSM, a LSM Tree with the
+Therefore, the researchers have come up with \emph{bLSM Trees}, a LSM Tree with the
 advantages of B-Trees. This is done by adding Bloom filters in LSM Trees (hence
 the \emph{b} in \emph{bLSM}) to increase index performance and replacing the
 merge scheduler in LSM Trees with the new ``spring and gear'' merge scheduler.
