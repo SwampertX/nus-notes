@@ -7,6 +7,9 @@
 \usepackage{textcomp}
 \usepackage{amsmath, amssymb, amsthm}
 \theoremstyle{plain}
+\usepackage{graphicx}
+\graphicspath{{./presentation/}}
+\usepackage{xcolor}
 
 \newcommand{\pmat}[1]{ \begin{pmatrix}#1\end{pmatrix} }
 \newcommand{\seqn}[1]{(#1)^\infty_{n=1}}
@@ -242,7 +245,7 @@ unlike mathematics, a true proposition is not necessarily inhabited by a witness
     We start with assuming the LHS is given: let
     \begin{align*}
     &z:(\prod x: A)(\sum {y: B})C(x, y),\text{ and}\\
-    &x:(\sum {y: B})C(x, y).
+    &x:A.
     \end{align*}
     Then
     \begin{align}
@@ -251,7 +254,8 @@ unlike mathematics, a true proposition is not necessarily inhabited by a witness
 \end{frame}
 
 \begin{frame}{Goal: $(\prod x: A)(\sum {y: B})C(x, y)\to(\sum{f: A\to B})(\prod{x: A})C(x, f(x))$}
-  $z(x)$ can be viewed as a pair, so we can look at its left and right entries:
+  $z(x): (\sum y\in B)(C(x, y))$ can be viewed as a pair, so we can look at its left
+  and right entries:
     \begin{align}
     \pi_{1}(z(x))&: B\\
     \pi_{2}(z(x))&:C(x, \pi_{1}(z(x)))
@@ -261,7 +265,7 @@ unlike mathematics, a true proposition is not necessarily inhabited by a witness
     \begin{align}
     (\lambda x:\pi_{1}(z(x)))(x) = \pi_{1}(z(x)): B
     \end{align}
-    Substitute (4) into (3):
+    Substitute (4) into (3), we have the last term $C(x, f(x))$:
     \begin{align}
     \pi_{2}(z(x)):C(x, (\lambda x:\pi_{1}(z(x)))(x))
     \end{align}
@@ -294,8 +298,8 @@ unlike mathematics, a true proposition is not necessarily inhabited by a witness
     &(\prod x: A)(\sum {y: B})C(x, y)\to(\sum{f: A\to B})(\prod{x: A})C(x, f(x))
     \end{align}
 
-    The function in (8) has our desired type, therefore it is a proof of the axiom of choice.
-    $\square$
+    The function in (8) has our desired type, therefore it is a proof of the
+    ``axiom'' of choice. $\square$
 \end{frame}
 
 \section{Discussion}
@@ -312,7 +316,19 @@ unlike mathematics, a true proposition is not necessarily inhabited by a witness
 \end{itemize}
 \end{frame}
 
+% \begin{frame}
+%   \begin{figure}
+%     \centering
+% \includegraphics{lambda-cube}
+%   \end{figure}
+% \end{frame}
+
 \section{Conclusion}
-\begin{frame}
+\begin{frame}{Conclusion}
+  \begin{figure}
+    \includegraphics{coq} \includegraphics[width=3cm]{idris}
+    \includegraphics[width=3cm]{iris} \includegraphics[width=3cm]{lean}
+    \includegraphics[width=4cm]{agda} \centering
+  \end{figure}
 \end{frame}
 \end{document}
