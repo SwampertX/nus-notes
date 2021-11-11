@@ -1,0 +1,31 @@
+#+TITLE: Plan
+
+This file records my progress and summarizes papers as I read. We will not use
+Roam as it is new - I need to understand the pain points first.
+
+* Resources
+** Survey on HoTT and Univalent
+Homotopy type theory and Voevodsky's univalent foundations
+https://arxiv.org/abs/1210.5658
+** Martin-Lof and HoTT
+Steve Awodey
+https://arxiv.org/pdf/1010.1810.pdf
+https://www.andrew.cmu.edu/user/awodey/hott/CMUslides.pdf
+** TODO Overview of Type Theories
+Nino Guallart
+https://arxiv.org/pdf/1411.1029.pdf
+** TODO Martin Lof Notes by Chalmers
+http://www.cse.chalmers.se/~peterd/papers/MartinL%C3%B6f1984.pdf
+* Outline
+** Timeline
+- 1969: Howard: The formulae-as-types notion of construction
+- 1975: Martin-Lof: An Intuitionistic Theory of Types: Predicative Part
+- 1984: Martin-Lof: Intuinitionistic Type THeory
+- 1985: Martin-Lof: Constructive mathematics and computer programming
+  Dependent Type Theory
+- 1988: Coquand: The Calculus of Constructions
+- 1993: Harper, Honsell, Plotkin: A Framework for definining Logics
+- 1998: Hofmann, Streicher: The groupoid interpretation of type theory
+- 2009: Awodey, Warren: Homotopy Theoretic models of identity types
+- 2015: Cohen, Coquand, Huber, Mortberg: Cubical Type Theory: A Constructive
+  Interpretation of the Univalence Axiom

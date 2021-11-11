@@ -1,0 +1,151 @@
+#+TITLE: Tutorial 8
+
+* Question 1: switch statements
+If the switch conditions are all constants, it is then possible to use a hash
+table.
+* Question 2: Generate the ARM Code
+#+begin_src asm
+foo:
+    stmfd sp!, {fp, lr, v1, v2, v3, v4, v5}
+    ; we first need to allocate 400 bytes on heap
+    mov a2, #100 ; array length = 100
+    mov a1, a2, LSL #2
+    bl _Znwj(PLT)
+    mov v5, a1 ; *arr = v5
+    mov v4, a1 ; *arr = v4
+    mov a3, #0 ; a3 = 0
+
+init: ;initializes all 100 elements in array to random()
+    bl random(PLT)
+    str a1, [v5], #4 ; post-increment v5
+    add a3, a3, #1 ; count += 1
+    cmp a3, a2
+    blt init ; jump back if count < 100
+
+    mov a3, #0 ; a3 = 0, a2 = 100
+rand:
+    bl random(PLT)
+    cmp a1, a3
+    blt rand ; a1 < 0 jump to rand
+    cmp a1, a2
+    bge rand ; a1 >= 100 jump to rand
+    ldr a1, [v4, a1, LSL #2]; a1 = *(v4 + a1 << 2), arr at v4
+    stmfd sp!, {fp, lr, v1, v2, v3, v4, v5}
+#+end_src
+* Revision: static vs dynamic scoping
+#+begin_src
+Program A()
+{
+    x, y, z: integer;
+
+    procedure B()
+    {
+        y: integer;
+        y=0;
+        x=z+1;
+        z=y+2;
+    }
+
+    procedure C()
+    {
+        z: integer;
+
+        procedure D()
+        {
+            x: integer;
+            x = z + 1;
+            y = x + 1;
+            call B();
+        }
+
+        z = 5;
+        call D();
+    }
+
+    x = 10;
+    y = 11;
+    z = 12;
+    call C();
+    print x, y, z;
+}
+#+end_src
+** Static scoping
+at compile time, the nesting already determined the references.
+refers to the closes reference in source code.
+answer: =x,y,z=13,7,2=
+#+begin_src
+Program A()
+{
+    x, y, z: integer; // x1, y1, z1
+
+    procedure B()
+    {
+        y: integer; // y2
+        y=0; // y2 = 0
+        x=z+1; // x1 = z1 + 1 = 13
+        z=y+2; // z1 = y2 + 2 = 2
+    }
+
+    procedure C()
+    {
+        z: integer; // z2
+
+        procedure D()
+        {
+            x: integer; // x2
+            x = z + 1; // x2 = z2 + 1 = 6
+            y = x + 1; // y1 = x2 + 1 = 7
+            call B();
+        }
+
+        z = 5; // z2 = 5
+        call D();
+    }
+
+    x = 10;
+    y = 11;
+    z = 12; // x1, y1, z1 = 10, 11, 12
+    call C(); // x1 = 13, y1 = 7, z1 = 2
+    print x, y, z;
+}
+#+end_src
+** Dynamic scoping
+at run time, the stack status determines the references.
+refers to the closet occurence in stack.
+#+begin_src
+Program A()
+{
+    x, y, z: integer; // x1, y1, z1
+
+    procedure B()
+    {
+        y: integer; // x2=6, y2, z2=5
+        y=0;
+        x=z+1; // x2 = z2 + 1 = 6
+        z=y+2; // z2 = y2 + 2 = 2
+    }
+
+    procedure C()
+    {
+        z: integer; // z2
+
+        procedure D()
+        {
+            x: integer; // x2, y1=11, z2=5
+            x = z + 1; // x2 = 6
+            y = x + 1; // y1 = 7
+            call B();
+        }
+
+        z = 5;
+        call D();
+    }
+
+    x = 10;
+    y = 11;
+    z = 12;
+    call C(); // x1=10, y1=7, z1=12
+    print x, y, z;
+}
+#+end_src
+* Question 3: Static scoping in ARM assembly

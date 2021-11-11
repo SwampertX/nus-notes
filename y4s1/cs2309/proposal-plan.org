@@ -1,0 +1,3 @@
+#+TITLE: Proposal Plan
+
+[[https://www.sciencedirect.com/science/article/pii/S1571066120300463][Strong Normalization for the Simply-Typed Lambda Calculus in Constructive Type Theory Using Agda]]

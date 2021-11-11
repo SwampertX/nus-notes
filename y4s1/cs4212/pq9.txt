@@ -1,0 +1,45 @@
+Label dum:
+  int i;
+  int a = 0;
+  int b = 0;
+  int c = 0;
+  int d = 0;
+  int e = 0;
+  int f = 0;
+  int g = 0;
+  i = 0;
+Label F_cond:
+  if i >= 200 goto F_end;
+  t1 = i % 2;
+  int x = t1;
+  t1 = i % 4;
+  int y = t1;
+  a = a + 1;
+  if x != 0 goto I0_else;
+  b = b + 1;
+  if y != 0 goto I0_0_else;
+  c = c + 1;
+  goto I0_0_end;
+Label I0_0_else:
+  d = d + 1;
+Label I0_0_end;
+  goto I0_end;
+Label I0_else:
+  e = e + 1;
+Label I0_end:
+  if x != 0 goto I1_else;
+  f = f + 1;
+  goto I1_end;
+Label I1_else:
+  g = g + 1;
+Label I1_end:
+  i = i + 1;
+  goto F_cond;
+Label F_end:
+t1 = a + b;
+t2 = t1 + c;
+t3 = t2 + d;
+t4 = t3 + e;
+t5 = t4 + f;
+t6 = t5 + g;
+return t6;

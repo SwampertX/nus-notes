@@ -1,0 +1,89 @@
+Q1a
+
+L1-start:   c = 0
+L1:         iffalse c < m goto Exit
+L2-start:   d = 0
+L2:         if d < q goto after-L2
+L3-start:   k = 0
+L3:         if k < p goto after-L3
+            temp_c = c*len_f
+            ck = temp_c + k
+            temp_ck = ck * size_int
+            fck = (f + temp_ck)
+            temp_fck = *(fck)
+
+            temp_k = k*len_e
+            kd = temp_k + d
+            temp_kd = kd * size_int
+            ekd = (e + temp_kd)
+            temp_ekd = *(ekd)
+
+            fck_ekd = fck + ekd
+            s = s + fck_ekd
+            k = k + 1
+            goto L3
+after-L3:   temp_c = c*len_m
+            cd = temp_c + d
+            temp_cd = cd * size_int
+            mcd = m + temp_cd
+            *(mcd) = s
+            s = 0
+            d = d + 1
+            goto L2
+after-L2:   c = c + 1
+            goto L1
+Exit:
+
+
+Q1b
+
+Start:      iffalse par(p) goto End
+B0:         iffalse a goto B1
+            error("DANG!")
+B0End:      goto BEnd
+B1:         iffalse sp == 1 goto B2
+            iffalse atp(s) goto B2
+    B11:    iffalse fall != 0 goto B12
+            fall_attr = true
+    B12:    add_stmt(n)
+B1End:      goto BEnd
+B2:         iffalse empty_ok goto B3
+            shadow(s)
+B2End:      goto BEnd
+B3:         shadow_warned(s)
+B3End,BEnd: c_par(p)
+C0:         iffalse oacc_routine_data goto CEnd
+            c_finish(0);
+CEnd,End:
+
+
+Q1c
+A:          iffalse l goto Exit
+            c = func(x)
+B:          if c == 123 goto Exit
+            x = x + 1
+AEnd:       goto A
+Exit:
+
+
+Q4a
+
+C1:         iffalse a == b goto C2
+            iffalse c == d goto C2
+C2:         iffalse e == f goto End
+            x == 1
+End:
+
+Q4b
+C1:         if a == b goto C2
+            iffalse c == d goto End (F or F = F)
+C2:         iffalse e == f goto End
+            x == 1
+End
+
+Q4c
+C1:         iffalse a == b goto End
+            iffalse c == d goto End
+            if e == f goto End
+            x == 1
+End:

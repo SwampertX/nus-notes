@@ -1,0 +1,49 @@
+
+;; Function main (main, funcdef_no=0, decl_uid=1942, cgraph_uid=1, symbol_order=0)
+
+
+Analyzing function body size: main/0
+
+IPA function summary for main/0
+  global time:     5.000000
+  self size:       6
+  global size:     6
+  min size:       0
+  self stack:      0
+  global stack:    0
+    size:4.000000, time:5.000000
+    size:2.000000, time:0.000000,  executed if:(not inlined)
+  calls:
+
+int main ()
+{
+  char c;
+  int x;
+  int D.1950;
+  int _4;
+
+  <bb 2> :
+  x_2 = 3;
+  c_3 = 115;
+  goto <bb 4>; [INV]
+
+  <bb 3> :
+  x_6 = x_1 + 1;
+
+  <bb 4> :
+  # x_1 = PHI <x_2(2), x_6(3)>
+  if (x_1 <= 9)
+    goto <bb 3>; [INV]
+  else
+    goto <bb 5>; [INV]
+
+  <bb 5> :
+  _4 = x_1;
+
+  <bb 6> :
+<L3>:
+  return _4;
+
+}
+
+

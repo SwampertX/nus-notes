@@ -1,0 +1,51 @@
+
+;; Function main (main, funcdef_no=0, decl_uid=1942, cgraph_uid=1, symbol_order=0) (executed once)
+
+
+
+ local analysis of main/0
+   scanning: x_6 = x_1 + 1;
+  scanning: if (x_1 <= 9)
+  scanning: return x_1;
+;; 2 loops found
+;;
+;; Loop 0
+;;  header 0, latch 1
+;;  depth 0, outer -1
+;;  nodes: 0 1 2 3 4 5
+;;
+;; Loop 1
+;;  header 4, latch 3
+;;  depth 1, outer 0
+;;  nodes: 4 3
+;; 2 succs { 4 }
+;; 3 succs { 4 }
+;; 4 succs { 3 5 }
+;; 5 succs { 1 }
+Function is locally const.
+Function found to be const: main
+Declaration updated to be const: main
+int main ()
+{
+  char c;
+  int x;
+
+  <bb 2> [local count: 134217728]:
+  goto <bb 4>; [100.00%]
+
+  <bb 3> [local count: 939524097]:
+  x_6 = x_1 + 1;
+
+  <bb 4> [local count: 1073741824]:
+  # x_1 = PHI <3(2), x_6(3)>
+  if (x_1 <= 9)
+    goto <bb 3>; [87.50%]
+  else
+    goto <bb 5>; [12.50%]
+
+  <bb 5> [local count: 134217728]:
+  return x_1;
+
+}
+
+

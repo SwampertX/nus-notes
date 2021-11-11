@@ -1,0 +1,612 @@
+% Created 2021-11-01 Mon 19:39
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{minted}
+\usepackage{hyperref}
+\linespread{1.0}
+\usepackage[a4paper, total={6.5in, 8.5in}]{geometry}
+\usepackage{crimson}
+\author{Tan Yee Jian}
+\date{\today}
+\title{Individual Exercise 2}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={Individual Exercise 2},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.0.60 (Org mode 9.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+Each section corresponds to each of the problems raised in the Assignment.
+
+\section{General flow of compilation}
+\label{sec:org7e11e74}
+The main idea in the design of GCC is \textbf{``passes''}\cite{passes}. GCC
+compiles source code (eg. from \texttt{C}) to assembly (eg. to \texttt{x86-64}
+assembly) by using many, many passes. On the top level, passes translate one
+representation of the code to another representation, that gets closer and
+closer to machine code, and eventually assembly code.
+
+These are the representations in GCC, from input to output
+\subsection{Source code}
+\label{sec:org43f51fe}
+
+ This is the user input in any of the GCC-supported language such as \texttt{C} and
+\texttt{Fortran}.
+
+\subsection{GENERIC (language-independent Abstract Syntax Tree)}
+\label{sec:org5658ca2}
+
+User-input source code is first parsed using recursive descent into an
+Abstract Syntax Tree. For example, the \texttt{C} code is parsed in the function
+below as an entry point, in This is parsed in \texttt{gcc/c/c-parser.c:21961}:
+
+\begin{minted}[linenos,firstnumber=21961]{c}
+// Begin C-parser entry point
+void c_parse_file (void)
+{
+  /* Use local storage to begin.  If the first token is a pragma, parse it.
+     If it is #pragma GCC pch_preprocess, then this will load a PCH file
+     which will cause garbage collection.  */
+  c_parser tparser;
+
+  memset (&tparser, 0, sizeof tparser);
+  tparser.translate_strings_p = true;
+  tparser.tokens = &tparser.tokens_buf[0];
+  the_parser = &tparser;
+
+  if (c_parser_peek_token (&tparser)->pragma_kind == PRAGMA_GCC_PCH_PREPROCESS)
+    c_parser_pragma_pch_preprocess (&tparser);
+  else
+    c_common_no_more_pch ();
+
+  the_parser = ggc_alloc<c_parser> ();
+  *the_parser = tparser;
+  if (tparser.tokens == &tparser.tokens_buf[0])
+    the_parser->tokens = &the_parser->tokens_buf[0];
+
+  /* Initialize EH, if we've been told to do so.  */
+  if (flag_exceptions)
+    using_eh_for_cleanups ();
+
+  c_parser_translation_unit (the_parser);
+  the_parser = NULL;
+}
+// End C-parser entry point
+\end{minted}
+
+Since each language has a different syntax, hence different syntax tree
+structures. \textbf{GENERIC} specifies a \textbf{language-independent AST}
+structure to abstract all the AST of different languages into one common
+\textbf{AST}\cite{parsing-pass}, facilitating translation to further IRs (such
+as GIMPLE, Tree-SSA, RTL) and optimization.
+
+There are differences in how \textbf{GENERIC} is used in parsing.
+\begin{itemize}
+\item \texttt{C} parses directly into \textbf{GENERIC} but
+
+\item \texttt{Fortran} however parses first into a private representation to \textbf{GENERIC},
+which is later then ``lowered'' into \textbf{GENERIC} and \textbf{GIMPLE}\cite{passes}.
+\end{itemize}
+
+\subsection{GIMPLE (``three-address codes'' that has repeated assignment to variables)}
+\label{sec:org1161d48}
+
+This process of translating from other representations, such as \textbf{GENERIC} to
+\textbf{GIMPLE} is called \textbf{``gimplification''}. The entry point for this pass is the
+function \texttt{gimplify\_function\_tree()} in \texttt{gcc/gimplify.c:15447}:
+
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=15453]{c}
+void
+gimplify_function_tree (tree fndecl) {
+  gimple_seq seq;
+  gbind *bind;
+
+  gcc_assert (!gimple_body (fndecl));
+
+  if (DECL_STRUCT_FUNCTION (fndecl))
+    push_cfun (DECL_STRUCT_FUNCTION (fndecl));
+  else
+    push_struct_function (fndecl);
+
+  /* OMITTED CODE */
+
+      /* Replace the current function body with the body
+         wrapped in the try/finally TF.  */
+      seq = NULL;
+      gimple_seq_add_stmt (&seq, new_bind);
+      gimple_set_body (fndecl, seq);
+      bind = new_bind;
+    }
+
+  if (sanitize_flags_p (SANITIZE_THREAD)
+      && param_tsan_instrument_func_entry_exit)
+    {
+      gcall *call = gimple_build_call_internal (IFN_TSAN_FUNC_EXIT, 0);
+      gimple *tf = gimple_build_try (seq, call, GIMPLE_TRY_FINALLY);
+      gbind *new_bind = gimple_build_bind (NULL, tf, NULL);
+      /* Replace the current function body with the body
+	 wrapped in the try/finally TF.  */
+      seq = NULL;
+      gimple_seq_add_stmt (&seq, new_bind);
+      gimple_set_body (fndecl, seq);
+    }
+
+  DECL_SAVED_TREE (fndecl) = NULL_TREE;
+  cfun->curr_properties |= PROP_gimple_any;
+
+  pop_cfun ();
+
+  dump_function (TDI_gimple, fndecl);
+}
+\end{minted}
+\caption{Entry point to gimplification.}
+\end{listing}
+\subsection{Tree-SSA (Single Static Assignment)}
+\label{sec:org4b5736c}
+
+From this point onwards, the passes are mainly optimizations. It is managed
+by \texttt{gcc/passes.c} which executes passes as listed in \texttt{gcc/passes.def:29}.
+
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=29]{c}
+ /* All passes needed to lower the function into shape optimizers can
+    operate on.  These passes are always run first on the function, but
+    backend might produce already lowered functions that are not processed
+    by these passes.  */
+  INSERT_PASSES_AFTER (all_lowering_passes)
+  NEXT_PASS (pass_warn_unused_result);
+  NEXT_PASS (pass_diagnose_omp_blocks);
+  NEXT_PASS (pass_diagnose_tm_blocks);
+  NEXT_PASS (pass_omp_oacc_kernels_decompose);
+  NEXT_PASS (pass_lower_omp);
+  NEXT_PASS (pass_lower_cf);
+  NEXT_PASS (pass_lower_tm);
+  NEXT_PASS (pass_refactor_eh);
+  NEXT_PASS (pass_lower_eh);
+  NEXT_PASS (pass_coroutine_lower_builtins);
+  NEXT_PASS (pass_build_cfg);
+  NEXT_PASS (pass_warn_function_return);
+  NEXT_PASS (pass_coroutine_early_expand_ifns);
+  NEXT_PASS (pass_expand_omp);
+  NEXT_PASS (pass_warn_printf);
+  NEXT_PASS (pass_walloca, /*strict_mode_p=*/true);
+  NEXT_PASS (pass_build_cgraph_edges);
+  TERMINATE_PASS_LIST (all_lowering_passes)
+ // many more passes
+\end{minted}
+\caption{Some of the passes specified in \texttt{gcc/passes.def}.}
+\end{listing}
+\subsection{RTL (Register Transfer Language) RTL is a machine code for an abstract}
+\label{sec:org1339166}
+machine with inifinitely many registers. RTL's syntax and several peephole
+optimizations will be included in the sections below.
+\subsection{Target assembly code}
+\label{sec:org2f3f902}
+This is the assembly code in the target machine architecture, such as
+\texttt{ARMv7}, \texttt{RISCV} or \texttt{aarch64}. GCC's compilation end here, and the rest of
+the job is given to the \texttt{as} GNU Assembler.
+
+There are passes which do not further ``compile'' the language into the next, more
+low-level version, which are known as ``optimization passes''.
+\section{Parsing of C}
+\label{sec:orgca0061d}
+Recursive descent is used. Found in \texttt{gcc/c/c-parser.c:1800}
+
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=1800]{c}
+static void
+c_parser_declaration_or_fndef (c_parser *parser, bool fndef_ok,
+			       bool static_assert_ok, bool empty_ok,
+			       bool nested, bool start_attr_ok,
+			       tree *objc_foreach_object_declaration,
+			       vec<c_token> omp_declare_simd_clauses,
+			       bool have_attrs, tree attrs,
+			       struct oacc_routine_data *oacc_routine_data,
+			       bool *fallthru_attr_p)
+{ ... }
+\end{minted}
+\caption{Recursive descent function to parse declarations}
+\end{listing}
+
+which parses function declarations and more. Recursive Descent allows for
+better parsing error reporting as all cases can have individualized error
+messages. \href{https://softwareengineering.stackexchange.com/a/254707}{StackExchange post} Example at \texttt{gcc/c/c-parser.c:1937}:
+
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=1937]{c}
+	{
+	  /* This is not C++ with its implicit typedef.  */
+	  richloc.add_fixit_insert_before ("struct ");
+	  error_at (&richloc,
+		    "unknown type name %qE;"
+		    " use %<struct%> keyword to refer to the type",
+		    name);
+	}
+      else if (tag_exists_p (UNION_TYPE, name))
+	{
+	  richloc.add_fixit_insert_before ("union ");
+	  error_at (&richloc,
+		    "unknown type name %qE;"
+		    " use %<union%> keyword to refer to the type",
+		    name);
+	}
+      else if (tag_exists_p (ENUMERAL_TYPE, name))
+	{
+	  richloc.add_fixit_insert_before ("enum ");
+	  error_at (&richloc,
+		    "unknown type name %qE;"
+		    " use %<enum%> keyword to refer to the type",
+		    name);
+	}
+      else
+	{
+	  auto_diagnostic_group d;
+	  name_hint hint = lookup_name_fuzzy (name, FUZZY_LOOKUP_TYPENAME,
+					      here);
+	  if (const char *suggestion = hint.suggestion ())
+	    {
+	      richloc.add_fixit_replace (suggestion);
+	      error_at (&richloc,
+			"unknown type name %qE; did you mean %qs?",
+			name, suggestion);
+	    }
+	  else
+	    error_at (here, "unknown type name %qE", name);
+	}
+\end{minted}
+\caption{Some detailed error messages in the \texttt{C}-parser}
+\end{listing}
+\section{Intermediate code formats}
+\label{sec:org0d4d492}
+In this section and the next, we use this running example of \texttt{C} code:
+
+\begin{listing}[H]
+\begin{minted}[]{c}
+int main() {
+  int x = 1 + 2;
+  char c = 's';
+  while (x < 10) {
+    x += 1;
+  }
+  return x;
+}
+\end{minted}
+\caption{Running example in this section, in \texttt{C}}
+\end{listing}
+\subsection{Motivation}
+\label{sec:org9ebb2ab}
+\begin{itemize}
+\item Before GENERIC and GIMPLE were invented, the parsed AST for every language
+were immediately translated into Register Transfer Language (RTL), which is
+like ``assembly language with infinite number of registers''.
+\item The lack of a common structure caused each language to have to write a \textbf{AST to
+RTL} compiler, on top of the \textbf{parser}. The use of \textbf{GENERIC} abstracted this
+common work done by each language front-end.
+\item Directly translating from AST to RTL loses many properties of the code, ``for
+example, array references, data types, references to program variables,
+control flow structures''. Even function calls are expanded to more than one
+instructions, loosing the structure of functions, hence losing opportunities
+for function optimizations such as \emph{folding} and \emph{dead code elimination}.
+\item Solution: ``GENERIC addresses the lack of a common tree representation among
+the various front ends. GIMPLE solves the complexity problems that facilitate
+the discovery of data and control flow in the program.''
+\item \textbf{GIMPLE} in three-address codes provides a good structure for optimizations,
+developed actively in research.
+\end{itemize}
+\subsection{GENERIC}
+\label{sec:org0ff633c}
+\textbf{GENERIC} is a common AST structure for all gcc-compatible languages. There are
+ no optimizations happening at this point, until the code is ``gimplified'' or
+ converted to \textbf{GIMPLE}, which is in three-address code.
+\subsection{GIMPLE}
+\label{sec:orgb283b4c}
+The \texttt{C} code compiles to the following \textbf{GIMPLE} code:
+\begin{listing}[H]
+\begin{minted}[]{c}
+int main ()
+{
+  int D.1950;
+
+  {
+    int x;
+    char c;
+
+    x = 3;
+    c = 115;
+    goto <D.1947>;
+    <D.1948>:
+    x = x + 1;
+    <D.1947>:
+    if (x <= 9) goto <D.1948>; else goto <D.1946>;
+    <D.1946>:
+    D.1950 = x;
+    return D.1950;
+  }
+  D.1950 = 0;
+  return D.1950;
+}
+\end{minted}
+\caption{\textbf{GIMPLE} code generated by \texttt{C}}
+\end{listing}
+
+\textbf{GIMPLE} is basically three-address code, however many optimizations rely on
+ code being in the \textbf{Static Single Assignment} form, called \textbf{Tree-SSA} or \textbf{SSA}
+ in GCC. After some passes, GCC obtains the \textbf{SSA} as below:
+
+\begin{minted}[]{c}
+int main ()
+{
+  char c;
+  int x;
+  int _4;
+
+  <bb 2> :
+  x_2 = 3;
+  c_3 = 115;
+  goto <bb 4>; [INV]
+
+  <bb 3> :
+  x_6 = x_1 + 1;
+
+  <bb 4> :
+  # x_1 = PHI <x_2(2), x_6(3)>
+  if (x_1 <= 9)
+    goto <bb 3>; [INV]
+  else
+    goto <bb 5>; [INV]
+
+  <bb 5> :
+  _4 = x_1;
+  return _4;
+
+}
+\end{minted}
+At this point, many interesting peephole optimizations can already be done, such
+ as ``Tail-call optimization'' and ``Conditional constant propogation (CCP)'', which
+ we will discuss in the last section.
+
+\subsection{Register Transfer Language (RTL)}
+\label{sec:org4eee840}
+\textbf{RTL} is described as an ``assembly language with infinite number of registers'',
+inspired by LISP lists and describes the instructions to be outputed eventually
+in a slightly higher level. Internally it is a graph-like structure with
+references, but printed as nested brackets similar to LISP.
+
+This will be explained in detail in the next section.
+\section{Explain RTL representation}
+\label{sec:orga6f1ca1}
+We will explain using this RTL code, taken from the previous section. All the
+in-code comments are mine.
+
+\begin{listing}[H]
+\begin{minted}[]{elisp}
+(note 1 0 3 NOTE_INSN_DELETED) ;; notes are just debugging information.
+(note 3 1 13 2 [bb 2] NOTE_INSN_BASIC_BLOCK)
+(note 13 3 2 2 NOTE_INSN_PROLOGUE_END)
+(note 2 13 9 2 NOTE_INSN_FUNCTION_BEG)
+(insn 9 2 10 2
+;; insn are instructions that do not jump and are not function calls
+    (set (reg/i:SI 0 ax)
+    ;; sets the register with the constant below.
+    ;; (reg/i:SI 0 ax):
+    ;;   reg means registers
+    ;;   /i here means the value is a scalar that is not part of an aggregate
+    ;;   SI here represents the Single Integer mode of 4 bytes.
+    ;;   0 is a hard register number.
+        (const_int 10 [0xa])) "test.c":8:1 75 {*movsi_internal}
+        ;; this is a constant integer of value 10, with representation 0xa.
+     (nil))
+(insn 10 9 14 2 (use (reg/i:SI 0 ax)) "test.c":8:1 -1
+;; this is an instruction that loads data from the register for the return below.
+     (nil))
+(note 14 10 15 2 NOTE_INSN_EPILOGUE_BEG)
+(jump_insn 15 14 16 2 (simple_return) "test.c":8:1 837 {simple_return_internal}
+;; this is a jump-instruction.
+     (nil)
+ -> simple_return)
+;; simple_return is the return instruction without the function-return epilogue.
+(barrier 16 15 12)
+;; barrier denotes the end of control flow.
+(note 12 16 0 NOTE_INSN_DELETED)
+\end{minted}
+\caption{RTL compiled, with in-code comment explanations}
+\end{listing}
+
+\section{Three peephole optimization in GCC}
+\label{sec:org3859f52}
+\subsection{Tail-call optimization (in \texttt{gcc/tree-tailcall.c})}
+\label{sec:orge8ff33e}
+\begin{itemize}
+\item Tail-calls occur when a recursive function returns a call to itself as part of
+explicit recursion. Since it happens at the end of a function, it is named as
+tail-call.
+\item Tail-call optimization aims to remove unnecessary recursion (which takes up
+the stack) with loops.
+\item Furthermore, functions where the tail-call is not explicit is also optimized
+by GCC using accumulators. Below is an example of the recursive \texttt{sum()}
+function:
+
+\begin{listing}[H]
+\begin{minted}[]{c}
+   int sum (int n)
+   {
+     if (n > 0)
+       return n + sum (n - 1);
+     else
+       return 0;
+   }
+\end{minted}
+\caption{Before tail-call optimization}
+\end{listing}
+
+is transformed into
+
+\begin{listing}[H]
+\begin{minted}[]{c}
+   int sum (int n)
+   {
+     int acc = 0;
+
+     while (n > 0)
+       acc += n--;
+
+     return acc;
+   }
+\end{minted}
+\caption{After tail-call optimization}
+\end{listing}
+\end{itemize}
+
+Example function in \texttt{gcc/tree-tailcall.c:1086}:
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=1086]{c}
+static unsigned int
+tree_optimize_tail_calls_1 (bool opt_tailcalls)
+{
+  edge e;
+  bool phis_constructed = false;
+  struct tailcall *tailcalls = NULL, *act, *next;
+  bool changed = false;
+  basic_block first = single_succ (ENTRY_BLOCK_PTR_FOR_FN (cfun));
+  tree param;
+  gimple *stmt;
+  edge_iterator ei;
+
+  if (!suitable_for_tail_opt_p ())
+    return 0;
+  if (opt_tailcalls)
+    opt_tailcalls = suitable_for_tail_call_opt_p ();
+
+  FOR_EACH_EDGE (e, ei, EXIT_BLOCK_PTR_FOR_FN (cfun)->preds)
+    {
+      /* Only traverse the normal exits, i.e. those that end with return
+	 statement.  */
+      stmt = last_stmt (e->src);
+
+      if (stmt
+	  && gimple_code (stmt) == GIMPLE_RETURN)
+	find_tail_calls (e->src, &tailcalls);
+    }
+\end{minted}
+\caption{Entry point to tail-call optimization (\texttt{gcc/tree-tailcall.c})}
+\end{listing}
+\subsection{Conditional constant propogation \& Folding built-in functions (\texttt{tree-ssa-ccp.c})}
+\label{sec:org92465e6}
+Conditional constant propagation (CCP) propogates statements of the pattern
+\texttt{VAR = CONSTANT} to the rest of the program. The algorithm is based on the
+assumption that the code is SSA. The common operation of propogation can be seen
+in this code snippet in \texttt{gcc/tree-ssa-propagate.c:1444}:
+
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=1444]{c}
+static void
+replace_exp_1 (use_operand_p op_p, tree val,
+    	       bool for_propagation ATTRIBUTE_UNUSED)
+{
+  if (flag_checking)
+    {
+      tree op = USE_FROM_PTR (op_p);
+      gcc_assert (!(for_propagation
+		  && TREE_CODE (op) == SSA_NAME
+		  && TREE_CODE (val) == SSA_NAME
+		  && !may_propagate_copy (op, val)));
+    }
+
+  if (TREE_CODE (val) == SSA_NAME)
+    SET_USE (op_p, val);
+  else
+    SET_USE (op_p, unshare_expr (val));
+}
+\end{minted}
+\caption{Entry point to CCP}
+\end{listing}
+
+After constants are propagated, built-in functions are also simplified if the
+arguments are constants. In \texttt{gcc/tree-ssa-ccp.c:3255}
+
+\begin{listing}[H]
+\begin{minted}[linenos,firstnumber=3255]{c}
+unsigned int
+pass_fold_builtins::execute (function *fun)
+{
+  bool cfg_changed = false;
+  basic_block bb;
+  unsigned int todoflags = 0;
+
+  FOR_EACH_BB_FN (bb, fun)
+    {
+      gimple_stmt_iterator i;
+      for (i = gsi_start_bb (bb); !gsi_end_p (i); )
+	{
+	  gimple *stmt, *old_stmt;
+	  tree callee;
+	  enum built_in_function fcode;
+
+	  stmt = gsi_stmt (i);
+      // --snip--
+    }
+    // --snip--
+    }
+// --snip--
+}
+\end{minted}
+\caption{Entry point to built-in function folding}
+\end{listing}
+\subsection{Delayed branch scheduling (in \texttt{reorg.c})}
+\label{sec:orgb52a035}
+Recall in CS2100, we know that branch instructions incur Branch Penalty, which
+are extra cycles that are needed compared to a, say, \texttt{ADD} instruction. These
+extra cycles are made use of by rearranging non branch-critical instructions to
+execute during the Branch Penalty to offset the cost.
+
+From \texttt{gcc/reorg.c:3738}:
+\begin{minted}[linenos,firstnumber=3738]{c}
+/* Try to find insns to place in delay slots.  */
+
+static void
+dbr_schedule (rtx_insn *first)
+{
+  rtx_insn *insn, *next, *epilogue_insn = 0;
+  int i;
+  bool need_return_insns;
+
+  /* If the current function has no insns other than the prologue and
+     epilogue, then do not try to fill any delay slots.  */
+  if (n_basic_blocks_for_fn (cfun) == NUM_FIXED_BLOCKS)
+    return;
+
+  /* Find the highest INSN_UID and allocate and initialize our map from
+     INSN_UID's to position in code.  */
+  for (max_uid = 0, insn = first; insn; insn = NEXT_INSN (insn))
+    {
+      if (INSN_UID (insn) > max_uid)
+	max_uid = INSN_UID (insn);
+      if (NOTE_P (insn)
+	  && NOTE_KIND (insn) == NOTE_INSN_EPILOGUE_BEG)
+	epilogue_insn = insn;
+    }
+  // CODE OMITTED FOR BREVITY
+}
+\end{minted}
+
+\bibliographystyle{plain}
+\bibliography{references.bib}
+\end{document}

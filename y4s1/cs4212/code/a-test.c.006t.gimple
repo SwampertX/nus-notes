@@ -1,0 +1,24 @@
+int main ()
+{
+  int D.1950;
+
+  {
+    int x;
+    char c;
+
+    x = 3;
+    c = 115;
+    goto <D.1947>;
+    <D.1948>:
+    x = x + 1;
+    <D.1947>:
+    if (x <= 9) goto <D.1948>; else goto <D.1946>;
+    <D.1946>:
+    D.1950 = x;
+    return D.1950;
+  }
+  D.1950 = 0;
+  return D.1950;
+}
+
+

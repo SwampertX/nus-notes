@@ -1,0 +1,214 @@
+#+TITLE: Script
+
+[imagine you are the audience]
+* Introduction
+Hi everyone, I am Yee Jian, and together with Peter, we will be presenting our
+paper on the Stepper, which is a step-by-step evaluation tracer of the Source 2
+Javascript sublanguage. I will begin with explaining the core concepts behind
+the Stepper, and Peter will later demonstrate them in action.
+
+* Background
+As you might have heard from the previous talk, the SICP textbook is used for
+CS1 in the National University of Singapore. But instead of the using Scheme, it
+is taught using a sublanguage of Javascript, which we call the Source. One
+characteristic of SICP is its emphasis on different "mental models" on program
+evaluation. For the first half of the CS1 course, which corresponds nicely with
+the first 2 chapters of SICP, which uses the concept of a "substitution model",
+a simple algebraic reduction method. In this talk, we will focus on the
+functional language, Source 2, which made stepping possible.
+
+[click]
+
+Now, let us see what is the "substitution model" about, with a simple example.
+
+** Substitution model
+Consider this Source 2 program, which is a valid javascript program, on the
+=square= function. Before we start, it it important to mention that in the
+substitution model, there is no idea of a "naming context" or an "environment"
+which stores the definition of names. All references are resolved by directly
+substituting its definitions when the declaration is made.
+
+In the first reduction step of the substitution model, the definition the
+function =square= is first substituted [click] into all function applications in
+the rest of the program. Then, reduction goes on intuitively from left to right,
+[click] first substituting 2 into the lambda function, and then substituting
+=2 * 2= with 4 [click], and similarly for the function call on the right [click
+x 3]. Finally, we arrive at the result 13.
+
+Now that we have a rough sense of how substitution model works, let us look at a
+crucial detail before looking at the Stepper demo.
+
+** Problem 1: dealing with blocks
+If the function's body block only has a single Return Statement, the
+substitution is simple - we merely need to replace the calls with the returned
+expression. However in Source, the body of a function declaration is allowed to
+have multiple statements [click], which might contain important information that
+cannot be omitted. Suppose we define the =square= function a little differently,
+such as on the right. In this case, we cannot naively substitute the
+applications of square [click] with just the returned expression, =x => result=,
+which [click] would make =result= a free variable after substitution. This is an
+invalid evaluation.
+
+** Problem 1: dealing with blocks
+[next slide] Therefore, to deal with the problem, we introduce the idea of
+blocks at expression level [click] in the display of the stepper. So instead of
+just substitute the names with the returned expression, we substitute the whole
+body block instead. [click] These will result in blocks at the expression level
+during evaluation time, as opposed to at the statement level for Javascript.
+[click] Now that these blocks capture enough information, how can we extract the
+return value from it?
+
+** Detail: block expressions
+[next page] [click] The reduction of block expression is nothing out of the
+ordinary. We will look at the first statement in the block and reduce it
+repeatedly. Here, we see that the first statement is reduced and the constant
+=result=, which carries the value of =4=, is substituted into the [click] return
+statement. statement. When the first statement of a block is a return statement,
+the whole block will then be substituted by the returned expression, in this
+case, the number =4=. Now,[unshare] Let us now have Peter to show you what this
+looks like in the Stepper with a live demo.
+
+* Demo
+* Implementation
+[Be ready to switch once "Yee Jian" is called.]
+[slides on "Implementation of the Stepper"]
+
+In this section, let me share with you, an interesting challenge when
+implementing the stepper. Before that, let us have a refresher about Lambda
+Calculus. [click]
+
+** Beta-reduction
+In lambda calculus, there are variables, such as x, y, and z, and abstractions
+using the lambda symbol, represented in Javascript as an arrow. You can think of
+a lambda function to be an anonymous function. When supplied with an argument,
+it will return the part AFTER the arrow, substituting the parameters with the
+supplied arguments.
+
+In this example, we have a function =x => x(z)=, applied to =y => y= as an
+argument. The reduction here is called the *Beta-reduction*: the =x= in the body
+will be replaced with the argument, =y => y=, and the in the next beta reduction
+step, the =y= in the body will be replaced by the variable =z=.
+
+In short, beta-reduction reduces function applications by just replacing the
+parameters in the body, by the arguments supplied. [nextslide]
+
+** Student view
+Now that we know about beta-reductions, we can view what we saw in the demo just
+now with a different lens. Let use use the same factorial example in the demo.
+This definition uses explicit recursion, which is seen by the =factorial= call
+in its definition. To evaluate, We first subtitute the occurences of =factorial=
+in the rest of the program, [click] getting the top right box. [click] After
+this beta-reduction, we replace all the variable =n= by the number =4=, [click]
+finally reaching this step. To the students, at this step, the name =factorial=
+is [click] magically expanded into its definition again. But remember that the
+"Substitution model" does not have a naming context that stores its definition.
+[nextslide]
+
+** Problem 2: dealing with explicit recursion
+Therefore, [click] we have actually lost the definition of factorial after the
+beta-reduction step, resulting in a free variable. This is an invalid program
+now. [click]
+
+In our implementation of the stepper, we ask the question: [click] is there a
+way to resolve this problem of explicit recursion, without using a naming
+context, staying true to the spirit of substitution model?
+
+** Problem 2: dealing with explicit recursion
+The anwer is yes [click]! The solution to this problem, is the mu-term, analyzed by
+Ariola and Klop in their 1997 paper, and we just take the same technique for our
+Stepper. In short, mu-terms are just named lambda terms, but with a more
+interesting reduction rule.
+
+** Problem 2: dealing with explicit recursion
+During reduction of mu-terms, we need to do two things: [click] other than
+substituting the arguments like the beta-reduction in lambda-calculus, , we also
+substitute the function name, with the mu-term itself. That way, the recursive
+definition is preserved for another round of recursion. Let use see how this
+would work for our factorial example.
+
+** Details: mu-terms
+After going through the mu-application reduction in red, the block expression is
+reduced and block discarded. Here the ternary operator is evaluated, and in the
+alternate, we have another mu-application, but this time we know it will
+preserve the definition. Finally, it will reach the result of 24, and we finally
+have explicit recursion without a naming context!
+
+** Details: mu-terms
+We have all the gory detail about mu-terms and block expressions, including
+their introduction and reduction rules, in our paper. In case you are
+interested, you can find them in our paper.
+
+** Implementation: space optimizations
+Before we end, we look at how the stepper save space. The main concern of
+implementing the stepper is that the thousands of steps will take up massive
+amount of memory, rendering the Source Academy application unusuable. In this
+case, we take an approach to maximize the syntax graphs as each step is
+generated. In our implementation, these 4 steps, out of maybe a few thousand,
+share a massive amount of structures across steps:
+[click] The function declarations
+[click] The mu-terms, which in turn share structure with the declarations
+[click] the lambda functions, as well as
+[click] the list data structures.
+
+This makes the application extremely space efficient since almost all the syntax
+graph nodes are shared.
+
+** Summary
+To summarize what we have seen today, we have covered new features such as block
+expression and mu-terms that are introduced to help build Stepper as our source
+of truth when it comes to the substitution model in Source. Since its birth in
+the summer of 2019, we have been using it in class for the third year. I was the
+first implementor of the Stepper, and throughout these years, there have been
+batches of students such as Peter who implemented features such as redex
+highlighting and function skipping. The stepper is now an indispensible part for
+teaching CS1 in NUS, by the words of our coordinator, Professor Martin Henz. If
+you are interested, feel free to head over to sourceacademy.org anytime to try
+the stepper. Thank you!
+
+* Implementation and related work
+** Related work
+As a minimal formal system for computation, the lambda calculus [6] is used in
+teaching the theory of computation and programming language semantics (e.g.
+[13]), often backed up by programming exercises or even complete experimentation
+environments such as LambdaLab [20] and Lambdulus [21]. These implementations
+are based on term (tree) rewriting and not on graph rewriting and do not handle
+explicit recursion, which is necessary for a direct implementation of our
+reduction semantics. They share with our stepper and with Hat that the
+intermediate results of a reduction are explicitly generated and stored. As a
+web-based interactive system written in TypeScript using React, Lambdulus has a
+similar general system architecture as THE SYSTEM.
+
+Racket [7], and Haskell [8]. The Scheme, Racket, and Lazy Racket
+steppers generate a stack of continuations at run time by instru-
+menting the learner’s program with “continuation marks” in a
+preprocessing step. In contrast to these steppers, our stepper di-
+rectly reduces the given program, following the presented reduction
+semantics and resulting in a random-access trace data structure.
+In this approach, we follow Haskell’s stepper, Hat, which stores
+the full reduction trace in a data structure called “augmented redex
+trail”. Our stepper also shares with Hat the strategy of maximiz-
+ing sharing for space efficiency, which leads in both systems to
+data sharing between steps, coreferences, and cycles and thus re-
+quires term graph rewriting. The direct syntactic representation
+of intermediate states simplifies the specification and implemen-
+tation of the tool and facilitates learner interaction but foregoes
+opportunities for optimized compilation of the learner program.
+
+
+
+* Things to change:
+** TODO Write Script
+** TODO Record and test volume
+** DONE Replace intro to sub-model with square2,3
+- State "DONE"       from "TODO"       [2021-10-19 Tue 10:24]
+** DONE Be careful about left-to-right evaluations in problem 1
+- State "DONE"       from "INPROGRESS" [2021-10-19 Tue 10:48]
+** TODO Motivate mu-terms: a non-example using lambda-substitution
+** TODO Add the FR Rule
+** TODO Mention when explaining the rules - we will see these naturally in the demo
+- just a formality
+** TODO No need to thank Peter or say hi
+** TODO Replace structure-sharing example with peter's map
+** TODO Hat is the Haskell Tracer
+- find more information
+** TODO "You can say thank you but don't say that's all"

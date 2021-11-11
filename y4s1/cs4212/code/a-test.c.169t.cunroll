@@ -1,0 +1,89 @@
+
+;; Function main (main, funcdef_no=0, decl_uid=1942, cgraph_uid=1, symbol_order=0) (executed once)
+
+Removing basic block 19
+Removing basic block 20
+Removing basic block 21
+Removing basic block 22
+Removing basic block 23
+Removing basic block 24
+
+SSA replacement table
+N_i -> { O_1 ... O_j } means that N_i replaces O_1, ..., O_j
+
+x_6 -> { x_5 }
+ivtmp_7 -> { ivtmp_1 }
+x_8 -> { x_3 }
+ivtmp_9 -> { ivtmp_4 }
+x_10 -> { x_5 }
+ivtmp_11 -> { ivtmp_1 }
+x_12 -> { x_3 }
+ivtmp_13 -> { ivtmp_4 }
+x_14 -> { x_5 }
+ivtmp_15 -> { ivtmp_1 }
+x_16 -> { x_3 }
+ivtmp_17 -> { ivtmp_4 }
+x_18 -> { x_5 }
+ivtmp_19 -> { ivtmp_1 }
+x_20 -> { x_3 }
+ivtmp_21 -> { ivtmp_4 }
+x_22 -> { x_5 }
+ivtmp_23 -> { ivtmp_1 }
+x_24 -> { x_3 }
+ivtmp_25 -> { ivtmp_4 }
+x_26 -> { x_5 }
+ivtmp_27 -> { ivtmp_1 }
+x_28 -> { x_3 }
+ivtmp_29 -> { ivtmp_4 }
+Incremental SSA update started at block: 6
+Number of blocks in CFG: 25
+Number of blocks to update: 13 ( 52%)
+
+
+Removing basic block 5
+Removing basic block 18
+Merging blocks 2 and 6
+Removing basic block 7
+Removing basic block 9
+Removing basic block 11
+Removing basic block 13
+Removing basic block 15
+Removing basic block 17
+Merging blocks 2 and 8
+Merging blocks 2 and 10
+Merging blocks 2 and 12
+Merging blocks 2 and 14
+Merging blocks 2 and 16
+Merging blocks 2 and 3
+Merging blocks 2 and 4
+int main ()
+{
+  int x;
+  unsigned int ivtmp_4;
+  unsigned int ivtmp_9;
+  unsigned int ivtmp_13;
+  unsigned int ivtmp_17;
+  unsigned int ivtmp_21;
+  unsigned int ivtmp_25;
+  unsigned int ivtmp_29;
+
+  <bb 2> [local count: 134217728]:
+  x_8 = 4;
+  ivtmp_9 = 6;
+  x_12 = x_8 + 1;
+  ivtmp_13 = ivtmp_9 + 4294967295;
+  x_16 = x_12 + 1;
+  ivtmp_17 = ivtmp_13 + 4294967295;
+  x_20 = x_16 + 1;
+  ivtmp_21 = ivtmp_17 + 4294967295;
+  x_24 = x_20 + 1;
+  ivtmp_25 = ivtmp_21 + 4294967295;
+  x_28 = x_24 + 1;
+  ivtmp_29 = ivtmp_25 + 4294967295;
+  x_3 = x_28 + 1;
+  ivtmp_4 = ivtmp_29 + 4294967295;
+  return 10;
+
+}
+
+

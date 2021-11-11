@@ -1,0 +1,15 @@
+
+;; Function main (main, funcdef_no=0, decl_uid=1942, cgraph_uid=1, symbol_order=0) (executed once)
+
+modref analyzing 'main' (ipa=0) (const)
+ - modref done with result: tracked.
+int main ()
+{
+  int x;
+
+  <bb 2> [local count: 134217728]:
+  return 10;
+
+}
+
+

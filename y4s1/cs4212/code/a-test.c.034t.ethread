@@ -1,0 +1,42 @@
+
+;; Function main (main, funcdef_no=0, decl_uid=1942, cgraph_uid=1, symbol_order=0)
+
+;; 2 loops found
+;;
+;; Loop 0
+;;  header 0, latch 1
+;;  depth 0, outer -1
+;;  nodes: 0 1 2 3 4 5
+;;
+;; Loop 1
+;;  header 4, latch 3
+;;  depth 1, outer 0
+;;  nodes: 4 3
+;; 2 succs { 4 }
+;; 3 succs { 4 }
+;; 4 succs { 3 5 }
+;; 5 succs { 1 }
+int main ()
+{
+  char c;
+  int x;
+
+  <bb 2> :
+  goto <bb 4>; [INV]
+
+  <bb 3> :
+  x_6 = x_1 + 1;
+
+  <bb 4> :
+  # x_1 = PHI <3(2), x_6(3)>
+  if (x_1 <= 9)
+    goto <bb 3>; [INV]
+  else
+    goto <bb 5>; [INV]
+
+  <bb 5> :
+  return x_1;
+
+}
+
+
