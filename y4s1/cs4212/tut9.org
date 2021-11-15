@@ -1,0 +1,19 @@
+#+TITLE: Tutorial 9
+
+* Q1 Register and address descriptors
+| Line | Ori            | Gen                | r1       | r2         | r3 | r4 | i     | j     | a     | remarks                |
+|------+----------------+--------------------+----------+------------+----+----+-------+-------+-------+------------------------|
+|    1 | =t1 = 10 * i=  |                    |          |            |    |    | i     | j     | a     |                        |
+|      |                | =LD r1, i=         | i        |            |    |    | i     | j     | a     | getReg(1) = r1         |
+|      |                | =MUL r1, r1, \#10= | t1       |            |    |    | i, r1 | j     | a     | NU(i) = null           |
+|    2 | =t2 = t1 + j=  | =LD r2, j=         | t1       | *j         |    |    | i     | j, r2 | a     | getReg(2) = r1, r1, r2 |
+|      |                | =ADD r2, r1, r2=   | t2       | *j         |    |    | i     | j, r2 | a     | NU(j) = 6              |
+|    3 | =t3 = 8 * t2=  | =MUL r1, r1, \#8=  | t3       | *j         |    |    | i     | j, r2 | a     | getReg(3)              |
+|    4 | =t4 = t3 - 88= | =SUB r1, r1, \#88= | t4       | *j         |    |    | i     | j, r2 | a     | getReg                 |
+|    5 | =a[t4] = 0.0=  | =LD r3, a=         | t4       | *j         | a  |    | i     | j, r2 | a, r3 |                        |
+|      |                | =MUL r1, r1, 8=    | t4*8     | *j         | a  |    | i     | j, r2 | a, r3 |                        |
+|    6 |                | =ADD r1, r3, r1=   | a + t4*8 | *j         | a  |    | i     | j, r2 | a, r3 |                        |
+|      |                | =ST r1, \#0=       | a + t4*8 | *j         | a  |    | i     | j, r2 | a, r3 |                        |
+|    6 | =j = j + 1=    | =ADD r2, r2, 1=    | ...      | t = *j + 1 | a  |    | i     | r2    | a, r3 |                        |
+|      |                | =ST j, r2=         | ...      | *j         | a  |    | i     | j, r2 | a, r3 |                        |
+* Q2 Spilling cost

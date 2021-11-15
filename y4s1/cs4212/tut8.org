@@ -149,3 +149,8 @@ Program A()
 }
 #+end_src
 * Question 3: Static scoping in ARM assembly
+Idea: compiler supplies the correct address (on the stack). Compiler calculates
+the correct reference based on the nested depth.
+* Question 4: Dynamic scoping
+Idea: on the stack, there needs to be access links jumping to previous stack
+frames. Floating point data has to be loaded into the =.data= section.
