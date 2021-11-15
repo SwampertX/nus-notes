@@ -1,0 +1,111 @@
+% Created 2021-11-15 Mon 20:05
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{minted}
+\usepackage{hyperref}
+\author{Tan Yee Jian}
+\date{\today}
+\title{Tutorial 9}
+\hypersetup{
+ pdfauthor={Tan Yee Jian},
+ pdftitle={Tutorial 9},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.0.60 (Org mode 9.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Q1 Register and address descriptors}
+\label{sec:org7d76450}
+\begin{center}
+\begin{tabular}{rllllllllll}
+Line & Ori & Gen & r1 & r2 & r3 & r4 & i & j & a & remarks\\
+\hline
+1 & \texttt{t1 = 10 * i} &  &  &  &  &  & i & j & a & \\
+ &  & \texttt{LD r1, i} & i &  &  &  & i & j & a & getReg(1) = r1\\
+ &  & \texttt{MUL r1, r1, \textbackslash{}\#10} & t1 &  &  &  & i, r1 & j & a & NU(i) = null\\
+2 & \texttt{t2 = t1 + j} & \texttt{LD r2, j} & t1 & *j &  &  & i & j, r2 & a & getReg(2) = r1, r1, r2\\
+ &  & \texttt{ADD r2, r1, r2} & t2 & *j &  &  & i & j, r2 & a & NU(j) = 6\\
+3 & \texttt{t3 = 8 * t2} & \texttt{MUL r1, r1, \textbackslash{}\#8} & t3 & *j &  &  & i & j, r2 & a & getReg(3)\\
+4 & \texttt{t4 = t3 - 88} & \texttt{SUB r1, r1, \textbackslash{}\#88} & t4 & *j &  &  & i & j, r2 & a & getReg\\
+5 & \texttt{a[t4] = 0.0} & \texttt{LD r3, a} & t4 & *j & a &  & i & j, r2 & a, r3 & \\
+ &  & \texttt{MUL r1, r1, 8} & t4*8 & *j & a &  & i & j, r2 & a, r3 & \\
+6 &  & \texttt{ADD r1, r3, r1} & a + t4*8 & *j & a &  & i & j, r2 & a, r3 & \\
+ &  & \texttt{ST r1, \textbackslash{}\#0} & a + t4*8 & *j & a &  & i & j, r2 & a, r3 & \\
+6 & \texttt{j = j + 1} & \texttt{ADD r2, r2, 1} & \ldots{} & t = *j + 1 & a &  & i & r2 & a, r3 & \\
+ &  & \texttt{ST j, r2} & \ldots{} & *j & a &  & i & j, r2 & a, r3 & \\
+\end{tabular}
+\end{center}
+\section{Q2 Spilling cost}
+\label{sec:org6898dfb}
+Cost of spilling probably depends on
+\begin{itemize}
+\item how soon it is reused
+\end{itemize}
+\section{Q3 Convert code into 3-add code and if-gotos}
+\label{sec:org2a8ba61}
+3-address code:
+\begin{minted}[linenos,firstnumber=1]{c}
+getCofactor:
+int mat[N][N];
+int temp[N][N];
+int p;
+int q;
+int n;
+int i = 0;
+int j = 0;
+int row = 0;
+for_0:
+if row >= n goto for_0_end;
+int col = 0;
+for_0_0:
+if col >= n goto for_0_0_end;
+bool t1 = row != p;
+if !t1 goto if_0_0_0_end;
+bool t2 = col != q;
+if !t2 goto if_0_0_0_end;
+int rowbyte = N * 4;
+int rowoff = row * rowbyte;
+int colbyte = col * 4;
+int matoff = rowoff + colbyte;
+int matadd = mat + matoff;
+int rhs = *(matadd)
+rowoff = i * rowbyte;
+colbyte = j * 4;
+j = j + 1;
+matoff = rowoff + colbyte;
+matadd = mat + matoff;
+*(matadd) = rhs;
+int t3 = n - 1;
+bool t4 = j == t3;
+if !t4 goto if_0_0_0_0_end;
+j = 0;
+i = i + 1;
+if_0_0_0_0_end:
+if_0_0_0_end:
+col = col + 1;
+goto for_0_0;
+for_0_0_end:
+row = row + 1;
+goto for_0;
+for_0_end:
+\end{minted}
+
+CFG
+\end{document}

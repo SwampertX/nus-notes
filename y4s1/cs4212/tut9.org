@@ -17,3 +17,56 @@
 |    6 | =j = j + 1=    | =ADD r2, r2, 1=    | ...      | t = *j + 1 | a  |    | i     | r2    | a, r3 |                        |
 |      |                | =ST j, r2=         | ...      | *j         | a  |    | i     | j, r2 | a, r3 |                        |
 * Q2 Spilling cost
+Cost of spilling probably depends on
+- how soon it is reused
+* Q3 Convert code into 3-add code and if-gotos
+3-address code:
+#+begin_src C -n
+getCofactor:
+int mat[N][N];
+int temp[N][N];
+int p;
+int q;
+int n;
+int i = 0;
+int j = 0;
+int row = 0;
+for_0:
+if row >= n goto for_0_end;
+int col = 0;
+for_0_0:
+if col >= n goto for_0_0_end;
+bool t1 = row != p;
+if !t1 goto if_0_0_0_end;
+bool t2 = col != q;
+if !t2 goto if_0_0_0_end;
+int rowbyte = N * 4;
+int rowoff = row * rowbyte;
+int colbyte = col * 4;
+int matoff = rowoff + colbyte;
+int matadd = mat + matoff;
+int rhs = *(matadd)
+rowoff = i * rowbyte;
+colbyte = j * 4;
+j = j + 1;
+matoff = rowoff + colbyte;
+matadd = mat + matoff;
+*(matadd) = rhs;
+int t3 = n - 1;
+bool t4 = j == t3;
+if !t4 goto if_0_0_0_0_end;
+j = 0;
+i = i + 1;
+if_0_0_0_0_end:
+if_0_0_0_end:
+col = col + 1;
+goto for_0_0;
+for_0_0_end:
+row = row + 1;
+goto for_0;
+for_0_end:
+#+end_src
+
+#+RESULTS:
+
+CFG
